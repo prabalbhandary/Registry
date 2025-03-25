@@ -35,12 +35,12 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-80 p-6 bg-gray-300 text-black">
+    <div className="h-[100%] w-[350px] p-6 bg-gray-300 text-black">
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">NL Registry</h1>
 
       <div
         onClick={() => setDropDownOpened(!dropDownOpened)}
-        className="flex items-center mb-6 cursor-pointer hover:bg-gray-400 p-2 rounded-lg"
+        className="flex items-center mb-4 cursor-pointer hover:bg-gray-400 p-2 rounded-lg"
       >
         <img src={user} alt="User" className="w-12 h-12 rounded-full mr-4" />
         <div className="flex flex-col">
@@ -61,22 +61,22 @@ const Sidebar = () => {
       </div>
 
       {dropDownOpened && (
-        <div className="bg-gray-400 p-4 rounded-lg mb-6">
+        <div className="bg-gray-200 shadow-xl p-4 rounded-lg mb-4">
           <NavLink
             to="/add-hospital"
-            className="block text-sm text-gray-800 hover:bg-gray-500 rounded p-2"
+            className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
           >
             Add Hospital
           </NavLink>
           <NavLink
             to="/add-assistant"
-            className="block text-sm text-gray-800 hover:bg-gray-500 rounded p-2"
+            className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
           >
             Add Assistant
           </NavLink>
           <NavLink
             to="/profile"
-            className="block text-sm text-gray-800 hover:bg-gray-500 rounded p-2"
+            className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
           >
             View Profile
           </NavLink>

@@ -15,7 +15,7 @@ const RecentUsers = () => {
   const displayData = users.length > 5 ? users.slice(0, 5) : users;
 
   return (
-    <div className="p-4 rounded-lg">
+    <div className="rounded-lg">
       <p className="text-xl font-semibold text-gray-800 mb-4">Recent Users</p>
       <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
         <table className="min-w-full table-auto border-collapse">

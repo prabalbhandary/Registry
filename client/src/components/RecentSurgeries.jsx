@@ -14,7 +14,7 @@ const RecentSurgeries = () => {
   const displayData = surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries;
 
   return (
-    <div className="p-6 bg-white rounded-lg">
+    <div className="bg-white rounded-lg">
       <p className="text-xl font-semibold text-gray-800 mb-4">Recent Surgeries</p>
       <div className="overflow-y-auto" style={{ maxHeight: "350px" }}>
         <table className="min-w-full table-auto border-separate border-spacing-0">

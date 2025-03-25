@@ -110,8 +110,8 @@ const Dashboard = () => {
         <hr className="my-6" />
       </section>
 
-      <section className="w-full p-6 rounded-lg">
-        <div className="flex gap-4 w-full">
+      <section className="w-full rounded-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
           <div className="flex-1 bg-white p-4 rounded-lg">
             <RecentSurgeries />
           </div>

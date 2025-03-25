@@ -14,7 +14,7 @@ const RecentPatients = () => {
   const displayData = patients.length > 5 ? patients.slice(0, 5) : patients;
 
   return (
-    <div className="p-4 rounded-lg">
+    <div className="rounded-lg">
       <p className="text-xl font-semibold text-gray-800 mb-4">Recent Patients</p>
       <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
         <table className="min-w-full table-auto border-collapse">
