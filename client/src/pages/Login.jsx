@@ -3,25 +3,29 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post(`${URL}/login`, {email, password});
-        if(res.status === 200){
-            toast.success(res.data.message);
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
-            navigate("/");
-        }
+      const res = await axios.post(`${URL}/login`, { email, password });
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        navigate("/");
+      }
     } catch (error) {
-        toast.error(error.response.data.message);
+      toast.error(error.response.data.message);
     }
-  }
+  };
+
   return (
     <>
       <title>Log in - Nepal Ligament Registry</title>
@@ -56,7 +60,7 @@ const Login = () => {
               />
             </section>
 
-            <section className="mb-6">
+            <section className="mb-6 relative">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
@@ -64,7 +68,7 @@ const Login = () => {
                 Your Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 id="password"
                 value={password}
@@ -72,6 +76,16 @@ const Login = () => {
                 placeholder="••••••••••••••"
                 className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              >
+                {showPassword ? (
+                  <FaEyeSlash className="text-gray-600 text-center justify-center text-xl" />
+                ) : (
+                  <FaEye className="text-gray-600 text-center justify-center text-xl" />
+                )}
+              </span>
             </section>
 
             <section className="flex justify-between items-center mb-6">
