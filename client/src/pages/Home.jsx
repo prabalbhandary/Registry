@@ -1,0 +1,38 @@
+import React from "react";
+import Logo from "../assets/logo.png";
+import { Link } from "react-router-dom";
+
+const Home = () => {
+  const isAuthenticated = localStorage.getItem("token");
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-center p-4">
+      <Link to="/">
+        <img src={Logo} alt="Logo" className="w-32 h-32 mb-4" />
+      </Link>
+      <h2 className="text-blue-500 text-2xl font-semibold mb-2">
+        NEPAL LIGAMENT REGISTRY
+      </h2>
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">NL Registry</h1>
+      <p className="text-gray-500 text-lg mb-6">Arthroscopy Society of Nepal</p>
+      <div className="space-x-4">
+        {isAuthenticated ? (
+          <Link to="/dashboard" className="underline">
+            Dashboard
+          </Link>
+        ) : (
+          <>
+            <Link to="/login" className="underline">
+              Login
+            </Link>
+            <Link to="/register" className="underline">
+              Register
+            </Link>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Home;

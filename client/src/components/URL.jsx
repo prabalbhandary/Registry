@@ -1,0 +1,1 @@
+export const URL = "https://registry.suryanarayan.com.np/api"
