@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { URL } from "../components/URL";
+import axios from "axios";
 
 const OTP = () => {
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigate = useNavigate();
+  const [email, setEmail] = useState(localStorage.getItem("otpEmail"));
 
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -18,14 +21,24 @@ const OTP = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const enteredOtp = otp.join("");
-    if (enteredOtp.length === 4) {
-      toast.success("OTP Verified!");
-      navigate("/reset-password");
-    } else {
-      toast.error("Please enter a valid OTP.");
+
+    const otpValue = otp.join("");
+
+    if (otpValue.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP.");
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${URL}/verify-otp`, { otp: otpValue, email });
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        navigate("/reset-password");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred.");
     }
   };
 

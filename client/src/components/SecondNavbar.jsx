@@ -7,12 +7,10 @@ const SecondNavbar = ({ completedIndex }) => {
   return (
     <div className="flex space-x-4 justify-center items-center">
       {numbers.map((number, index) => (
-        <div
-          key={number}
+        <div 
+          key={index + 1} 
           className={`relative p-4 cursor-pointer rounded-full transition-all duration-300 ease-in-out transform ${
-            completedIndex === index
-              ? "bg-blue-500 text-white shadow-xl scale-110"
-              : "bg-gray-200 text-gray-800"
+            completedIndex > index ? "bg-blue-500 text-white shadow-xl scale-110" : "bg-gray-200 text-gray-800"
           }`}
           style={{
             borderRight: index < numbers.length - 1 ? "2px solid #ddd" : "none",
@@ -24,7 +22,7 @@ const SecondNavbar = ({ completedIndex }) => {
             height: "50px",
           }}
         >
-          {completedIndex === index ? (
+          {completedIndex > index ? (
             <span className="text-2xl absolute inset-0 flex items-center justify-center">
               <FaCheck />
             </span>

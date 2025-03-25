@@ -35,7 +35,7 @@ const CreateSurgery = () => {
         sports,
       });
       
-      setCompletedIndex((prevIndex) => (prevIndex === null ? 0 : prevIndex + 1));
+      setCompletedIndex((prevIndex) => (prevIndex === null ? 1 : prevIndex + 1));
     //   navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
