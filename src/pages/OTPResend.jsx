@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { URL } from "../components/URL";
 
 const OTPResend = () => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [isResendAllowed, setIsResendAllowed] = useState(false);
+  const navigate = useNavigate();
+  const email = localStorage.getItem("otpEmail");
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -20,12 +24,17 @@ const OTPResend = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const handleResendOTP = () => {
-    if (isResendAllowed) {
-      setTimeLeft(60);
-      setIsResendAllowed(false);
-    } else {
-      toast.error("Please wait until the timer ends before resending OTP.");
+  const handleResendOTP = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(`${URL}/send-otp`, { email: email });
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        navigate("/otp");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred.");
     }
   };
 
