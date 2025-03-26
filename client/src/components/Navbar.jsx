@@ -93,6 +93,36 @@ const Navbar = () => {
           <hr />
         </>
       )}
+      {location.pathname === "/add-surgerical-details" && (
+        <>
+          <div className="bg-white text-black p-4 flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Add Surgerical Details</h2>
+          </div>
+          <hr />
+        </>
+      )}
+      {location.pathname === "/patient-surgical-details" && (
+        <>
+          <div className="bg-white text-black p-4 flex justify-between items-center">
+            <h2 className="text-2xl font-bold">
+              Create Patient Surgical Details
+            </h2>
+          </div>
+          <hr />
+        </>
+      )}
+      {
+        location.pathname === "/patient-injury-details" && (
+          <>
+            <div className="bg-white text-black p-4 flex justify-between items-center">
+              <h2 className="text-2xl font-bold">
+                Create Patient Injury Details
+              </h2>
+            </div>
+            <hr />
+          </>
+        )
+      }
     </>
   );
 };
