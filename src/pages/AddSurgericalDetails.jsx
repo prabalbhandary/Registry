@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
@@ -10,7 +10,8 @@ const AddSurgicalDetails = () => {
   const [hospital, setHospital] = useState("");
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const [date, setDate] = useState("");
-  const [completedIndex, setCompletedIndex] = useState(1);
+  const location = useLocation();
+  const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ const AddSurgicalDetails = () => {
         date,
       });
       setCompletedIndex(2);
-      navigate("/patient-surgical-details");
+      navigate("/patient-surgical-details", { state: { completedIndex: 2 } });
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong.");
     }

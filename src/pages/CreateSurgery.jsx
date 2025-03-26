@@ -36,7 +36,7 @@ const CreateSurgery = () => {
       });
 
       setCompletedIndex(1);
-      navigate("/add-surgerical-details");
+navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
     } catch (error) {
       toast.error(error.response.data.message);
     }

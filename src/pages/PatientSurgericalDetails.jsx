@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
 
@@ -11,7 +11,8 @@ const PatientSurgicalDetails = () => {
   const [bmi, setBmi] = useState("");
   const [beightonScore, setBeightonScore] = useState("");
   const [comorbidity, setComorbidity] = useState([]);
-  const [completedIndex, setCompletedIndex] = useState(2);
+  const location = useLocation();
+  const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
 
   const calculateBmi = () => {
     if (height && weight) {
@@ -31,7 +32,7 @@ const PatientSurgicalDetails = () => {
         comorbidity,
       });
       setCompletedIndex(3);
-      navigate("/patient-injury-details");
+      navigate("/patient-injury-details", { state: { completedIndex: 3 } });
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong.");
     }
