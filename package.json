@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "cd client && npm i && vite",
+    "start": "cd client && npm i && npm run dev",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
