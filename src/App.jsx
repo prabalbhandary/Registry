@@ -30,6 +30,7 @@ import OTPResend from "./pages/OTPResend";
 import AddSurgericalDetails from "./pages/AddSurgericalDetails";
 import PatientSurgericalDetails from "./pages/PatientSurgericalDetails";
 import PatientInjuryDetails from "./pages/PatientInjuryDetails";
+import Diagnosis from "./pages/Diagnosis";
 
 const App = () => {
   return (
@@ -75,6 +76,7 @@ const AppContent = () => {
             <Route path="/add-surgerical-details" element={isAuthenticated ? <AddSurgericalDetails /> : <Navigate to="/login" />} />
             <Route path="/patient-surgical-details" element={isAuthenticated ? <PatientSurgericalDetails /> : <Navigate to="/login" />} />
             <Route path="/patient-injury-details" element={isAuthenticated ? <PatientInjuryDetails /> : <Navigate to="/login" />} />
+            <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/login" />} />
             <Route path="/create-patient" element={isAuthenticated ? <CreatePatient /> : <Navigate to="/login" />} />
             <Route path="/create-user" element={isAuthenticated ? <CreateUser /> : <Navigate to="/login" />} />
             <Route path="/add-hospital" element={isAuthenticated ? <AddHospital /> : <Navigate to="/login" />} />

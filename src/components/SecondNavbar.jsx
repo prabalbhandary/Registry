@@ -28,6 +28,12 @@ const SecondNavbar = ({ completedIndex = 0 }) => {
       >
         Step 4: Patient Injury Details
       </Link>
+      <Link 
+        to="/diagnosis" 
+        className={completedIndex >= 4 ? "text-blue-600" : "text-gray-400"}
+      >
+        Step 5: Diagnosis
+      </Link>
     </nav>
   );
 };
