@@ -3,7 +3,7 @@ import React from 'react'
 const Assistants = () => {
   return (
     <>
-        <title>Assistants - Nepal Ligament Registry</title>
+        <title>Assistants - Trauma Registry</title>
         Assistants
     </>
   )

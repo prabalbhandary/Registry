@@ -9,7 +9,7 @@ import RecentPatients from "../components/RecentPatients";
 const Dashboard = () => {
   return (
     <>
-      <title>Dashboard - Nepal Ligament Registry</title>
+      <title>Dashboard - Trauma Registry</title>
 
       <section>
         <p className="text-xl font-semibold text-gray-700 mb-4">LIVE STATS</p>

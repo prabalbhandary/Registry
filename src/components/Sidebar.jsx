@@ -36,7 +36,7 @@ const Sidebar = () => {
 
   return (
     <div className="h-[100%] w-[350px] p-6 bg-gray-300 text-black">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">NL Registry</h1>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">Trauma Registry</h1>
 
       <div
         onClick={() => setDropDownOpened(!dropDownOpened)}

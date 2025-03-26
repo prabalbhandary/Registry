@@ -23,7 +23,7 @@ const ForgetPassword = () => {
     }
   return (
     <>
-      <title>Forget Password - Nepal Ligament Registry</title>
+      <title>Forget Password - Trauma Registry</title>
       <section className="flex items-center justify-center min-h-screen p-6 bg-gray-50">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
           <h1 className="text-3xl font-semibold text-gray-800">

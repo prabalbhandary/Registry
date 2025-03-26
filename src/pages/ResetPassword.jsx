@@ -32,7 +32,7 @@ const ResetPassword = () => {
 
   return (
     <>
-      <title>Reset Password - Nepal Ligament Registry</title>
+      <title>Reset Password - Trauma Registry</title>
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="bg-white p-10 rounded-lg shadow-xl w-full max-w-md">
           <div className="flex justify-center mb-6">

@@ -28,18 +28,18 @@ const Login = () => {
 
   return (
     <>
-      <title>Log in - Nepal Ligament Registry</title>
+      <title>Log in - Trauma Registry</title>
       <section className="flex items-center justify-center min-h-screen p-6 bg-gray-50">
         <article className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
           <header className="text-center mb-8">
             <Link to="/" className="block text-3xl font-bold text-blue-600">
-              NL Registry
+            Trauma Registry
             </Link>
           </header>
 
           <form onSubmit={handleSubmit}>
             <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-              Sign In to Nepal Ligament Registry
+              Sign In to Trauma Registry
             </h1>
 
             <section className="mb-4">

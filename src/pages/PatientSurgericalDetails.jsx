@@ -52,7 +52,7 @@ const PatientSurgicalDetails = () => {
 
   return (
     <>
-      <title>Patient Surgical Details - Nepal Ligament Registry</title>
+      <title>Patient Surgical Details - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <section className="max-w-4xl mx-auto p-4">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">

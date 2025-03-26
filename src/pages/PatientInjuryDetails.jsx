@@ -6,7 +6,7 @@ const PatientInjuryDetails = () => {
     const [completedIndex, setCompletedIndex] = useState(null);
   return (
     <>
-        <title>Add Patient Injury Details - Nepal Ligament Registry</title>
+        <title>Add Patient Injury Details - Trauma Registry</title>
         <SecondNavbar completedIndex={completedIndex} />
         <section>
             <h1>Add Patient Injury Details</h1>

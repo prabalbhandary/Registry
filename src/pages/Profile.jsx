@@ -3,7 +3,7 @@ import React from 'react'
 const Profile = () => {
   return (
     <>
-        <title>Profile - Nepal Ligament Registry</title>
+        <title>Profile - Trauma Registry</title>
         Profile
     </>
   )

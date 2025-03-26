@@ -44,7 +44,7 @@ const CreateSurgery = () => {
 
   return (
     <>
-      <title>Create Surgery - Nepal Ligament Registry</title>
+      <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">Add Patient Information</h1>

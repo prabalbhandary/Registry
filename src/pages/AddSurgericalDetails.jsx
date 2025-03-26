@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
 
 const AddSurgericalDetails = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || {}; // Fallback to empty object if user doesn't exist in localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || {};
   const navigate = useNavigate();
   const [primarySurgeon, setPrimarySurgeon] = useState(user);
   const [hospital, setHospital] = useState("");
@@ -31,7 +31,7 @@ const AddSurgericalDetails = () => {
 
   return (
     <>
-      <title>Create Surgical Details - Nepal Ligament Registry</title>
+      <title>Create Surgical Details - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <section className="py-6 px-4">
         <h1 className="text-3xl font-bold mb-4">Add Surgical Details</h1>

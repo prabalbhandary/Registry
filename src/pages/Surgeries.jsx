@@ -3,7 +3,7 @@ import React from "react";
 const Surgeries = () => {
   return (
     <>
-      <title>Surgeries - Nepal Ligament Registry</title>
+      <title>Surgeries - Trauma Registry</title>
       Surgeries
     </>
   );

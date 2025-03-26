@@ -3,7 +3,7 @@ import React from 'react'
 const CreatePatient = () => {
   return (
     <>
-        <title>Create Patient - Nepal Ligament Registry</title>
+        <title>Create Patient - Trauma Registry</title>
         Create Patient
     </>
   )

@@ -44,7 +44,7 @@ const OTP = () => {
 
   return (
     <>
-      <title>Verify your OTP - Nepal Ligament Registry</title>
+      <title>Verify your OTP - Trauma Registry</title>
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="bg-white p-10 rounded-lg shadow-xl w-full max-w-sm">
           <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
