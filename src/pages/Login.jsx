@@ -19,7 +19,7 @@ const Login = () => {
         toast.success(res.data.message);
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       toast.error(error.response.data.message);
