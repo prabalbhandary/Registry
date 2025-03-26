@@ -26,6 +26,7 @@ import Assistants from "./pages/Assistants";
 import Hospitals from "./pages/Hospitals";
 import ResetPassword from "./pages/ResetPassword";
 import OTP from "./pages/OTP";
+import OTPResend from "./pages/OTPResend";
 
 const App = () => {
   return (
@@ -41,14 +42,14 @@ const AppContent = () => {
 
   return (
     <div className="flex">
-      {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && (
+      {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
         <div>
           <Sidebar />
         </div>
       )}
 
       <div className="flex-1 flex flex-col">
-        {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && (
+        {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
           <div className="p-4">
             <Navbar />
           </div>
@@ -62,6 +63,7 @@ const AppContent = () => {
             <Route path="/forget-password" element={isAuthenticated ? <Navigate to="/dashboard" /> : <ForgetPassword />} />
             <Route path="/reset-password" element={isAuthenticated ? <Navigate to="/dashboard" /> : <ResetPassword />} />
             <Route path="/otp" element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTP />} />
+            <Route path="/otp-resend" element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTPResend />} />
             <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
             <Route path="/surgeries" element={isAuthenticated ? <Surgeries /> : <Navigate to="/login" />} />
             <Route path="/patients" element={isAuthenticated ? <Patients /> : <Navigate to="/login" />} />

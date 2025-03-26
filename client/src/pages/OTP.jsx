@@ -79,11 +79,10 @@ const OTP = () => {
             </button>
           </form>
           <p
-            onClick={() => navigate("/forget-password")}
             className="mt-4 text-center text-sm text-gray-600"
           >
-            Didn’t receive the code?{" "}
-            <span className="text-indigo-500 cursor-pointer hover:underline">
+            Didn't receive the code?{" "}
+            <span onClick={() => navigate("/otp-resend")} className="text-indigo-500 cursor-pointer hover:underline">
               Resend OTP
             </span>
           </p>
