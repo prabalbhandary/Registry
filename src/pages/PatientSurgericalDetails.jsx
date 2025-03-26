@@ -1,34 +1,23 @@
 import React, { useState } from "react";
-import SecondNavbar from "../components/SecondNavbar";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import SecondNavbar from "../components/SecondNavbar";
 
 const PatientSurgicalDetails = () => {
-  const [completedIndex, setCompletedIndex] = useState(2);
+  const navigate = useNavigate();
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [bmi, setBmi] = useState("");
   const [beightonScore, setBeightonScore] = useState("");
   const [comorbidity, setComorbidity] = useState([]);
-
-  const navigate = useNavigate();
+  const [completedIndex, setCompletedIndex] = useState(2);
 
   const calculateBmi = () => {
     if (height && weight) {
-      const bmi = (weight / (height / 100) ** 2).toFixed(2);
-      setBmi(bmi);
+      const bmiValue = (weight / (height / 100) ** 2).toFixed(2);
+      setBmi(bmiValue);
     }
-  };
-
-  const handleHeightChange = (e) => {
-    setHeight(e.target.value);
-    calculateBmi();
-  };
-
-  const handleWeightChange = (e) => {
-    setWeight(e.target.value);
-    calculateBmi();
   };
 
   const handleSubmit = async (e) => {
@@ -41,9 +30,7 @@ const PatientSurgicalDetails = () => {
         beightonScore,
         comorbidity,
       });
-      setCompletedIndex((prevIndex) =>
-        prevIndex === null ? 3 : prevIndex + 1
-      );
+      setCompletedIndex(3);
       navigate("/patient-injury-details");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong.");
@@ -58,20 +45,17 @@ const PatientSurgicalDetails = () => {
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
           Add Patient Surgical Details
         </h1>
-        <p className="text-center text-gray-600 mb-6">
-          Fill in the details below for the patient's surgical profile.
-        </p>
       </section>
 
       <section className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex flex-col space-y-2">
+          <div>
             <label htmlFor="height" className="text-gray-700">
               Height (in cm)
             </label>
             <input
               value={height}
-              onChange={handleHeightChange}
+              onChange={(e) => setHeight(e.target.value)}
               type="number"
               id="height"
               className="border border-gray-300 rounded-md p-2"
@@ -79,13 +63,13 @@ const PatientSurgicalDetails = () => {
             />
           </div>
 
-          <div className="flex flex-col space-y-2">
+          <div>
             <label htmlFor="weight" className="text-gray-700">
               Weight (in kg)
             </label>
             <input
               value={weight}
-              onChange={handleWeightChange}
+              onChange={(e) => setWeight(e.target.value)}
               type="number"
               id="weight"
               className="border border-gray-300 rounded-md p-2"
@@ -93,7 +77,7 @@ const PatientSurgicalDetails = () => {
             />
           </div>
 
-          <div className="flex flex-col space-y-2">
+          <div>
             <label htmlFor="beightonScore" className="text-gray-700">
               Beighton Score
             </label>
@@ -108,7 +92,7 @@ const PatientSurgicalDetails = () => {
             </select>
           </div>
 
-          <div className="flex flex-col space-y-2">
+          <div>
             <label htmlFor="comorbidity" className="text-gray-700">
               Comorbidity
             </label>
@@ -127,12 +111,11 @@ const PatientSurgicalDetails = () => {
                 { value: "COPD", label: "COPD" },
                 { value: "Tuberculosis", label: "Tuberculosis" },
                 { value: "Liver diseases", label: "Liver diseases" },
-                { value: "Other", label: "Other" },
               ]}
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <p className="font-semibold text-gray-700">BMI Score</p>
             <p className="text-xl text-gray-800">{bmi || "0.00"}</p>
           </div>
@@ -141,13 +124,14 @@ const PatientSurgicalDetails = () => {
             <button
               onClick={() => navigate(-1)}
               type="button"
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
+              className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg"
             >
               Back
             </button>
             <button
+              onClick={calculateBmi}
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg"
             >
               Next
             </button>

@@ -4,14 +4,13 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
 
-const AddSurgericalDetails = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || {};
+const AddSurgicalDetails = () => {
   const navigate = useNavigate();
-  const [primarySurgeon, setPrimarySurgeon] = useState(user);
+  const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham"); // This can be dynamic
   const [hospital, setHospital] = useState("");
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const [date, setDate] = useState("");
-  const [completedIndex, setCompletedIndex] = useState(null);
+  const [completedIndex, setCompletedIndex] = useState(1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +21,7 @@ const AddSurgericalDetails = () => {
         assistantSurgeons,
         date,
       });
-      setCompletedIndex((prevIndex) => (prevIndex === null ? 1 : prevIndex + 1));
+      setCompletedIndex(2);
       navigate("/patient-surgical-details");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong.");
@@ -35,9 +34,6 @@ const AddSurgericalDetails = () => {
       <SecondNavbar completedIndex={completedIndex} />
       <section className="py-6 px-4">
         <h1 className="text-3xl font-bold mb-4">Add Surgical Details</h1>
-        <p className="text-lg mb-6">
-          Add surgical details for {user.name || "Unknown Surgeon"}
-        </p>
       </section>
       <section className="max-w-3xl mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -50,12 +46,11 @@ const AddSurgericalDetails = () => {
             </label>
             <input
               id="primarySurgeon"
-              value={primarySurgeon.name || ""}
+              value={primarySurgeon}
               readOnly
               className="mt-2 p-3 w-full border border-gray-300 rounded-md"
             />
           </div>
-
           <div>
             <label
               htmlFor="hospital"
@@ -73,7 +68,6 @@ const AddSurgericalDetails = () => {
               <option value="B&B Hospital">B&B Hospital</option>
             </select>
           </div>
-
           <div>
             <label
               htmlFor="assistantSurgeons"
@@ -94,7 +88,6 @@ const AddSurgericalDetails = () => {
               className="mt-2"
             />
           </div>
-
           <div>
             <label
               htmlFor="date"
@@ -110,7 +103,6 @@ const AddSurgericalDetails = () => {
               className="mt-2 p-3 w-full border border-gray-300 rounded-md"
             />
           </div>
-
           <div className="flex justify-between">
             <button
               type="button"
@@ -132,4 +124,4 @@ const AddSurgericalDetails = () => {
   );
 };
 
-export default AddSurgericalDetails;
+export default AddSurgicalDetails;

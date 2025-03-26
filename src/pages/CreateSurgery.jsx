@@ -16,7 +16,7 @@ const CreateSurgery = () => {
   const [contact_number, setContact_number] = useState("");
   const [occupation, setOccupation] = useState("");
   const [sports, setSports] = useState("");
-  const [completedIndex, setCompletedIndex] = useState(null);
+  const [completedIndex, setCompletedIndex] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ const CreateSurgery = () => {
         sports,
       });
 
-      setCompletedIndex((prevIndex) => (prevIndex === null ? 1 : prevIndex + 1));
+      setCompletedIndex(1);
       navigate("/add-surgerical-details");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -47,13 +47,19 @@ const CreateSurgery = () => {
       <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">Add Patient Information</h1>
-        <p className="text-center text-gray-600 mb-6">Please fill in the details and proceed to the next step.</p>
-
+        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
+          Add Patient Information
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Form Fields Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label htmlFor="firstName" className="text-lg font-medium text-gray-700">First Name</label>
+              <label
+                htmlFor="firstName"
+                className="text-lg font-medium text-gray-700"
+              >
+                First Name
+              </label>
               <input
                 type="text"
                 value={firstName}
@@ -64,7 +70,12 @@ const CreateSurgery = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="lastName" className="text-lg font-medium text-gray-700">Last Name</label>
+              <label
+                htmlFor="lastName"
+                className="text-lg font-medium text-gray-700"
+              >
+                Last Name
+              </label>
               <input
                 type="text"
                 value={lastName}
@@ -75,7 +86,12 @@ const CreateSurgery = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="age" className="text-lg font-medium text-gray-700">Age</label>
+              <label
+                htmlFor="age"
+                className="text-lg font-medium text-gray-700"
+              >
+                Age
+              </label>
               <input
                 type="number"
                 value={age}
@@ -86,7 +102,12 @@ const CreateSurgery = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="nationality" className="text-lg font-medium text-gray-700">Nationality</label>
+              <label
+                htmlFor="nationality"
+                className="text-lg font-medium text-gray-700"
+              >
+                Nationality
+              </label>
               <select
                 name="nationality"
                 value={nationality}
@@ -99,7 +120,12 @@ const CreateSurgery = () => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="province" className="text-lg font-medium text-gray-700">Province</label>
+              <label
+                htmlFor="province"
+                className="text-lg font-medium text-gray-700"
+              >
+                Province
+              </label>
               <select
                 name="province"
                 value={province}
@@ -113,11 +139,18 @@ const CreateSurgery = () => {
                 <option value="gandaki province">Gandaki Province</option>
                 <option value="lumbini province">Lumbini Province</option>
                 <option value="karnali province">Karnali Province</option>
-                <option value="sudurpaschim province">Sudurpaschim Province</option>
+                <option value="sudurpaschim province">
+                  Sudurpaschim Province
+                </option>
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="district" className="text-lg font-medium text-gray-700">District</label>
+              <label
+                htmlFor="district"
+                className="text-lg font-medium text-gray-700"
+              >
+                District
+              </label>
               <select
                 name="district"
                 value={district}
@@ -135,7 +168,12 @@ const CreateSurgery = () => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="hospital_number" className="text-lg font-medium text-gray-700">Hospital Number</label>
+              <label
+                htmlFor="hospital_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Hospital Number
+              </label>
               <input
                 type="number"
                 value={hospital_number}
@@ -146,7 +184,12 @@ const CreateSurgery = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="contact_number" className="text-lg font-medium text-gray-700">Contact Number</label>
+              <label
+                htmlFor="contact_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Contact Number
+              </label>
               <input
                 type="tel"
                 value={contact_number}
@@ -157,7 +200,12 @@ const CreateSurgery = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="gender" className="text-lg font-medium text-gray-700">Gender</label>
+              <label
+                htmlFor="gender"
+                className="text-lg font-medium text-gray-700"
+              >
+                Gender
+              </label>
               <select
                 name="gender"
                 value={gender}
@@ -171,7 +219,12 @@ const CreateSurgery = () => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="occupation" className="text-lg font-medium text-gray-700">Occupation</label>
+              <label
+                htmlFor="occupation"
+                className="text-lg font-medium text-gray-700"
+              >
+                Occupation
+              </label>
               <select
                 name="occupation"
                 value={occupation}
@@ -187,7 +240,12 @@ const CreateSurgery = () => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="sports" className="text-lg font-medium text-gray-700">Involvement in Sports</label>
+              <label
+                htmlFor="sports"
+                className="text-lg font-medium text-gray-700"
+              >
+                Involvement in Sports
+              </label>
               <select
                 name="sports"
                 value={sports}
@@ -201,7 +259,6 @@ const CreateSurgery = () => {
               </select>
             </div>
           </div>
-
           <div className="flex justify-between mt-6">
             <button
               onClick={() => navigate("/dashboard")}
