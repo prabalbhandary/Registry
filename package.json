@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "cd client && npm i && vite",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vite": "^6.2.3"
+  }
+}
