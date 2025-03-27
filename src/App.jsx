@@ -44,6 +44,12 @@ const AppContent = () => {
   const location = useLocation();
   const isAuthenticated = localStorage.getItem("token")
 
+  if(!isAuthenticated){
+    return (
+      <Navigate to="/login" />
+    )
+  }
+
   return (
     <div className="flex">
       {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
