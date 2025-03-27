@@ -5,6 +5,82 @@ import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
 import skeleton from "../assets/skeleton.png";
 
+const SkeletonOverlay = ({ onPartClick }) => {
+  return (
+    <div className="relative w-full max-w-md mx-auto">
+      <img 
+        src={skeleton} 
+        alt="skeleton" 
+        className="w-full h-auto opacity-50" 
+      />
+      <div className="absolute inset-0">
+        {/* Head */}
+        <button 
+          onClick={() => onPartClick('head')}
+          className="absolute top-[10%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Spine */}
+        <button 
+          onClick={() => onPartClick('spine')}
+          className="absolute top-[30%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-32 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Left Shoulder */}
+        <button 
+          onClick={() => onPartClick('left-shoulder')}
+          className="absolute top-[25%] left-[35%] w-16 h-16 rounded-full hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Right Shoulder */}
+        <button 
+          onClick={() => onPartClick('right-shoulder')}
+          className="absolute top-[25%] right-[35%] w-16 h-16 rounded-full hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Left Arm */}
+        <button 
+          onClick={() => onPartClick('left-arm')}
+          className="absolute top-[35%] left-[30%] w-16 h-32 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Right Arm */}
+        <button 
+          onClick={() => onPartClick('right-arm')}
+          className="absolute top-[35%] right-[30%] w-16 h-32 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Pelvis */}
+        <button 
+          onClick={() => onPartClick('pelvis')}
+          className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-16 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Left Leg */}
+        <button 
+          onClick={() => onPartClick('left-leg')}
+          className="absolute top-[65%] left-[40%] w-16 h-32 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* Right Leg */}
+        <button 
+          onClick={() => onPartClick('right-leg')}
+          className="absolute top-[65%] right-[40%] w-16 h-32 hover:bg-blue-200/50 focus:outline-none"
+          style={{ cursor: 'pointer' }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const PatientSurgicalDetails = () => {
   const navigate = useNavigate();
   const [height, setHeight] = useState("");
@@ -12,6 +88,7 @@ const PatientSurgicalDetails = () => {
   const [bmi, setBmi] = useState("");
   const [beightonScore, setBeightonScore] = useState("");
   const [comorbidity, setComorbidity] = useState([]);
+  const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const location = useLocation();
   const [completedIndex, setCompletedIndex] = useState(
     location.state?.completedIndex || 1
@@ -24,6 +101,11 @@ const PatientSurgicalDetails = () => {
     }
   };
 
+  const handleBodyPartClick = (part) => {
+    setSelectedBodyPart(part);
+    toast.info(`Selected body part: ${part}`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -33,6 +115,7 @@ const PatientSurgicalDetails = () => {
         bmi,
         beightonScore,
         comorbidity,
+        selectedBodyPart,
       });
       setCompletedIndex(3);
       navigate("/patient-injury-details", { state: { completedIndex: 3 } });
@@ -49,105 +132,114 @@ const PatientSurgicalDetails = () => {
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
           Add Patient Surgical Details
         </h1>
-        <div className="flex justify-between items-center">
-          <div className="flex-1 pl-4">
-            <section className="bg-white shadow-md rounded-lg p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="height" className="text-gray-700">
-                    Height (in cm)
-                  </label>
-                  <input
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value)}
-                    type="number"
-                    id="height"
-                    className="border border-gray-300 rounded-md p-2"
-                    placeholder="Enter height in cm"
-                  />
-                </div>
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="height" className="text-gray-700">
+                  Height (in cm)
+                </label>
+                <input
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  type="number"
+                  id="height"
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  placeholder="Enter height in cm"
+                />
+              </div>
 
-                <div>
-                  <label htmlFor="weight" className="text-gray-700">
-                    Weight (in kg)
-                  </label>
-                  <input
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
-                    type="number"
-                    id="weight"
-                    className="border border-gray-300 rounded-md p-2"
-                    placeholder="Enter weight in kg"
-                  />
-                </div>
+              <div>
+                <label htmlFor="weight" className="text-gray-700">
+                  Weight (in kg)
+                </label>
+                <input
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  type="number"
+                  id="weight"
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  placeholder="Enter weight in kg"
+                />
+              </div>
 
-                <div>
-                  <label htmlFor="beightonScore" className="text-gray-700">
-                    Beighton Score
-                  </label>
-                  <select
-                    value={beightonScore}
-                    onChange={(e) => setBeightonScore(e.target.value)}
-                    id="beightonScore"
-                    className="border border-gray-300 rounded-md p-2"
-                  >
-                    <option value="normal">4 or less - Normal</option>
-                    <option value="laxity">
-                      5 or more - Ligamentous laxity
-                    </option>
-                  </select>
-                </div>
+              <div>
+                <label htmlFor="beightonScore" className="text-gray-700">
+                  Beighton Score
+                </label>
+                <select
+                  value={beightonScore}
+                  onChange={(e) => setBeightonScore(e.target.value)}
+                  id="beightonScore"
+                  className="w-full border border-gray-300 rounded-md p-2"
+                >
+                  <option value="normal">4 or less - Normal</option>
+                  <option value="laxity">
+                    5 or more - Ligamentous laxity
+                  </option>
+                </select>
+              </div>
 
-                <div>
-                  <label htmlFor="comorbidity" className="text-gray-700">
-                    Comorbidity
-                  </label>
-                  <Select
-                    value={comorbidity}
-                    onChange={(e) => setComorbidity(e)}
-                    id="comorbidity"
-                    isMulti
-                    className="border border-gray-300 rounded-md p-2"
-                    options={[
-                      { value: "Normal", label: "Normal" },
-                      { value: "Hypertension", label: "Hypertension" },
-                      { value: "Diabetes", label: "Diabetes" },
-                      { value: "Cardiac", label: "Cardiac" },
-                      { value: "Hypothyroidism", label: "Hypothyroidism" },
-                      { value: "COPD", label: "COPD" },
-                      { value: "Tuberculosis", label: "Tuberculosis" },
-                      { value: "Liver diseases", label: "Liver diseases" },
-                    ]}
-                  />
-                </div>
+              <div>
+                <label htmlFor="comorbidity" className="text-gray-700">
+                  Comorbidity
+                </label>
+                <Select
+                  value={comorbidity}
+                  onChange={(e) => setComorbidity(e)}
+                  id="comorbidity"
+                  isMulti
+                  className="border border-gray-300 rounded-md"
+                  options={[
+                    { value: "Normal", label: "Normal" },
+                    { value: "Hypertension", label: "Hypertension" },
+                    { value: "Diabetes", label: "Diabetes" },
+                    { value: "Cardiac", label: "Cardiac" },
+                    { value: "Hypothyroidism", label: "Hypothyroidism" },
+                    { value: "COPD", label: "COPD" },
+                    { value: "Tuberculosis", label: "Tuberculosis" },
+                    { value: "Liver diseases", label: "Liver diseases" },
+                  ]}
+                />
+              </div>
 
-                <div>
-                  <p className="font-semibold text-gray-700">BMI Score</p>
-                  <p className="text-xl text-gray-800">{bmi || "0.00"}</p>
-                </div>
+              <div>
+                <p className="font-semibold text-gray-700">BMI Score</p>
+                <p className="text-xl text-gray-800">{bmi || "0.00"}</p>
+              </div>
 
-                <div className="flex justify-between space-x-4">
-                  <button
-                    onClick={() => navigate(-1)}
-                    type="button"
-                    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={calculateBmi}
-                    type="submit"
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-                  >
-                    Next
-                  </button>
+              {selectedBodyPart && (
+                <div>
+                  <p className="font-semibold text-gray-700">Selected Body Part</p>
+                  <p className="text-xl text-gray-800">{selectedBodyPart}</p>
                 </div>
-              </form>
-            </section>
-          </div>
+              )}
+            </div>
+
+            <div className="flex justify-between space-x-4 mt-6">
+              <button
+                onClick={() => navigate(-1)}
+                type="button"
+                className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg"
+              >
+                Back
+              </button>
+              <button
+                onClick={calculateBmi}
+                type="submit"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg"
+              >
+                Next
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="flex justify-center mt-6">
-          <img src={skeleton} alt="skeleton" />
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-center mb-4">
+            Click on Body Parts for Details
+          </h2>
+          <SkeletonOverlay onPartClick={handleBodyPartClick} />
         </div>
       </section>
     </>
