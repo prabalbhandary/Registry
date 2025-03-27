@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
-import skeleton from "../assets/skeleton.png";
 import { useLocation } from "react-router-dom";
 
 const PatientInjuryDetails = () => {
@@ -15,9 +14,6 @@ const PatientInjuryDetails = () => {
       <section>
         <h1>Add Patient Injury Details</h1>
         <p>Add Patient Injury Details</p>
-        <div>
-          <img src={skeleton} alt="skeleton" />
-        </div>
       </section>
       <section>
         <form>
