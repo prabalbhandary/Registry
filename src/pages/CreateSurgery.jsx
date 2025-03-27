@@ -15,7 +15,7 @@ const CreateSurgery = () => {
   const [hospital_number, setHospital_number] = useState("");
   const [contact_number, setContact_number] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [sports, setSports] = useState("");
+  const [sports_involvement, setSports_involvement] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
 
   const handleSubmit = async (e) => {
@@ -32,7 +32,7 @@ const CreateSurgery = () => {
         hospital_number,
         contact_number,
         occupation,
-        sports,
+        sports_involvement,
       });
 
       setCompletedIndex(1);
@@ -248,8 +248,8 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
               </label>
               <select
                 name="sports"
-                value={sports}
-                onChange={(e) => setSports(e.target.value)}
+                value={sports_involvement}
+                onChange={(e) => setSports_involvement(e.target.value)}
                 id="sports"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
