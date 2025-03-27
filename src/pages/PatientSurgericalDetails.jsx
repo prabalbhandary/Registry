@@ -50,9 +50,6 @@ const PatientSurgicalDetails = () => {
           Add Patient Surgical Details
         </h1>
         <div className="flex justify-between items-center">
-          <div className="flex-1">
-            <img src={skeleton} alt="skeleton" />
-          </div>
           <div className="flex-1 pl-4">
             <section className="bg-white shadow-md rounded-lg p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -148,6 +145,9 @@ const PatientSurgicalDetails = () => {
               </form>
             </section>
           </div>
+        </div>
+        <div className="flex justify-center mt-6">
+          <img src={skeleton} alt="skeleton" />
         </div>
       </section>
     </>
