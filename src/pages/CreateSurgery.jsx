@@ -175,7 +175,7 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
                 Hospital Number
               </label>
               <input
-                type="number"
+                type="text"
                 value={hospital_number}
                 onChange={(e) => setHospital_number(e.target.value)}
                 id="hospital_number"
@@ -191,7 +191,7 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
                 Contact Number
               </label>
               <input
-                type="tel"
+                type="text"
                 value={contact_number}
                 onChange={(e) => setContact_number(e.target.value)}
                 id="contact_number"
