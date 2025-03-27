@@ -195,7 +195,7 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
                 value={contact_number}
                 onChange={(e) => setContact_number(e.target.value)}
                 id="contact_number"
-                name="contact_number"
+                name="phone_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
