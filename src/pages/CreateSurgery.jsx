@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { URL } from "../components/URL";
 
 const CreateSurgery = () => {
   const navigate = useNavigate();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [nationality, setNationality] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [hospital_number, setHospital_number] = useState("");
-  const [contact_number, setContact_number] = useState("");
+  const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
   const [sports_involvement, setSports_involvement] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
@@ -21,22 +23,24 @@ const CreateSurgery = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log({
-        firstName,
-        lastName,
+      const res = await axios.post(`${URL}/patient-detail`, {
+        first_name,
+        last_name,
         age,
         gender,
         nationality,
         province,
         district,
         hospital_number,
-        contact_number,
+        phone_number,
         occupation,
         sports_involvement,
       });
-
-      setCompletedIndex(1);
-navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        setCompletedIndex(1);
+        navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -62,10 +66,10 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
               </label>
               <input
                 type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={first_name}
+                onChange={(e) => setFirst_name(e.target.value)}
                 id="firstName"
-                name="firstName"
+                name="first_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -78,10 +82,10 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
               </label>
               <input
                 type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={last_name}
+                onChange={(e) => setLast_name(e.target.value)}
                 id="lastName"
-                name="lastName"
+                name="last_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -192,8 +196,8 @@ navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
               </label>
               <input
                 type="text"
-                value={contact_number}
-                onChange={(e) => setContact_number(e.target.value)}
+                value={phone_number}
+                onChange={(e) => setPhone_number(e.target.value)}
                 id="contact_number"
                 name="phone_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
