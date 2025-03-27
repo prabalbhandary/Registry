@@ -13,7 +13,9 @@ const PatientSurgicalDetails = () => {
   const [beightonScore, setBeightonScore] = useState("");
   const [comorbidity, setComorbidity] = useState([]);
   const location = useLocation();
-  const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
+  const [completedIndex, setCompletedIndex] = useState(
+    location.state?.completedIndex || 1
+  );
 
   const calculateBmi = () => {
     if (height && weight) {
@@ -92,8 +94,10 @@ const PatientSurgicalDetails = () => {
                     id="beightonScore"
                     className="border border-gray-300 rounded-md p-2"
                   >
-                    <option value="">4 or less - Normal</option>
-                    <option value="">5 or more - Ligamentous laxity</option>
+                    <option value="normal">4 or less - Normal</option>
+                    <option value="laxity">
+                      5 or more - Ligamentous laxity
+                    </option>
                   </select>
                 </div>
 
