@@ -42,13 +42,7 @@ const App = () => {
 
 const AppContent = () => {
   const location = useLocation();
-  const isAuthenticated = localStorage.getItem("token")
-
-  if(!isAuthenticated){
-    return (
-      <Navigate to="/login" />
-    )
-  }
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <div className="flex">
