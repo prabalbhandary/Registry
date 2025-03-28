@@ -8,31 +8,31 @@ const SecondNavbar = ({ completedIndex = 0 }) => {
         to="/create-surgery" 
         className={completedIndex >= 0 ? "text-blue-600" : "text-gray-400"}
       >
-        Step 1: Create Surgery
+        Create Surgery
       </Link>
       <Link 
         to="/add-surgerical-details" 
         className={completedIndex >= 1 ? "text-blue-600" : "text-gray-400"}
       >
-        Step 2: Add Surgical Details
+        Add Surgical Details
       </Link>
       <Link 
         to="/patient-surgical-details" 
         className={completedIndex >= 2 ? "text-blue-600" : "text-gray-400"}
       >
-        Step 3: Patient Surgical Details
+        Patient Surgical Details
       </Link>
       <Link 
         to="/patient-injury-details" 
         className={completedIndex >= 3 ? "text-blue-600" : "text-gray-400"}
       >
-        Step 4: Patient Injury Details
+        Patient Injury Details
       </Link>
       <Link 
         to="/diagnosis" 
         className={completedIndex >= 4 ? "text-blue-600" : "text-gray-400"}
       >
-        Step 5: Diagnosis
+        Diagnosis
       </Link>
     </nav>
   );
