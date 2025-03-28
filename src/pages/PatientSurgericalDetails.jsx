@@ -69,7 +69,7 @@ const PatientSurgicalDetails = () => {
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const location = useLocation();
   const [completedIndex, setCompletedIndex] = useState(
-    location.state?.completedIndex || 1
+    location.state?.completedIndex || 2
   );
 
   const calculateBmi = () => {

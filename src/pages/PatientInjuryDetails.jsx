@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 const PatientInjuryDetails = () => {
   const location = useLocation();
   const [completedIndex, setCompletedIndex] = useState(
-    location.state?.completedIndex || 1
+    location.state?.completedIndex || 3
   );
   return (
     <>
