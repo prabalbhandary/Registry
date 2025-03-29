@@ -31,6 +31,18 @@ import AddSurgericalDetails from "./pages/AddSurgericalDetails";
 import PatientSurgericalDetails from "./pages/PatientSurgericalDetails";
 import PatientInjuryDetails from "./pages/PatientInjuryDetails";
 import Diagnosis from "./pages/Diagnosis";
+import Clavicle from "./components/skeletonpart/upperlimb/Clavicle";
+import Scapula from "./components/skeletonpart/upperlimb/Scapula";
+import Humerus from "./components/skeletonpart/upperlimb/Humerus";
+import Elbow from "./components/skeletonpart/upperlimb/Elbow";
+import RadiusAndUlna from "./components/skeletonpart/upperlimb/RadiusAndUlna";
+import Hand from "./components/skeletonpart/upperlimb/Hand";
+import Pelvis from "./components/skeletonpart/lowerlimb/Pelvis";
+import Acetabulum from "./components/skeletonpart/lowerlimb/Acetabulum";
+import Femur from "./components/skeletonpart/lowerlimb/Femur";
+import TibiaAndFibula from "./components/skeletonpart/lowerlimb/TibiaAndFibula";
+import Patella from "./components/skeletonpart/lowerlimb/Patella";
+import Foot from "./components/skeletonpart/lowerlimb/Foot";
 
 const App = () => {
   return (
@@ -84,6 +96,18 @@ const AppContent = () => {
             <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
             <Route path="/assistants" element={isAuthenticated ? <Assistants /> : <Navigate to="/login" />} />
             <Route path="/hospitals" element={isAuthenticated ? <Hospitals /> : <Navigate to="/login" />} />
+            <Route path="/clavicle" element={isAuthenticated ? <Clavicle /> : <Navigate to="/login" />} />
+            <Route path="/scapula" element={isAuthenticated ? <Scapula /> : <Navigate to="/login" />} />
+            <Route path="/humerus" element={isAuthenticated ? <Humerus /> : <Navigate to="/login" />} />
+            <Route path="/elbow" element={isAuthenticated ? <Elbow /> : <Navigate to="/login" />} />
+            <Route path="/radius_and_ulna" element={isAuthenticated ? <RadiusAndUlna /> : <Navigate to="/login" />} />
+            <Route path="/hand" element={isAuthenticated ? <Hand /> : <Navigate to="/login" />} />
+            <Route path="/pelvis" element={isAuthenticated ? <Pelvis /> : <Navigate to="/login" />} />
+            <Route path="/acetabulum" element={isAuthenticated ? <Acetabulum /> : <Navigate to="/login" />} />
+            <Route path="/femur" element={isAuthenticated ? <Femur /> : <Navigate to="/login" />} />
+            <Route path="/tibia_and_fibula" element={isAuthenticated ? <TibiaAndFibula /> : <Navigate to="/login" />} />
+            <Route path="/patella" element={isAuthenticated ? <Patella /> : <Navigate to="/login" />} />
+            <Route path="/foot" element={isAuthenticated ? <Foot /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </div>

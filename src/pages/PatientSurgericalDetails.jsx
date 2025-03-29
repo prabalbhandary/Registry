@@ -8,22 +8,24 @@ import skeleton from "../assets/skeleton.png";
 const SkeletonOverlay = ({ onPartClick }) => {
   const bodyParts = {
     upperLimb: [
-      { name: 'Clavicle', top: '20%', left: '45%', width: '10%', height: '5%' },
-      { name: 'Scapula', top: '25%', left: '35%', width: '10%', height: '10%' },
-      { name: 'Humerus', top: '35%', left: '30%', width: '10%', height: '20%' },
-      { name: 'Elbow', top: '45%', left: '25%', width: '8%', height: '8%' },
-      { name: 'Radius & Ulna', top: '50%', left: '20%', width: '10%', height: '20%' },
-      { name: 'Hand', top: '70%', left: '15%', width: '10%', height: '10%' }
+      { name: 'Clavicle', top: '20%', left: '45%', width: '10%', height: '5%', link: "/clavicle" },
+      { name: 'Scapula', top: '25%', left: '35%', width: '10%', height: '10%', link: "/scapula" },
+      { name: 'Humerus', top: '35%', left: '30%', width: '10%', height: '20%', link: "/humerus" },
+      { name: 'Elbow', top: '45%', left: '25%', width: '8%', height: '8%', link: "/elbow" },
+      { name: 'Radius & Ulna', top: '50%', left: '20%', width: '10%', height: '20%', link: "/radius_and_ulna" },
+      { name: 'Hand', top: '70%', left: '15%', width: '10%', height: '10%', link: "/hand" }
     ],
     lowerLimb: [
-      { name: 'Pelvis', top: '50%', left: '42%', width: '16%', height: '10%' },
-      { name: 'Acetabulum', top: '52%', left: '45%', width: '10%', height: '5%' },
-      { name: 'Femur', top: '60%', left: '40%', width: '10%', height: '20%' },
-      { name: 'Tibia & Fibula', top: '75%', left: '40%', width: '10%', height: '20%' },
-      { name: 'Patella', top: '65%', left: '45%', width: '5%', height: '5%' },
-      { name: 'Foot', top: '90%', left: '40%', width: '10%', height: '10%' }
+      { name: 'Pelvis', top: '50%', left: '42%', width: '16%', height: '10%', link: "/pelvis" },
+      { name: 'Acetabulum', top: '52%', left: '45%', width: '10%', height: '5%', link: "/acetabulum" },
+      { name: 'Femur', top: '60%', left: '40%', width: '10%', height: '20%', link: "/femur" },
+      { name: 'Tibia & Fibula', top: '75%', left: '40%', width: '10%', height: '20%', link: "/tibia_and_fibula" },
+      { name: 'Patella', top: '65%', left: '45%', width: '5%', height: '5%', link: "/patella" },
+      { name: 'Foot', top: '90%', left: '40%', width: '10%', height: '10%', link: "/foot" }
     ]
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="relative w-full max-w-md mx-auto">
@@ -48,7 +50,7 @@ const SkeletonOverlay = ({ onPartClick }) => {
               }}
               title={part.name}
             >
-              <span className="text-xs text-white bg-blue-500/50 rounded px-1">
+              <span onClick={() => navigate(part.link)} className="text-xs text-white bg-blue-500/50 rounded px-1">
                 {part.name}
               </span>
             </button>
