@@ -9,6 +9,7 @@ const AddHospital = () => {
   const [hospitals, setHospitals] = useState([]);
   const [inactiveHospitals, setInactiveHospitals] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
 
   // Fetch hospitals from the server when the component mounts
   useEffect(() => {
@@ -51,6 +52,7 @@ const AddHospital = () => {
       console.error('Error adding hospital:', error);
       const errorMessage = error?.response?.data?.message || 'An error occurred';
       toast.error(errorMessage);
+      setError(error.response.data.error);
     }
   };
 
@@ -92,6 +94,7 @@ const AddHospital = () => {
     } catch (error) {
       console.error('Toggle status error:', error);
       toast.error(error.message || 'Failed to update hospital status.');
+      setError(error.response.data.error);
     }
   };
 
@@ -116,6 +119,7 @@ const AddHospital = () => {
     } catch (error) {
       console.error('Unlink hospital error:', error);
       toast.error(error.message || 'Failed to unlink hospital.');
+      setError(error.response.data.error);
     }
   };
 
@@ -132,6 +136,14 @@ const AddHospital = () => {
   return (
     <>
       <title>Your Hospitals - Trauma Registry</title>
+
+      {
+        error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>  
+        )
+      }
 
       {/* Section for Searching and Adding Existing Hospitals */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">

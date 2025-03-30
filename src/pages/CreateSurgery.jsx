@@ -19,6 +19,7 @@ const CreateSurgery = () => {
   const [occupation, setOccupation] = useState("");
   const [sports_involvement, setSports_involvement] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +44,7 @@ const CreateSurgery = () => {
       }
     } catch (error) {
       toast.error(error.response.data.message);
+      setError(error.response.data.error);
     }
   };
 
@@ -55,6 +57,15 @@ const CreateSurgery = () => {
           Add Patient Information
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            {
+              error && (
+                <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
+                  {error}
+                </div>
+              )
+            }
+          </div>
           {/* Form Fields Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">

@@ -8,6 +8,7 @@ const AddAssistant = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSurgeons, setActiveSurgeons] = useState([]);
   const [inactiveSurgeons, setInactiveSurgeons] = useState([]);
+  const [error, setError] = useState('');
 
   // Fetch assistant surgeons from the server when the component mounts
   useEffect(() => {
@@ -49,6 +50,7 @@ const AddAssistant = () => {
       console.error('Error adding assistant surgeon:', error);
       const errorMessage = error?.response?.data?.message || 'An error occurred';
       toast.error(errorMessage);
+      setError(error.response.data.error);
     }
   };
 
@@ -114,6 +116,7 @@ const AddAssistant = () => {
     } catch (error) {
       console.error('Unlink surgeon error:', error);
       toast.error(error.message || 'Failed to unlink surgeon.');
+      setError(error.response.data.error);
     }
   };
 
@@ -129,6 +132,14 @@ const AddAssistant = () => {
   return (
     <>
       <title>Assistant Surgeons - Trauma Registry</title>
+
+      {
+        error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )
+      }
       
       {/* Section for Searching and Adding Existing Assistant Surgeons */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
