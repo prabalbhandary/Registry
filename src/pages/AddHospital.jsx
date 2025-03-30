@@ -137,14 +137,6 @@ const AddHospital = () => {
     <>
       <title>Your Hospitals - Trauma Registry</title>
 
-      {
-        error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
-          </div>  
-        )
-      }
-
       {/* Section for Searching and Adding Existing Hospitals */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Existing Hospitals</h1>
@@ -263,6 +255,13 @@ const AddHospital = () => {
             </tbody>
           </table>
         </div>
+        {
+        error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>  
+        )
+      }
       </section>
 
       <hr className="my-6 border-gray-300" />

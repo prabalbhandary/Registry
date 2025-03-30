@@ -57,15 +57,6 @@ const CreateSurgery = () => {
           Add Patient Information
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            {
-              error && (
-                <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
-                  {error}
-                </div>
-              )
-            }
-          </div>
           {/* Form Fields Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
@@ -278,6 +269,13 @@ const CreateSurgery = () => {
                 <option value="no sports">No Sports</option>
               </select>
             </div>
+          </div>
+          <div>
+            {error && (
+              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
+                {error}
+              </div>
+            )}
           </div>
           <div className="flex justify-between mt-6">
             <button
