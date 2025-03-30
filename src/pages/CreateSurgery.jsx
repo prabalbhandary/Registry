@@ -119,6 +119,7 @@ const CreateSurgery = () => {
                 id="nationality"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
+                <option value="">Select Nationality</option>
                 <option value="nepali">Nepali</option>
                 <option value="non-nepali">Non-Nepali</option>
               </select>
@@ -137,7 +138,8 @@ const CreateSurgery = () => {
                 id="province"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                <option value="province no1">Koshi Province</option>
+                <option value="">Select Province</option>
+                <option value="koshi province">Koshi Province</option>
                 <option value="madesh province">Madesh Province</option>
                 <option value="bagmati province">Bagmati Province</option>
                 <option value="gandaki province">Gandaki Province</option>
@@ -162,6 +164,7 @@ const CreateSurgery = () => {
                 id="district"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
+                <option value="">Select District</option>
                 <option value="kathmandu">Kathmandu</option>
                 <option value="bhaktapur">Bhaktapur</option>
                 <option value="lalitpur">Lalitpur</option>
@@ -217,6 +220,7 @@ const CreateSurgery = () => {
                 id="gender"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
+                <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
@@ -257,6 +261,7 @@ const CreateSurgery = () => {
                 id="sports"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
+                <option value="">Select Involvement in Sports</option>
                 <option value="professional">Professional</option>
                 <option value="recreational">Recreational</option>
                 <option value="no sports">No Sports</option>
