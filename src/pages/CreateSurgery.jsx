@@ -137,7 +137,7 @@ const CreateSurgery = () => {
                 id="province"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                <option value="province no1">Province Number 1</option>
+                <option value="province no1">Koshi Province</option>
                 <option value="madesh province">Madesh Province</option>
                 <option value="bagmati province">Bagmati Province</option>
                 <option value="gandaki province">Gandaki Province</option>
