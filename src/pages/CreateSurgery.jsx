@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "../components/URL";
@@ -21,7 +21,6 @@ const CreateSurgery = () => {
   const [completedIndex, setCompletedIndex] = useState(0);
   const [error, setError] = useState("");
 
-  // Track specific input errors
   const [fieldErrors, setFieldErrors] = useState({
     first_name: "",
     last_name: "",
@@ -36,10 +35,11 @@ const CreateSurgery = () => {
     sports_involvement: "",
   });
 
+  const [districts, setDistricts] = useState([]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset field errors
     setFieldErrors({
       first_name: "",
       last_name: "",
@@ -57,7 +57,6 @@ const CreateSurgery = () => {
     let formValid = true;
     let newErrors = {};
 
-    // Validate each field
     if (!first_name) {
       formValid = false;
       newErrors.first_name = "First name is required.";
@@ -105,7 +104,7 @@ const CreateSurgery = () => {
 
     if (!formValid) {
       setFieldErrors(newErrors);
-      return; // Stop form submission if there are validation errors
+      return;
     }
 
     try {
@@ -125,11 +124,68 @@ const CreateSurgery = () => {
       if (res.status === 201) {
         toast.success(res.data.message);
         setCompletedIndex(1);
-        navigate("/add-surgerical-details", { state: { completedIndex: 1 } });
+        const patientId = res.data.data.id;
+        localStorage.setItem("patientId", patientId);
+        navigate(`/add-surgerical-details/${patientId}`, { state: { completedIndex: 1 } });
       }
     } catch (error) {
       toast.error(error.response.data.message);
       setError(error.response.data.error);
+    }
+  };
+
+  const handleProvinceChange = (e) => {
+    const selectedProvince = e.target.value;
+    setProvince(selectedProvince);
+
+    switch (selectedProvince) {
+      case "koshi province":
+        setDistricts([
+          "Jhapa", "Illam", "Paachthar", "Taplejung", "Sankhuwasawa", 
+          "Therathum", "Bhojpur", "Dhankuta", "Khotang", "Sunsari", 
+          "Morong", "Solukhumbu", "Okhaldhunga", "Udaypur"
+        ]);
+        break;
+      case "madesh province":
+        setDistricts([
+          "Parsa", "Bara", "Rautahat", "Sarlahi", "Siraha", "Dhanusha", 
+          "Saptari", "Mahottari"
+        ]);
+        break;
+      case "bagmati province":
+        setDistricts([
+          "Kathmandu", "Makwanpur", "Lalitpur", "Bhaktapur", "Nuwakot", 
+          "Rasuwa", "Dhading", "Kavrepalanchok", "Sindhupalchok", 
+          "Sindhuli", "Dolakha", "Ramechhap", "Chitwan"
+        ]);
+        break;
+      case "gandaki province":
+        setDistricts([
+          "Gorkha", "Tanahu", "Syanja", "Lamjung", "Kaski", "Nawalparashi East", 
+          "Manang", "Mustang", "Parbat", "Baglung", "Myagdi"
+        ]);
+        break;
+      case "lumbini province":
+        setDistricts([
+          "Kapilvastu", "Gulmi", "Rupandehi", "Banke", "Argakhachi", "Bardiya", 
+          "Dang", "Rukum East", "Pyuthan", "Nawalparashi West", "Palpa", "Rolpa"
+        ]);
+        break;
+      case "karnali province":
+        setDistricts([
+          "Rukum West", "Salyan", "Dolpa", "Jumla", "Mugu", "Humla", "Kalikot", 
+          "Jajarkot", "Dailekh", "Surkhet"
+        ]);
+        break;
+      case "sudurpaschim province":
+        setDistricts([
+          "Darchula", "Baitadi", "Dadeldhura", "Kanchanpur", "Bajhang", "Bajura", 
+          "Doti", "Achham", "Kailali"
+        ]);
+        break;
+      default:
+        setDistricts([]);
+        break;
     }
   };
 
@@ -138,18 +194,11 @@ const CreateSurgery = () => {
       <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
-          Add Patient Information
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">Add Patient Information</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label
-                htmlFor="firstName"
-                className="text-lg font-medium text-gray-700"
-              >
-                First Name
-              </label>
+              <label htmlFor="firstName" className="text-lg font-medium text-gray-700">First Name</label>
               <input
                 type="text"
                 value={first_name}
@@ -158,17 +207,10 @@ const CreateSurgery = () => {
                 name="first_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.first_name && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.first_name}</p>
-              )}
+              {fieldErrors.first_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.first_name}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="lastName"
-                className="text-lg font-medium text-gray-700"
-              >
-                Last Name
-              </label>
+              <label htmlFor="lastName" className="text-lg font-medium text-gray-700">Last Name</label>
               <input
                 type="text"
                 value={last_name}
@@ -177,17 +219,10 @@ const CreateSurgery = () => {
                 name="last_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.last_name && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.last_name}</p>
-              )}
+              {fieldErrors.last_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.last_name}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="age"
-                className="text-lg font-medium text-gray-700"
-              >
-                Age
-              </label>
+              <label htmlFor="age" className="text-lg font-medium text-gray-700">Age</label>
               <input
                 type="number"
                 value={age}
@@ -196,17 +231,10 @@ const CreateSurgery = () => {
                 name="age"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.age && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>
-              )}
+              {fieldErrors.age && <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="nationality"
-                className="text-lg font-medium text-gray-700"
-              >
-                Nationality
-              </label>
+              <label htmlFor="nationality" className="text-lg font-medium text-gray-700">Nationality</label>
               <select
                 name="nationality"
                 value={nationality}
@@ -218,21 +246,14 @@ const CreateSurgery = () => {
                 <option value="nepali">Nepali</option>
                 <option value="non-nepali">Non-Nepali</option>
               </select>
-              {fieldErrors.nationality && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.nationality}</p>
-              )}
+              {fieldErrors.nationality && <p className="text-red-500 text-sm mt-1">{fieldErrors.nationality}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="province"
-                className="text-lg font-medium text-gray-700"
-              >
-                Province
-              </label>
+              <label htmlFor="province" className="text-lg font-medium text-gray-700">Province</label>
               <select
                 name="province"
                 value={province}
-                onChange={(e) => setProvince(e.target.value)}
+                onChange={handleProvinceChange}
                 id="province"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
@@ -243,21 +264,12 @@ const CreateSurgery = () => {
                 <option value="gandaki province">Gandaki Province</option>
                 <option value="lumbini province">Lumbini Province</option>
                 <option value="karnali province">Karnali Province</option>
-                <option value="sudurpaschim province">
-                  Sudurpaschim Province
-                </option>
+                <option value="sudurpaschim province">Sudurpaschim Province</option>
               </select>
-              {fieldErrors.province && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.province}</p>
-              )}
+              {fieldErrors.province && <p className="text-red-500 text-sm mt-1">{fieldErrors.province}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="district"
-                className="text-lg font-medium text-gray-700"
-              >
-                District
-              </label>
+              <label htmlFor="district" className="text-lg font-medium text-gray-700">District</label>
               <select
                 name="district"
                 value={district}
@@ -266,25 +278,16 @@ const CreateSurgery = () => {
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select District</option>
-                <option value="kathmandu">Kathmandu</option>
-                <option value="bhaktapur">Bhaktapur</option>
-                <option value="lalitpur">Lalitpur</option>
-                <option value="pokhara">Pokhara</option>
-                <option value="chitwan">Chitwan</option>
-                <option value="baglung">Baglung</option>
-                <option value="gorkha">Gorkha</option>
+                {districts.map((districtName) => (
+                  <option key={districtName} value={districtName}>
+                    {districtName}
+                  </option>
+                ))}
               </select>
-              {fieldErrors.district && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.district}</p>
-              )}
+              {fieldErrors.district && <p className="text-red-500 text-sm mt-1">{fieldErrors.district}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="hospital_number"
-                className="text-lg font-medium text-gray-700"
-              >
-                Hospital Number
-              </label>
+              <label htmlFor="hospital_number" className="text-lg font-medium text-gray-700">Hospital Number</label>
               <input
                 type="text"
                 value={hospital_number}
@@ -293,17 +296,10 @@ const CreateSurgery = () => {
                 name="hospital_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.hospital_number && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.hospital_number}</p>
-              )}
+              {fieldErrors.hospital_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.hospital_number}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="contact_number"
-                className="text-lg font-medium text-gray-700"
-              >
-                Contact Number
-              </label>
+              <label htmlFor="contact_number" className="text-lg font-medium text-gray-700">Contact Number</label>
               <input
                 type="text"
                 value={phone_number}
@@ -312,17 +308,10 @@ const CreateSurgery = () => {
                 name="phone_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.phone_number && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.phone_number}</p>
-              )}
+              {fieldErrors.phone_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.phone_number}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="gender"
-                className="text-lg font-medium text-gray-700"
-              >
-                Gender
-              </label>
+              <label htmlFor="gender" className="text-lg font-medium text-gray-700">Gender</label>
               <select
                 name="gender"
                 value={gender}
@@ -335,17 +324,10 @@ const CreateSurgery = () => {
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.gender && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>
-              )}
+              {fieldErrors.gender && <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="occupation"
-                className="text-lg font-medium text-gray-700"
-              >
-                Occupation
-              </label>
+              <label htmlFor="occupation" className="text-lg font-medium text-gray-700">Occupation</label>
               <select
                 name="occupation"
                 value={occupation}
@@ -359,17 +341,10 @@ const CreateSurgery = () => {
                 <option value="self-employed">Self-employed</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.occupation && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.occupation}</p>
-              )}
+              {fieldErrors.occupation && <p className="text-red-500 text-sm mt-1">{fieldErrors.occupation}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="sports_involvement"
-                className="text-lg font-medium text-gray-700"
-              >
-                Sports Involvement
-              </label>
+              <label htmlFor="sports_involvement" className="text-lg font-medium text-gray-700">Sports Involvement</label>
               <input
                 type="text"
                 value={sports_involvement}
@@ -378,18 +353,13 @@ const CreateSurgery = () => {
                 name="sports_involvement"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.sports_involvement && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.sports_involvement}</p>
-              )}
+              {fieldErrors.sports_involvement && <p className="text-red-500 text-sm mt-1">{fieldErrors.sports_involvement}</p>}
             </div>
           </div>
 
-          {/* Error Display */}
           <div>
             {error && (
-              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
-                {error}
-              </div>
+              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">{error}</div>
             )}
           </div>
           <div className="flex justify-between mt-6">
@@ -404,7 +374,7 @@ const CreateSurgery = () => {
               type="submit"
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
             >
-              Next
+              Save and Next
             </button>
           </div>
         </form>
