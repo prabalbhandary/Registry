@@ -85,8 +85,8 @@ const AppContent = () => {
             <Route path="/patients" element={isAuthenticated ? <Patients /> : <Navigate to="/login" />} />
             <Route path="/users" element={isAuthenticated ? <Users /> : <Navigate to="/login" />} />
             <Route path="/create-surgery" element={isAuthenticated ? <CreateSurgery /> : <Navigate to="/login" />} />
-            <Route path="/add-surgerical-details" element={isAuthenticated ? <AddSurgericalDetails /> : <Navigate to="/login" />} />
-            <Route path="/patient-surgical-details" element={isAuthenticated ? <PatientSurgericalDetails /> : <Navigate to="/login" />} />
+            <Route path="/add-surgerical-details/:id" element={isAuthenticated ? <AddSurgericalDetails /> : <Navigate to="/login" />} />
+            <Route path="/patient/:id/patient-surgical-details" element={isAuthenticated ? <PatientSurgericalDetails /> : <Navigate to="/login" />} />
             <Route path="/patient-injury-details" element={isAuthenticated ? <PatientInjuryDetails /> : <Navigate to="/login" />} />
             <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/login" />} />
             <Route path="/create-patient" element={isAuthenticated ? <CreatePatient /> : <Navigate to="/login" />} />
