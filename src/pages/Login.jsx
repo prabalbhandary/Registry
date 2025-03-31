@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,17 +20,12 @@ const Login = () => {
         toast.success(res.data.message);
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        setError(null);
+        // setError(null);
         navigate("/dashboard");
       }
     } catch (error) {
-      console.error(error);
-      if (error.response && error.response.data.errors) {
-        setError(error.response.data.errors);
-      } else {
-        toast.error(error.response?.data?.message || "An unexpected error occurred.");
-        setError({ general: error.response?.data?.message || "An unexpected error occurred." });
-      }
+      toast.error(error.response.data.message);
+      // setError(error.response.data.errors);
     }
   };
 
@@ -50,7 +45,7 @@ const Login = () => {
               Sign In to Trauma Registry
             </h1>
 
-            {error && (
+            {/* {error && (
               <div
                 className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
                 role="alert"
@@ -68,7 +63,7 @@ const Login = () => {
                   })}
                 </ul>
               </div>
-            )}
+            )} */}
 
             <section className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">

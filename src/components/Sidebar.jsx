@@ -35,7 +35,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-[100%] w-[350px] p-6 bg-gray-300 text-black">
+    <div className="min-h-screen fixed w-[350px] p-6 bg-gray-300 text-black">
       <h1 onClick={() => navigate("/")} className="text-2xl font-semibold text-gray-800 mb-6 cursor-pointer">Trauma Registry</h1>
 
       <div
