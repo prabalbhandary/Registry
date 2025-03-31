@@ -24,11 +24,12 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
+      console.error(error);
       if (error.response && error.response.data.errors) {
         setError(error.response.data.errors);
       } else {
-        toast.error(error.response.data.message);
-        setError({ general: error.response.data.message });
+        toast.error(error.response?.data?.message || "An unexpected error occurred.");
+        setError({ general: error.response?.data?.message || "An unexpected error occurred." });
       }
     }
   };
@@ -55,11 +56,16 @@ const Login = () => {
                 role="alert"
               >
                 <ul className="mt-2">
-                  {Object.keys(error).map((field, index) => (
-                    <li key={index} className="capitalize">
-                      {error[field].join(", ")}
-                    </li>
-                  ))}
+                  {Object.keys(error).map((field, index) => {
+                    const errorMessages = Array.isArray(error[field])
+                      ? error[field]
+                      : [error[field]];
+                    return (
+                      <li key={index} className="capitalize">
+                        {errorMessages.join(", ")}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
