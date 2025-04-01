@@ -16,7 +16,7 @@ const Dashboard = () => {
       <div className="flex">
 
         {/* Main Content */}
-        <div className="flex-1 ml-[350px] p-6 overflow-y-auto">
+        <div className="p-6 overflow-y-auto">
           {/* Your Dashboard content */}
           <section>
             <p className="text-xl font-semibold text-gray-700 mb-4">LIVE STATS</p>
