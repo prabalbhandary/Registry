@@ -9,7 +9,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,12 +19,10 @@ const Login = () => {
         toast.success(res.data.message);
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        // setError(null);
         navigate("/dashboard");
       }
     } catch (error) {
-      toast.error(error.response.data.message);
-      // setError(error.response.data.errors);
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -45,28 +42,11 @@ const Login = () => {
               Sign In to Trauma Registry
             </h1>
 
-            {/* {error && (
-              <div
-                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
-                role="alert"
-              >
-                <ul className="mt-2">
-                  {Object.keys(error).map((field, index) => {
-                    const errorMessages = Array.isArray(error[field])
-                      ? error[field]
-                      : [error[field]];
-                    return (
-                      <li key={index} className="capitalize">
-                        {errorMessages.join(", ")}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )} */}
-
             <section className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Your Email
               </label>
               <input
@@ -81,7 +61,10 @@ const Login = () => {
             </section>
 
             <section className="mb-6 relative">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Your Password
               </label>
               <input
@@ -98,22 +81,30 @@ const Login = () => {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
               >
                 {showPassword ? (
-                  <FaEyeSlash className="text-gray-600 text-center justify-center text-xl" />
+                  <FaEyeSlash className="text-gray-600 text-xl" />
                 ) : (
-                  <FaEye className="text-gray-600 text-center justify-center text-xl" />
+                  <FaEye className="text-gray-600 text-xl" />
                 )}
               </span>
             </section>
 
             <section className="flex justify-between items-center mb-6">
               <div className="flex items-center">
-                <input type="checkbox" name="remember" id="remember" className="mr-2" />
+                <input
+                  type="checkbox"
+                  name="remember"
+                  id="remember"
+                  className="mr-2"
+                />
                 <label htmlFor="remember" className="text-sm text-gray-600">
                   Remember me
                 </label>
               </div>
               <div>
-                <Link to="/forget-password" className="text-sm text-blue-600 hover:underline">
+                <Link
+                  to="/forget-password"
+                  className="text-sm text-blue-600 hover:underline"
+                >
                   Lost Password?
                 </Link>
               </div>
@@ -129,8 +120,11 @@ const Login = () => {
             </section>
 
             <footer className="text-center">
-              <Link to="/register" className="text-sm text-blue-600 hover:underline">
-                Not registered?
+              <Link
+                to="/register"
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Not registered? Create an account
               </Link>
             </footer>
           </form>
