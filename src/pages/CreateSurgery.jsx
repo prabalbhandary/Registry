@@ -17,7 +17,8 @@ const CreateSurgery = () => {
   const [hospital_number, setHospital_number] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [sports_involvement, setSports_involvement] = useState("");
+  // const [sports_involvement, setSports_involvement] = useState("");
+  const [MoI, setMoI] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
   const [error, setError] = useState("");
 
@@ -344,8 +345,8 @@ const CreateSurgery = () => {
               {fieldErrors.occupation && <p className="text-red-500 text-sm mt-1">{fieldErrors.occupation}</p>}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="sports_involvement" className="text-lg font-medium text-gray-700">Sports Involvement</label>
-              <input
+              <label htmlFor="sports_involvement" className="text-lg font-medium text-gray-700">Mechanism of Injury</label>
+              {/* <input
                 type="text"
                 value={sports_involvement}
                 onChange={(e) => setSports_involvement(e.target.value)}
@@ -353,7 +354,22 @@ const CreateSurgery = () => {
                 name="sports_involvement"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.sports_involvement && <p className="text-red-500 text-sm mt-1">{fieldErrors.sports_involvement}</p>}
+              {fieldErrors.sports_involvement && <p className="text-red-500 text-sm mt-1">{fieldErrors.sports_involvement}</p>} */}
+              {/* dropdown */}
+              <select
+                name="moi"
+                value={MoI}
+                onChange={(e) => setMoI(e.target.value)}
+                id="occupation"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Mechanism of Injury</option>
+                <option value="RTA">RTA</option>
+                <option value="fall">Fall</option>
+                <option value="sports">Sports</option>
+                <option value="others">Others</option>
+              </select>
+          {/* Switch case */}
             </div>
           </div>
 

@@ -13,8 +13,7 @@ const Home = () => {
       <h2 className="text-blue-500 text-2xl font-semibold mb-2">
       Trauma Registry
       </h2>
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">Trauma Registry</h1>
-      <p className="text-gray-500 text-lg mb-6">Arthroscopy Society of Nepal</p>
+      <h1 className="text-blue-500 text-2xl font-semibold mb-2">Nepal Orthopedic Association</h1>
       <div className="space-x-4">
         {isAuthenticated ? (
           <Link to="/dashboard" className="underline">
