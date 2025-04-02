@@ -5,21 +5,27 @@ import { SiGooglesheets } from "react-icons/si";
 import RecentSurgeries from "../components/RecentSurgeries";
 import RecentUsers from "../components/RecentUsers";
 import RecentPatients from "../components/RecentPatients";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   return (
     <>
       <title>Dashboard - Trauma Registry</title>
-
-      {/* Main Layout: Fixed Sidebar on the left and scrollable content on the right */}
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
+        {/* Sidebar */}
+        <div className="w-full md:w-1/5 fixed md:relative top-0 left-0 h-full bg-gray-800 z-10">
+          <Sidebar />
+        </div>
 
         {/* Main Content */}
-        <div className="p-6 overflow-y-auto">
-          {/* Your Dashboard content */}
+        <div className="w-full md:w-4/5 p-6 overflow-y-auto">
+          <Navbar />
           <section>
-            <p className="text-xl font-semibold text-gray-700 mb-4">LIVE STATS</p>
+            <p className="text-xl font-semibold text-gray-700 mb-4">
+              LIVE STATS
+            </p>
             <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 max-w-full">
               {/* Stats Boxes */}
               <div className="flex shadow-lg">
@@ -85,7 +91,10 @@ const Dashboard = () => {
           {/* Other Sections */}
           <section className="w-full p-6 bg-white rounded-lg mb-6">
             <div className="flex items-center justify-between mb-4 space-x-6">
-              <div onClick={() => navigate("/add-hospital")} className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full">
+              <div
+                onClick={() => navigate("/add-hospital")}
+                className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full"
+              >
                 <div className="bg-pink-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
                   <FaBars className="text-xl" />
                 </div>
@@ -97,7 +106,10 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div onClick={() => navigate("/add-assistant")} className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full">
+              <div
+                onClick={() => navigate("/add-assistant")}
+                className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full"
+              >
                 <div className="bg-yellow-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
                   <SiGooglesheets className="text-xl" />
                 </div>
@@ -113,7 +125,7 @@ const Dashboard = () => {
           </section>
 
           <section className="w-full rounded-lg">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 w-full">
               <div className="flex-1 bg-white p-4 rounded-lg">
                 <RecentSurgeries />
               </div>

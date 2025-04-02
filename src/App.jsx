@@ -58,20 +58,20 @@ const AppContent = () => {
 
   return (
     <div className="flex">
-      {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
+      {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
         <div>
           <Sidebar />
         </div>
-      )}
+      )} */}
 
       <div className="flex-1 flex flex-col">
-        {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
+        {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
           <div className="p-4">
             <Navbar />
           </div>
-        )}
+        )} */}
 
-        <div className="p-6 flex-1">
+        <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
