@@ -106,7 +106,7 @@ const Register = () => {
               />
               <span
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
               >
                 {showConfirmPassword ? (
                   <FaEyeSlash className="text-gray-600 text-xl" />
@@ -134,7 +134,7 @@ const Register = () => {
               />
               <span
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
               >
                 {showConfirmPassword ? (
                   <FaEyeSlash className="text-gray-600 text-xl" />

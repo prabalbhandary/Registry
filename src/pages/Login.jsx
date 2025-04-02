@@ -78,7 +78,7 @@ const Login = () => {
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
               >
                 {showPassword ? (
                   <FaEyeSlash className="text-gray-600 text-xl" />
