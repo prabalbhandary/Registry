@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const SecondNavbar = ({ completedIndex = 0 }) => {
-  // Initialize patientId with state and localStorage value
   const [patientId, setPatientId] = useState(null);
   const { idFromRoute } = useParams(); // Using useParams for route-specific ID
 
@@ -29,7 +28,8 @@ const SecondNavbar = ({ completedIndex = 0 }) => {
     }
   };
 
-  if (!patientId && completedIndex > 0) {
+  // Show loading only if patientId is not set and completedIndex > 0
+  if (completedIndex > 0 && !patientId) {
     return <div>Loading...</div>; // Optional: handle case when patientId is still not available and it's needed
   }
 

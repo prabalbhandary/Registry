@@ -17,8 +17,10 @@ const CreateSurgery = () => {
   const [hospital_number, setHospital_number] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
-  // const [sports_involvement, setSports_involvement] = useState("");
   const [MoI, setMoI] = useState("");
+  const [subMoI, setSubMoI] = useState(""); // New state to handle the sub-options based on MoI
+  const [sportsOther, setSportsOther] = useState(""); // New state for sports "Other" input
+  const [MoIOther, setMoIOther] = useState(""); // New state for MoI "Other" input
   const [completedIndex, setCompletedIndex] = useState(0);
   const [error, setError] = useState("");
 
@@ -33,7 +35,8 @@ const CreateSurgery = () => {
     hospital_number: "",
     phone_number: "",
     occupation: "",
-    sports_involvement: "",
+    MoI: "",
+    subMoI: "", // Added validation for subMoI
   });
 
   const [districts, setDistricts] = useState([]);
@@ -52,7 +55,8 @@ const CreateSurgery = () => {
       hospital_number: "",
       phone_number: "",
       occupation: "",
-      sports_involvement: "",
+      MoI: "",
+      subMoI: "", // Reset subMoI error on form submit
     });
 
     let formValid = true;
@@ -98,9 +102,13 @@ const CreateSurgery = () => {
       formValid = false;
       newErrors.occupation = "Occupation is required.";
     }
-    if (!sports_involvement) {
+    if (!MoI) {
       formValid = false;
-      newErrors.sports_involvement = "Sports involvement is required.";
+      newErrors.MoI = "Mechanism of Injury is required.";
+    }
+    if (!subMoI && MoI !== "others") {
+      formValid = false;
+      newErrors.subMoI = "Sub-option is required.";
     }
 
     if (!formValid) {
@@ -120,14 +128,19 @@ const CreateSurgery = () => {
         hospital_number,
         phone_number,
         occupation,
-        sports_involvement,
+        MoI,
+        subMoI, // Include the subMoI in the request
+        sportsOther, // Include the sports other option
+        MoIOther, // Include the MoI other option
       });
       if (res.status === 201) {
         toast.success(res.data.message);
         setCompletedIndex(1);
         const patientId = res.data.data.id;
         localStorage.setItem("patientId", patientId);
-        navigate(`/add-surgerical-details/${patientId}`, { state: { completedIndex: 1 } });
+        navigate(`/add-surgerical-details/${patientId}`, {
+          state: { completedIndex: 1 },
+        });
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -142,46 +155,107 @@ const CreateSurgery = () => {
     switch (selectedProvince) {
       case "koshi province":
         setDistricts([
-          "Jhapa", "Illam", "Paachthar", "Taplejung", "Sankhuwasawa", 
-          "Therathum", "Bhojpur", "Dhankuta", "Khotang", "Sunsari", 
-          "Morong", "Solukhumbu", "Okhaldhunga", "Udaypur"
+          "Jhapa",
+          "Illam",
+          "Paachthar",
+          "Taplejung",
+          "Sankhuwasawa",
+          "Therathum",
+          "Bhojpur",
+          "Dhankuta",
+          "Khotang",
+          "Sunsari",
+          "Morong",
+          "Solukhumbu",
+          "Okhaldhunga",
+          "Udaypur",
         ]);
         break;
       case "madesh province":
         setDistricts([
-          "Parsa", "Bara", "Rautahat", "Sarlahi", "Siraha", "Dhanusha", 
-          "Saptari", "Mahottari"
+          "Parsa",
+          "Bara",
+          "Rautahat",
+          "Sarlahi",
+          "Siraha",
+          "Dhanusha",
+          "Saptari",
+          "Mahottari",
         ]);
         break;
       case "bagmati province":
         setDistricts([
-          "Kathmandu", "Makwanpur", "Lalitpur", "Bhaktapur", "Nuwakot", 
-          "Rasuwa", "Dhading", "Kavrepalanchok", "Sindhupalchok", 
-          "Sindhuli", "Dolakha", "Ramechhap", "Chitwan"
+          "Kathmandu",
+          "Makwanpur",
+          "Lalitpur",
+          "Bhaktapur",
+          "Nuwakot",
+          "Rasuwa",
+          "Dhading",
+          "Kavrepalanchok",
+          "Sindhupalchok",
+          "Sindhuli",
+          "Dolakha",
+          "Ramechhap",
+          "Chitwan",
         ]);
         break;
       case "gandaki province":
         setDistricts([
-          "Gorkha", "Tanahu", "Syanja", "Lamjung", "Kaski", "Nawalparashi East", 
-          "Manang", "Mustang", "Parbat", "Baglung", "Myagdi"
+          "Gorkha",
+          "Tanahu",
+          "Syanja",
+          "Lamjung",
+          "Kaski",
+          "Nawalparashi East",
+          "Manang",
+          "Mustang",
+          "Parbat",
+          "Baglung",
+          "Myagdi",
         ]);
         break;
       case "lumbini province":
         setDistricts([
-          "Kapilvastu", "Gulmi", "Rupandehi", "Banke", "Argakhachi", "Bardiya", 
-          "Dang", "Rukum East", "Pyuthan", "Nawalparashi West", "Palpa", "Rolpa"
+          "Kapilvastu",
+          "Gulmi",
+          "Rupandehi",
+          "Banke",
+          "Argakhachi",
+          "Bardiya",
+          "Dang",
+          "Rukum East",
+          "Pyuthan",
+          "Nawalparashi West",
+          "Palpa",
+          "Rolpa",
         ]);
         break;
       case "karnali province":
         setDistricts([
-          "Rukum West", "Salyan", "Dolpa", "Jumla", "Mugu", "Humla", "Kalikot", 
-          "Jajarkot", "Dailekh", "Surkhet"
+          "Rukum West",
+          "Salyan",
+          "Dolpa",
+          "Jumla",
+          "Mugu",
+          "Humla",
+          "Kalikot",
+          "Jajarkot",
+          "Dailekh",
+          "Surkhet",
         ]);
         break;
       case "sudurpaschim province":
         setDistricts([
-          "Darchula", "Baitadi", "Dadeldhura", "Kanchanpur", "Bajhang", "Bajura", 
-          "Doti", "Achham", "Kailali"
+          "Darchula",
+          "Baitadi",
+          "Dadeldhura",
+          "Kanchanpur",
+          "Bajhang",
+          "Bajura",
+          "Doti",
+          "Achham",
+          "Kailali",
         ]);
         break;
       default:
@@ -190,16 +264,35 @@ const CreateSurgery = () => {
     }
   };
 
+  const handleMoIChange = (e) => {
+    setMoI(e.target.value);
+    setSubMoI(""); // Reset the subMoI whenever MoI changes
+    setSportsOther(""); // Reset sports "other" input
+    setMoIOther(""); // Reset MoI "other" input
+  };
+
+  const handleSubMoIChange = (e) => {
+    setSubMoI(e.target.value);
+  };
+
   return (
     <>
       <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
       <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">Add Patient Information</h1>
+        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
+          Add Patient Information
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Input fields for personal details */}
             <div className="flex flex-col">
-              <label htmlFor="firstName" className="text-lg font-medium text-gray-700">First Name</label>
+              <label
+                htmlFor="firstName"
+                className="text-lg font-medium text-gray-700"
+              >
+                First Name
+              </label>
               <input
                 type="text"
                 value={first_name}
@@ -208,10 +301,19 @@ const CreateSurgery = () => {
                 name="first_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.first_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.first_name}</p>}
+              {fieldErrors.first_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.first_name}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="lastName" className="text-lg font-medium text-gray-700">Last Name</label>
+              <label
+                htmlFor="lastName"
+                className="text-lg font-medium text-gray-700"
+              >
+                Last Name
+              </label>
               <input
                 type="text"
                 value={last_name}
@@ -220,10 +322,19 @@ const CreateSurgery = () => {
                 name="last_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.last_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.last_name}</p>}
+              {fieldErrors.last_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.last_name}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="age" className="text-lg font-medium text-gray-700">Age</label>
+              <label
+                htmlFor="age"
+                className="text-lg font-medium text-gray-700"
+              >
+                Age
+              </label>
               <input
                 type="number"
                 value={age}
@@ -232,10 +343,17 @@ const CreateSurgery = () => {
                 name="age"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.age && <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>}
+              {fieldErrors.age && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="nationality" className="text-lg font-medium text-gray-700">Nationality</label>
+              <label
+                htmlFor="nationality"
+                className="text-lg font-medium text-gray-700"
+              >
+                Nationality
+              </label>
               <select
                 name="nationality"
                 value={nationality}
@@ -247,10 +365,19 @@ const CreateSurgery = () => {
                 <option value="nepali">Nepali</option>
                 <option value="non-nepali">Non-Nepali</option>
               </select>
-              {fieldErrors.nationality && <p className="text-red-500 text-sm mt-1">{fieldErrors.nationality}</p>}
+              {fieldErrors.nationality && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.nationality}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="province" className="text-lg font-medium text-gray-700">Province</label>
+              <label
+                htmlFor="province"
+                className="text-lg font-medium text-gray-700"
+              >
+                Province
+              </label>
               <select
                 name="province"
                 value={province}
@@ -265,12 +392,23 @@ const CreateSurgery = () => {
                 <option value="gandaki province">Gandaki Province</option>
                 <option value="lumbini province">Lumbini Province</option>
                 <option value="karnali province">Karnali Province</option>
-                <option value="sudurpaschim province">Sudurpaschim Province</option>
+                <option value="sudurpaschim province">
+                  Sudurpaschim Province
+                </option>
               </select>
-              {fieldErrors.province && <p className="text-red-500 text-sm mt-1">{fieldErrors.province}</p>}
+              {fieldErrors.province && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.province}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="district" className="text-lg font-medium text-gray-700">District</label>
+              <label
+                htmlFor="district"
+                className="text-lg font-medium text-gray-700"
+              >
+                District
+              </label>
               <select
                 name="district"
                 value={district}
@@ -285,10 +423,19 @@ const CreateSurgery = () => {
                   </option>
                 ))}
               </select>
-              {fieldErrors.district && <p className="text-red-500 text-sm mt-1">{fieldErrors.district}</p>}
+              {fieldErrors.district && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.district}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="hospital_number" className="text-lg font-medium text-gray-700">Hospital Number</label>
+              <label
+                htmlFor="hospital_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Hospital Number
+              </label>
               <input
                 type="text"
                 value={hospital_number}
@@ -297,10 +444,19 @@ const CreateSurgery = () => {
                 name="hospital_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.hospital_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.hospital_number}</p>}
+              {fieldErrors.hospital_number && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.hospital_number}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="contact_number" className="text-lg font-medium text-gray-700">Contact Number</label>
+              <label
+                htmlFor="contact_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Contact Number
+              </label>
               <input
                 type="text"
                 value={phone_number}
@@ -309,10 +465,19 @@ const CreateSurgery = () => {
                 name="phone_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.phone_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.phone_number}</p>}
+              {fieldErrors.phone_number && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.phone_number}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="gender" className="text-lg font-medium text-gray-700">Gender</label>
+              <label
+                htmlFor="gender"
+                className="text-lg font-medium text-gray-700"
+              >
+                Gender
+              </label>
               <select
                 name="gender"
                 value={gender}
@@ -325,10 +490,19 @@ const CreateSurgery = () => {
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.gender && <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>}
+              {fieldErrors.gender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.gender}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="occupation" className="text-lg font-medium text-gray-700">Occupation</label>
+              <label
+                htmlFor="occupation"
+                className="text-lg font-medium text-gray-700"
+              >
+                Occupation
+              </label>
               <select
                 name="occupation"
                 value={occupation}
@@ -342,25 +516,24 @@ const CreateSurgery = () => {
                 <option value="self-employed">Self-employed</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.occupation && <p className="text-red-500 text-sm mt-1">{fieldErrors.occupation}</p>}
+              {fieldErrors.occupation && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.occupation}
+                </p>
+              )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="sports_involvement" className="text-lg font-medium text-gray-700">Mechanism of Injury</label>
-              {/* <input
-                type="text"
-                value={sports_involvement}
-                onChange={(e) => setSports_involvement(e.target.value)}
-                id="sports_involvement"
-                name="sports_involvement"
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {fieldErrors.sports_involvement && <p className="text-red-500 text-sm mt-1">{fieldErrors.sports_involvement}</p>} */}
-              {/* dropdown */}
+              <label
+                htmlFor="moi"
+                className="text-lg font-medium text-gray-700"
+              >
+                Mechanism of Injury
+              </label>
               <select
                 name="moi"
                 value={MoI}
-                onChange={(e) => setMoI(e.target.value)}
-                id="occupation"
+                onChange={handleMoIChange}
+                id="moi"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Mechanism of Injury</option>
@@ -369,13 +542,136 @@ const CreateSurgery = () => {
                 <option value="sports">Sports</option>
                 <option value="others">Others</option>
               </select>
-          {/* Switch case */}
+              {fieldErrors.MoI && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>
+              )}
             </div>
+            {/* Conditional rendering for Sub-Options based on MoI */}
+            {MoI === "RTA" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  RTA Sub Options
+                </label>
+                <select
+                  name="subMoi"
+                  value={subMoI}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Sub Option</option>
+                  <option value="4 Wheeler occupant">4 Wheeler occupant</option>
+                  <option value="2 Wheeler rider">2 Wheeler rider</option>
+                  <option value="2 Wheeler Pillion rider">
+                    2 Wheeler Pillion rider
+                  </option>
+                  <option value="Pedestrian">Pedestrian</option>
+                </select>
+                {fieldErrors.subMoI && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.subMoI}
+                  </p>
+                )}
+              </div>
+            )}
+            {MoI === "fall" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Fall Sub Options
+                </label>
+                <select
+                  name="subMoi"
+                  value={subMoI}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Sub Option</option>
+                  <option value="From height">From height</option>
+                  <option value="From Standing height">
+                    From Standing height
+                  </option>
+                </select>
+                {fieldErrors.subMoI && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.subMoI}
+                  </p>
+                )}
+              </div>
+            )}
+            {MoI === "sports" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Sports Sub Options
+                </label>
+                <select
+                  name="subMoi"
+                  value={subMoI}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Sub Option</option>
+                  <option value="Football">Football</option>
+                  <option value="Cricket">Cricket</option>
+                  <option value="Basketball">Basketball</option>
+                  <option value="Volleyball">Volleyball</option>
+                  <option value="Others">Others</option>
+                </select>
+                {subMoI === "Others" && (
+                  <div className="flex flex-col mt-2">
+                    <label
+                      htmlFor="sportsOther"
+                      className="text-lg font-medium text-gray-700"
+                    >
+                      Please Specify Sports
+                    </label>
+                    <input
+                      type="text"
+                      value={sportsOther}
+                      onChange={(e) => setSportsOther(e.target.value)}
+                      id="sportsOther"
+                      name="sportsOther"
+                      className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {MoI === "others" && (
+              <div className="flex flex-col mt-2">
+                <label
+                  htmlFor="MoIOther"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Please Specify Mechanism of Injury
+                </label>
+                <input
+                  type="text"
+                  value={MoIOther}
+                  onChange={(e) => setMoIOther(e.target.value)}
+                  id="MoIOther"
+                  name="MoIOther"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            )}
           </div>
 
           <div>
             {error && (
-              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">{error}</div>
+              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
+                {error}
+              </div>
             )}
           </div>
           <div className="flex justify-between mt-6">
