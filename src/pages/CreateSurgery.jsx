@@ -537,9 +537,9 @@ const CreateSurgery = () => {
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Mechanism of Injury</option>
-                <option value="RTA">RTA</option>
-                <option value="fall">Fall</option>
-                <option value="sports">Sports</option>
+                <option value="RTA injury">RTA Injury</option>
+                <option value="fall injury">Fall Injury</option>
+                <option value="sports injury">Sports Injury</option>
                 <option value="others">Others</option>
               </select>
               {fieldErrors.MoI && (
