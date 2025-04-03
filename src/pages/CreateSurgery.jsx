@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SecondNavbar from "../components/SecondNavbar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,6 +27,7 @@ const CreateSurgery = () => {
   const [incidentTime, setIncidentTime] = useState("");
   const [arrivalDate, setArrivalDate] = useState(new Date().toISOString().split('T')[0]);
   const [arrivalTime, setArrivalTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
+  const [presentationDelay, setPresentationDelay] = useState("");
   const [primaryTreatment, setPrimaryTreatment] = useState("");
   const [treatmentWhere, setTreatmentWhere] = useState("");
   const [antibiotic, setAntibiotic] = useState("");
@@ -49,10 +50,31 @@ const CreateSurgery = () => {
     incidentTime: "",
     arrivalDate: "",
     arrivalTime: "",
+    presentationDelay: "",
     primaryTreatment: "",
   });
 
   const [districts, setDistricts] = useState([]);
+
+  useEffect(() => {
+    calculatePresentationDelay();
+  }, [incidentDate, incidentTime, arrivalDate, arrivalTime]);
+
+  const calculatePresentationDelay = () => {
+    if (incidentDate && incidentTime && arrivalDate && arrivalTime) {
+      const incidentDateTime = new Date(`${incidentDate}T${incidentTime}`);
+      const arrivalDateTime = new Date(`${arrivalDate}T${arrivalTime}`);
+
+      const diffInMs = arrivalDateTime - incidentDateTime;
+      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+      const hours = Math.floor(diffInMinutes / 60);
+      const minutes = diffInMinutes % 60;
+
+      setPresentationDelay(`${hours} hours ${minutes} minutes`);
+    } else {
+      setPresentationDelay("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,6 +96,7 @@ const CreateSurgery = () => {
       incidentTime: "",
       arrivalDate: "",
       arrivalTime: "",
+      presentationDelay: "",
       primaryTreatment: "",
     });
 
@@ -144,6 +167,10 @@ const CreateSurgery = () => {
       formValid = false;
       newErrors.arrivalTime = "Arrival Time is required.";
     }
+    if (!presentationDelay) {
+      formValid = false;
+      newErrors.presentationDelay = "Presentation Delay is required.";
+    }
     if (!primaryTreatment) {
       formValid = false;
       newErrors.primaryTreatment = "Primary Treatment is required.";
@@ -174,6 +201,7 @@ const CreateSurgery = () => {
         incidentTime,
         arrivalDate,
         arrivalTime,
+        presentationDelay,
         primaryTreatment,
         treatmentWhere,
         antibiotic,
@@ -332,10 +360,7 @@ const CreateSurgery = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label
-                htmlFor="firstName"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="firstName" className="text-lg font-medium text-gray-700">
                 First Name
               </label>
               <input
@@ -346,17 +371,10 @@ const CreateSurgery = () => {
                 name="first_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.first_name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.first_name}
-                </p>
-              )}
+              {fieldErrors.first_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.first_name}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="lastName"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="lastName" className="text-lg font-medium text-gray-700">
                 Last Name
               </label>
               <input
@@ -367,11 +385,7 @@ const CreateSurgery = () => {
                 name="last_name"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.last_name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.last_name}
-                </p>
-              )}
+              {fieldErrors.last_name && <p className="text-red-500 text-sm mt-1">{fieldErrors.last_name}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="age" className="text-lg font-medium text-gray-700">
@@ -385,15 +399,10 @@ const CreateSurgery = () => {
                 name="age"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.age && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>
-              )}
+              {fieldErrors.age && <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="nationality"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="nationality" className="text-lg font-medium text-gray-700">
                 Nationality
               </label>
               <select
@@ -407,17 +416,10 @@ const CreateSurgery = () => {
                 <option value="nepali">Nepali</option>
                 <option value="non-nepali">Non-Nepali</option>
               </select>
-              {fieldErrors.nationality && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.nationality}
-                </p>
-              )}
+              {fieldErrors.nationality && <p className="text-red-500 text-sm mt-1">{fieldErrors.nationality}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="province"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="province" className="text-lg font-medium text-gray-700">
                 Province
               </label>
               <select
@@ -434,21 +436,12 @@ const CreateSurgery = () => {
                 <option value="gandaki province">Gandaki Province</option>
                 <option value="lumbini province">Lumbini Province</option>
                 <option value="karnali province">Karnali Province</option>
-                <option value="sudurpaschim province">
-                  Sudurpaschim Province
-                </option>
+                <option value="sudurpaschim province">Sudurpaschim Province</option>
               </select>
-              {fieldErrors.province && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.province}
-                </p>
-              )}
+              {fieldErrors.province && <p className="text-red-500 text-sm mt-1">{fieldErrors.province}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="district"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="district" className="text-lg font-medium text-gray-700">
                 District
               </label>
               <select
@@ -465,17 +458,10 @@ const CreateSurgery = () => {
                   </option>
                 ))}
               </select>
-              {fieldErrors.district && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.district}
-                </p>
-              )}
+              {fieldErrors.district && <p className="text-red-500 text-sm mt-1">{fieldErrors.district}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="hospital_number"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="hospital_number" className="text-lg font-medium text-gray-700">
                 Hospital Number
               </label>
               <input
@@ -486,17 +472,10 @@ const CreateSurgery = () => {
                 name="hospital_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.hospital_number && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.hospital_number}
-                </p>
-              )}
+              {fieldErrors.hospital_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.hospital_number}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="contact_number"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="contact_number" className="text-lg font-medium text-gray-700">
                 Contact Number
               </label>
               <input
@@ -507,17 +486,10 @@ const CreateSurgery = () => {
                 name="phone_number"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.phone_number && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.phone_number}
-                </p>
-              )}
+              {fieldErrors.phone_number && <p className="text-red-500 text-sm mt-1">{fieldErrors.phone_number}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="gender"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="gender" className="text-lg font-medium text-gray-700">
                 Gender
               </label>
               <select
@@ -532,17 +504,10 @@ const CreateSurgery = () => {
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.gender && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.gender}
-                </p>
-              )}
+              {fieldErrors.gender && <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="occupation"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="occupation" className="text-lg font-medium text-gray-700">
                 Occupation
               </label>
               <select
@@ -558,11 +523,7 @@ const CreateSurgery = () => {
                 <option value="self-employed">Self-employed</option>
                 <option value="other">Other</option>
               </select>
-              {fieldErrors.occupation && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.occupation}
-                </p>
-              )}
+              {fieldErrors.occupation && <p className="text-red-500 text-sm mt-1">{fieldErrors.occupation}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="moi" className="text-lg font-medium text-gray-700">
@@ -581,16 +542,11 @@ const CreateSurgery = () => {
                 <option value="sports injury">Sports Injury</option>
                 <option value="others">Others</option>
               </select>
-              {fieldErrors.MoI && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>
-              )}
+              {fieldErrors.MoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>}
             </div>
             {MoI === "RTA injury" && (
               <div className="flex flex-col">
-                <label
-                  htmlFor="subMoi"
-                  className="text-lg font-medium text-gray-700"
-                >
+                <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   RTA Sub Options
                 </label>
                 <select
@@ -603,24 +559,15 @@ const CreateSurgery = () => {
                   <option value="">Select Sub Option</option>
                   <option value="4 Wheeler occupant">4 Wheeler occupant</option>
                   <option value="2 Wheeler rider">2 Wheeler rider</option>
-                  <option value="2 Wheeler Pillion rider">
-                    2 Wheeler Pillion rider
-                  </option>
+                  <option value="2 Wheeler Pillion rider">2 Wheeler Pillion rider</option>
                   <option value="Pedestrian">Pedestrian</option>
                 </select>
-                {fieldErrors.subMoI && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors.subMoI}
-                  </p>
-                )}
+                {fieldErrors.subMoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.subMoI}</p>}
               </div>
             )}
             {MoI === "fall injury" && (
               <div className="flex flex-col">
-                <label
-                  htmlFor="subMoi"
-                  className="text-lg font-medium text-gray-700"
-                >
+                <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   Fall Sub Options
                 </label>
                 <select
@@ -632,23 +579,14 @@ const CreateSurgery = () => {
                 >
                   <option value="">Select Sub Option</option>
                   <option value="From height">From height</option>
-                  <option value="From Standing height">
-                    From Standing height
-                  </option>
+                  <option value="From Standing height">From Standing height</option>
                 </select>
-                {fieldErrors.subMoI && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors.subMoI}
-                  </p>
-                )}
+                {fieldErrors.subMoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.subMoI}</p>}
               </div>
             )}
             {MoI === "sports injury" && (
               <div className="flex flex-col">
-                <label
-                  htmlFor="subMoi"
-                  className="text-lg font-medium text-gray-700"
-                >
+                <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   Sports Sub Options
                 </label>
                 <select
@@ -667,10 +605,7 @@ const CreateSurgery = () => {
                 </select>
                 {subMoI === "Others" && (
                   <div className="flex flex-col mt-2">
-                    <label
-                      htmlFor="sportsOther"
-                      className="text-lg font-medium text-gray-700"
-                    >
+                    <label htmlFor="sportsOther" className="text-lg font-medium text-gray-700">
                       Please Specify Sports
                     </label>
                     <input
@@ -687,10 +622,7 @@ const CreateSurgery = () => {
             )}
             {MoI === "others" && (
               <div className="flex flex-col mt-2">
-                <label
-                  htmlFor="MoIOther"
-                  className="text-lg font-medium text-gray-700"
-                >
+                <label htmlFor="MoIOther" className="text-lg font-medium text-gray-700">
                   Please Specify Mechanism of Injury
                 </label>
                 <input
@@ -715,9 +647,7 @@ const CreateSurgery = () => {
                 name="incidentDate"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.incidentDate && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentDate}</p>
-              )}
+              {fieldErrors.incidentDate && <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentDate}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="incidentTime" className="text-lg font-medium text-gray-700">
@@ -731,9 +661,7 @@ const CreateSurgery = () => {
                 name="incidentTime"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.incidentTime && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentTime}</p>
-              )}
+              {fieldErrors.incidentTime && <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentTime}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="arrivalDate" className="text-lg font-medium text-gray-700">
@@ -747,9 +675,7 @@ const CreateSurgery = () => {
                 name="arrivalDate"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.arrivalDate && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalDate}</p>
-              )}
+              {fieldErrors.arrivalDate && <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalDate}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="arrivalTime" className="text-lg font-medium text-gray-700">
@@ -763,9 +689,7 @@ const CreateSurgery = () => {
                 name="arrivalTime"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              {fieldErrors.arrivalTime && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalTime}</p>
-              )}
+              {fieldErrors.arrivalTime && <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalTime}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="primaryTreatment" className="text-lg font-medium text-gray-700">
@@ -782,9 +706,7 @@ const CreateSurgery = () => {
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
               </select>
-              {fieldErrors.primaryTreatment && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.primaryTreatment}</p>
-              )}
+              {fieldErrors.primaryTreatment && <p className="text-red-500 text-sm mt-1">{fieldErrors.primaryTreatment}</p>}
             </div>
             {primaryTreatment === "yes" && (
               <>
@@ -829,6 +751,20 @@ const CreateSurgery = () => {
                 </div>
               </>
             )}
+            <div className="flex flex-col">
+              <label htmlFor="presentationDelay" className="text-lg font-medium text-gray-700">
+                Presentation Delay
+              </label>
+              <input
+                type="text"
+                value={presentationDelay}
+                id="presentationDelay"
+                name="presentationDelay"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                readOnly
+              />
+              {fieldErrors.presentationDelay && <p className="text-red-500 text-sm mt-1">{fieldErrors.presentationDelay}</p>}
+            </div>
           </div>
           <div>
             {error && (
