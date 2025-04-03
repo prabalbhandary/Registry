@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "../components/URL";
@@ -18,11 +18,19 @@ const CreateSurgery = () => {
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
   const [MoI, setMoI] = useState("");
-  const [subMoI, setSubMoI] = useState(""); // New state to handle the sub-options based on MoI
-  const [sportsOther, setSportsOther] = useState(""); // New state for sports "Other" input
-  const [MoIOther, setMoIOther] = useState(""); // New state for MoI "Other" input
+  const [subMoI, setSubMoI] = useState("");
+  const [sportsOther, setSportsOther] = useState("");
+  const [MoIOther, setMoIOther] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
   const [error, setError] = useState("");
+  const [incidentDate, setIncidentDate] = useState("");
+  const [incidentTime, setIncidentTime] = useState("");
+  const [arrivalDate, setArrivalDate] = useState(new Date().toISOString().split('T')[0]);
+  const [arrivalTime, setArrivalTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
+  const [primaryTreatment, setPrimaryTreatment] = useState("");
+  const [treatmentWhere, setTreatmentWhere] = useState("");
+  const [antibiotic, setAntibiotic] = useState("");
+  const [whatTreatment, setWhatTreatment] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState({
     first_name: "",
@@ -36,7 +44,12 @@ const CreateSurgery = () => {
     phone_number: "",
     occupation: "",
     MoI: "",
-    subMoI: "", // Added validation for subMoI
+    subMoI: "",
+    incidentDate: "",
+    incidentTime: "",
+    arrivalDate: "",
+    arrivalTime: "",
+    primaryTreatment: "",
   });
 
   const [districts, setDistricts] = useState([]);
@@ -56,7 +69,12 @@ const CreateSurgery = () => {
       phone_number: "",
       occupation: "",
       MoI: "",
-      subMoI: "", // Reset subMoI error on form submit
+      subMoI: "",
+      incidentDate: "",
+      incidentTime: "",
+      arrivalDate: "",
+      arrivalTime: "",
+      primaryTreatment: "",
     });
 
     let formValid = true;
@@ -110,6 +128,26 @@ const CreateSurgery = () => {
       formValid = false;
       newErrors.subMoI = "Sub-option is required.";
     }
+    if (!incidentDate) {
+      formValid = false;
+      newErrors.incidentDate = "Incident Date is required.";
+    }
+    if (!incidentTime) {
+      formValid = false;
+      newErrors.incidentTime = "Incident Time is required.";
+    }
+    if (!arrivalDate) {
+      formValid = false;
+      newErrors.arrivalDate = "Arrival Date is required.";
+    }
+    if (!arrivalTime) {
+      formValid = false;
+      newErrors.arrivalTime = "Arrival Time is required.";
+    }
+    if (!primaryTreatment) {
+      formValid = false;
+      newErrors.primaryTreatment = "Primary Treatment is required.";
+    }
 
     if (!formValid) {
       setFieldErrors(newErrors);
@@ -129,9 +167,17 @@ const CreateSurgery = () => {
         phone_number,
         occupation,
         MoI,
-        subMoI, // Include the subMoI in the request
-        sportsOther, // Include the sports other option
-        MoIOther, // Include the MoI other option
+        subMoI,
+        sportsOther,
+        MoIOther,
+        incidentDate,
+        incidentTime,
+        arrivalDate,
+        arrivalTime,
+        primaryTreatment,
+        treatmentWhere,
+        antibiotic,
+        whatTreatment,
       });
       if (res.status === 201) {
         toast.success(res.data.message);
@@ -266,9 +312,9 @@ const CreateSurgery = () => {
 
   const handleMoIChange = (e) => {
     setMoI(e.target.value);
-    setSubMoI(""); // Reset the subMoI whenever MoI changes
-    setSportsOther(""); // Reset sports "other" input
-    setMoIOther(""); // Reset MoI "other" input
+    setSubMoI("");
+    setSportsOther("");
+    setMoIOther("");
   };
 
   const handleSubMoIChange = (e) => {
@@ -285,7 +331,6 @@ const CreateSurgery = () => {
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Input fields for personal details */}
             <div className="flex flex-col">
               <label
                 htmlFor="firstName"
@@ -329,10 +374,7 @@ const CreateSurgery = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="age"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="age" className="text-lg font-medium text-gray-700">
                 Age
               </label>
               <input
@@ -523,10 +565,7 @@ const CreateSurgery = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="moi"
-                className="text-lg font-medium text-gray-700"
-              >
+              <label htmlFor="moi" className="text-lg font-medium text-gray-700">
                 Mechanism of Injury
               </label>
               <select
@@ -546,8 +585,7 @@ const CreateSurgery = () => {
                 <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>
               )}
             </div>
-            {/* Conditional rendering for Sub-Options based on MoI */}
-            {MoI === "RTA" && (
+            {MoI === "RTA injury" && (
               <div className="flex flex-col">
                 <label
                   htmlFor="subMoi"
@@ -577,7 +615,7 @@ const CreateSurgery = () => {
                 )}
               </div>
             )}
-            {MoI === "fall" && (
+            {MoI === "fall injury" && (
               <div className="flex flex-col">
                 <label
                   htmlFor="subMoi"
@@ -605,7 +643,7 @@ const CreateSurgery = () => {
                 )}
               </div>
             )}
-            {MoI === "sports" && (
+            {MoI === "sports injury" && (
               <div className="flex flex-col">
                 <label
                   htmlFor="subMoi"
@@ -665,8 +703,133 @@ const CreateSurgery = () => {
                 />
               </div>
             )}
+            <div className="flex flex-col">
+              <label htmlFor="incidentDate" className="text-lg font-medium text-gray-700">
+                Date of Incident
+              </label>
+              <input
+                type="date"
+                value={incidentDate}
+                onChange={(e) => setIncidentDate(e.target.value)}
+                id="incidentDate"
+                name="incidentDate"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.incidentDate && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentDate}</p>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="incidentTime" className="text-lg font-medium text-gray-700">
+                Time of Incident
+              </label>
+              <input
+                type="time"
+                value={incidentTime}
+                onChange={(e) => setIncidentTime(e.target.value)}
+                id="incidentTime"
+                name="incidentTime"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.incidentTime && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentTime}</p>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="arrivalDate" className="text-lg font-medium text-gray-700">
+                Date of Arrival at Hospital
+              </label>
+              <input
+                type="date"
+                value={arrivalDate}
+                onChange={(e) => setArrivalDate(e.target.value)}
+                id="arrivalDate"
+                name="arrivalDate"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.arrivalDate && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalDate}</p>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="arrivalTime" className="text-lg font-medium text-gray-700">
+                Time of Arrival at Hospital
+              </label>
+              <input
+                type="time"
+                value={arrivalTime}
+                onChange={(e) => setArrivalTime(e.target.value)}
+                id="arrivalTime"
+                name="arrivalTime"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.arrivalTime && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalTime}</p>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="primaryTreatment" className="text-lg font-medium text-gray-700">
+                Primary Treatment
+              </label>
+              <select
+                name="primaryTreatment"
+                value={primaryTreatment}
+                onChange={(e) => setPrimaryTreatment(e.target.value)}
+                id="primaryTreatment"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Treatment</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              {fieldErrors.primaryTreatment && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.primaryTreatment}</p>
+              )}
+            </div>
+            {primaryTreatment === "yes" && (
+              <>
+                <div className="flex flex-col">
+                  <label htmlFor="treatmentWhere" className="text-lg font-medium text-gray-700">
+                    Where
+                  </label>
+                  <input
+                    type="text"
+                    value={treatmentWhere}
+                    onChange={(e) => setTreatmentWhere(e.target.value)}
+                    id="treatmentWhere"
+                    name="treatmentWhere"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label htmlFor="antibiotic" className="text-lg font-medium text-gray-700">
+                    Antibiotic
+                  </label>
+                  <input
+                    type="text"
+                    value={antibiotic}
+                    onChange={(e) => setAntibiotic(e.target.value)}
+                    id="antibiotic"
+                    name="antibiotic"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label htmlFor="whatTreatment" className="text-lg font-medium text-gray-700">
+                    What Treatment
+                  </label>
+                  <input
+                    type="text"
+                    value={whatTreatment}
+                    onChange={(e) => setWhatTreatment(e.target.value)}
+                    id="whatTreatment"
+                    name="whatTreatment"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </>
+            )}
           </div>
-
           <div>
             {error && (
               <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
