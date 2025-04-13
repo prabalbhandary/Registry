@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,17 +17,14 @@ const CreateSurgery = () => {
   const [hospital_number, setHospital_number] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [MoI, setMoI] = useState("");
-  const [subMoI, setSubMoI] = useState("");
+  const [mechanism_of_injury, setMechanism_of_injury] = useState("");
+  const [type_of_injury, setType_of_Injury] = useState("");
   const [sportsOther, setSportsOther] = useState("");
   const [MoIOther, setMoIOther] = useState("");
   const [completedIndex, setCompletedIndex] = useState(0);
   const [error, setError] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
   const [incidentTime, setIncidentTime] = useState("");
-  const [arrivalDate, setArrivalDate] = useState(new Date().toISOString().split('T')[0]);
-  const [arrivalTime, setArrivalTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
-  const [presentationDelay, setPresentationDelay] = useState("");
   const [primaryTreatment, setPrimaryTreatment] = useState("");
   const [treatmentWhere, setTreatmentWhere] = useState("");
   const [antibiotic, setAntibiotic] = useState("");
@@ -44,37 +41,14 @@ const CreateSurgery = () => {
     hospital_number: "",
     phone_number: "",
     occupation: "",
-    MoI: "",
-    subMoI: "",
+    mechanism_of_injury: "",
+    type_of_injury: "",
     incidentDate: "",
     incidentTime: "",
-    arrivalDate: "",
-    arrivalTime: "",
-    presentationDelay: "",
     primaryTreatment: "",
   });
 
   const [districts, setDistricts] = useState([]);
-
-  useEffect(() => {
-    calculatePresentationDelay();
-  }, [incidentDate, incidentTime, arrivalDate, arrivalTime]);
-
-  const calculatePresentationDelay = () => {
-    if (incidentDate && incidentTime && arrivalDate && arrivalTime) {
-      const incidentDateTime = new Date(`${incidentDate}T${incidentTime}`);
-      const arrivalDateTime = new Date(`${arrivalDate}T${arrivalTime}`);
-
-      const diffInMs = arrivalDateTime - incidentDateTime;
-      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-      const hours = Math.floor(diffInMinutes / 60);
-      const minutes = diffInMinutes % 60;
-
-      setPresentationDelay(`${hours} hours ${minutes} minutes`);
-    } else {
-      setPresentationDelay("");
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,13 +64,10 @@ const CreateSurgery = () => {
       hospital_number: "",
       phone_number: "",
       occupation: "",
-      MoI: "",
-      subMoI: "",
+      mechanism_of_injury: "",
+      type_of_injury: "",
       incidentDate: "",
       incidentTime: "",
-      arrivalDate: "",
-      arrivalTime: "",
-      presentationDelay: "",
       primaryTreatment: "",
     });
 
@@ -143,13 +114,13 @@ const CreateSurgery = () => {
       formValid = false;
       newErrors.occupation = "Occupation is required.";
     }
-    if (!MoI) {
+    if (!mechanism_of_injury) {
       formValid = false;
       newErrors.MoI = "Mechanism of Injury is required.";
     }
-    if (!subMoI && MoI !== "others") {
+    if (!type_of_injury && mechanism_of_injury !== "others") {
       formValid = false;
-      newErrors.subMoI = "Sub-option is required.";
+      newErrors.type_of_injury = "Sub-option is required.";
     }
     if (!incidentDate) {
       formValid = false;
@@ -158,18 +129,6 @@ const CreateSurgery = () => {
     if (!incidentTime) {
       formValid = false;
       newErrors.incidentTime = "Incident Time is required.";
-    }
-    if (!arrivalDate) {
-      formValid = false;
-      newErrors.arrivalDate = "Arrival Date is required.";
-    }
-    if (!arrivalTime) {
-      formValid = false;
-      newErrors.arrivalTime = "Arrival Time is required.";
-    }
-    if (!presentationDelay) {
-      formValid = false;
-      newErrors.presentationDelay = "Presentation Delay is required.";
     }
     if (!primaryTreatment) {
       formValid = false;
@@ -193,15 +152,12 @@ const CreateSurgery = () => {
         hospital_number,
         phone_number,
         occupation,
-        MoI,
-        subMoI,
+        mechanism_of_injury,
+        type_of_injury,
         sportsOther,
         MoIOther,
         incidentDate,
         incidentTime,
-        arrivalDate,
-        arrivalTime,
-        presentationDelay,
         primaryTreatment,
         treatmentWhere,
         antibiotic,
@@ -339,14 +295,14 @@ const CreateSurgery = () => {
   };
 
   const handleMoIChange = (e) => {
-    setMoI(e.target.value);
-    setSubMoI("");
+    setMechanism_of_injury(e.target.value);
+    setType_of_Injury("");
     setSportsOther("");
     setMoIOther("");
   };
 
   const handleSubMoIChange = (e) => {
-    setSubMoI(e.target.value);
+    setType_of_Injury(e.target.value);
   };
 
   return (
@@ -500,9 +456,9 @@ const CreateSurgery = () => {
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
               {fieldErrors.gender && <p className="text-red-500 text-sm mt-1">{fieldErrors.gender}</p>}
             </div>
@@ -530,8 +486,8 @@ const CreateSurgery = () => {
                 Mechanism of Injury
               </label>
               <select
-                name="moi"
-                value={MoI}
+                name="mechanism_of_injury"
+                value={mechanism_of_injury}
                 onChange={handleMoIChange}
                 id="moi"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -544,14 +500,14 @@ const CreateSurgery = () => {
               </select>
               {fieldErrors.MoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>}
             </div>
-            {MoI === "RTA injury" && (
+            {mechanism_of_injury === "RTA injury" && (
               <div className="flex flex-col">
                 <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   RTA Sub Options
                 </label>
                 <select
-                  name="subMoi"
-                  value={subMoI}
+                  name="type_of_injury"
+                  value={type_of_injury}
                   onChange={handleSubMoIChange}
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -565,45 +521,43 @@ const CreateSurgery = () => {
                 {fieldErrors.subMoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.subMoI}</p>}
               </div>
             )}
-            {MoI === "fall injury" && (
+            {mechanism_of_injury === "fall injury" && (
               <div className="flex flex-col">
                 <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   Fall Sub Options
                 </label>
                 <select
                   name="subMoi"
-                  value={subMoI}
+                  value={type_of_injury}
                   onChange={handleSubMoIChange}
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select Sub Option</option>
                   <option value="From height">From height</option>
                   <option value="From Standing height">From Standing height</option>
                 </select>
                 {fieldErrors.subMoI && <p className="text-red-500 text-sm mt-1">{fieldErrors.subMoI}</p>}
               </div>
             )}
-            {MoI === "sports injury" && (
+            {mechanism_of_injury === "sports injury" && (
               <div className="flex flex-col">
                 <label htmlFor="subMoi" className="text-lg font-medium text-gray-700">
                   Sports Sub Options
                 </label>
                 <select
                   name="subMoi"
-                  value={subMoI}
+                  value={type_of_injury}
                   onChange={handleSubMoIChange}
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select Sub Option</option>
                   <option value="Football">Football</option>
                   <option value="Cricket">Cricket</option>
                   <option value="Basketball">Basketball</option>
                   <option value="Volleyball">Volleyball</option>
-                  <option value="Others">Others</option>
+                  <option value="others">Others</option>
                 </select>
-                {subMoI === "Others" && (
+                {type_of_injury === "others" && (
                   <div className="flex flex-col mt-2">
                     <label htmlFor="sportsOther" className="text-lg font-medium text-gray-700">
                       Please Specify Sports
@@ -620,7 +574,7 @@ const CreateSurgery = () => {
                 )}
               </div>
             )}
-            {MoI === "others" && (
+            {mechanism_of_injury === "others" && (
               <div className="flex flex-col mt-2">
                 <label htmlFor="MoIOther" className="text-lg font-medium text-gray-700">
                   Please Specify Mechanism of Injury
@@ -644,7 +598,7 @@ const CreateSurgery = () => {
                 value={incidentDate}
                 onChange={(e) => setIncidentDate(e.target.value)}
                 id="incidentDate"
-                name="incidentDate"
+                name="incident_datetime"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.incidentDate && <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentDate}</p>}
@@ -658,57 +612,29 @@ const CreateSurgery = () => {
                 value={incidentTime}
                 onChange={(e) => setIncidentTime(e.target.value)}
                 id="incidentTime"
-                name="incidentTime"
+                name="incident_datetime"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.incidentTime && <p className="text-red-500 text-sm mt-1">{fieldErrors.incidentTime}</p>}
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="arrivalDate" className="text-lg font-medium text-gray-700">
-                Date of Arrival at Hospital
-              </label>
-              <input
-                type="date"
-                value={arrivalDate}
-                onChange={(e) => setArrivalDate(e.target.value)}
-                id="arrivalDate"
-                name="arrivalDate"
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {fieldErrors.arrivalDate && <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalDate}</p>}
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="arrivalTime" className="text-lg font-medium text-gray-700">
-                Time of Arrival at Hospital
-              </label>
-              <input
-                type="time"
-                value={arrivalTime}
-                onChange={(e) => setArrivalTime(e.target.value)}
-                id="arrivalTime"
-                name="arrivalTime"
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {fieldErrors.arrivalTime && <p className="text-red-500 text-sm mt-1">{fieldErrors.arrivalTime}</p>}
             </div>
             <div className="flex flex-col">
               <label htmlFor="primaryTreatment" className="text-lg font-medium text-gray-700">
                 Primary Treatment
               </label>
               <select
-                name="primaryTreatment"
+                name="primary_treatment_received"
                 value={primaryTreatment}
                 onChange={(e) => setPrimaryTreatment(e.target.value)}
                 id="primaryTreatment"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Treatment</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
               </select>
               {fieldErrors.primaryTreatment && <p className="text-red-500 text-sm mt-1">{fieldErrors.primaryTreatment}</p>}
             </div>
-            {primaryTreatment === "yes" && (
+            {primaryTreatment === "1" && (
               <>
                 <div className="flex flex-col">
                   <label htmlFor="treatmentWhere" className="text-lg font-medium text-gray-700">
@@ -719,7 +645,7 @@ const CreateSurgery = () => {
                     value={treatmentWhere}
                     onChange={(e) => setTreatmentWhere(e.target.value)}
                     id="treatmentWhere"
-                    name="treatmentWhere"
+                    name="treatment_location"
                     className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
@@ -740,31 +666,19 @@ const CreateSurgery = () => {
                   <label htmlFor="whatTreatment" className="text-lg font-medium text-gray-700">
                     What Treatment
                   </label>
-                  <input
+                  <textarea
+                    rows="4"
+                    cols="50"
                     type="text"
                     value={whatTreatment}
                     onChange={(e) => setWhatTreatment(e.target.value)}
                     id="whatTreatment"
-                    name="whatTreatment"
+                    name="treatment_details"
                     className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </>
             )}
-            <div className="flex flex-col">
-              <label htmlFor="presentationDelay" className="text-lg font-medium text-gray-700">
-                Presentation Delay
-              </label>
-              <input
-                type="text"
-                value={presentationDelay}
-                id="presentationDelay"
-                name="presentationDelay"
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                readOnly
-              />
-              {fieldErrors.presentationDelay && <p className="text-red-500 text-sm mt-1">{fieldErrors.presentationDelay}</p>}
-            </div>
           </div>
           <div>
             {error && (
