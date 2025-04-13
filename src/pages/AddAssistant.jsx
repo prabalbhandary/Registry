@@ -44,7 +44,6 @@ const AddAssistant = () => {
         toast.success(res.data.message);
         setActiveSurgeons((prevSurgeons) => [...prevSurgeons, res.data.assistant_surgeon]);
         setName(''); // Reset the input field after success
-        window.location.reload();
       }
     } catch (error) {
       console.error('Error adding assistant surgeon:', error);
