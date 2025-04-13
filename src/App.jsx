@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
   Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
@@ -24,7 +23,6 @@ const App = () => {
 };
 
 const AppContent = () => {
-  const location = useLocation();
   const isAuthenticated = localStorage.getItem("token");
 
   return (
