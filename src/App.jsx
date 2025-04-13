@@ -3,15 +3,45 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useLocation,
   Navigate,
 } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
+import Surgeries from "./pages/Surgeries";
+import Patients from "./pages/Patients";
+import Users from "./pages/Users";
+import CreateSurgery from "./pages/CreateSurgery";
+import CreatePatient from "./pages/CreatePatient";
+import CreateUser from "./pages/CreateUser";
+import AddHospital from "./pages/AddHospital";
+import AddAssistant from "./pages/AddAssistant";
+import Profile from "./pages/Profile";
+import Assistants from "./pages/Assistants";
+import Hospitals from "./pages/Hospitals";
 import ResetPassword from "./pages/ResetPassword";
 import OTP from "./pages/OTP";
 import OTPResend from "./pages/OTPResend";
+import AddSurgericalDetails from "./pages/AddSurgericalDetails";
+import PatientSurgericalDetails from "./pages/PatientSurgericalDetails";
+import PatientInjuryDetails from "./pages/PatientInjuryDetails";
+import Diagnosis from "./pages/Diagnosis";
+import Clavicle from "./components/skeletonpart/upperlimb/Clavicle";
+import Scapula from "./components/skeletonpart/upperlimb/Scapula";
+import Humerus from "./components/skeletonpart/upperlimb/Humerus";
+import Elbow from "./components/skeletonpart/upperlimb/Elbow";
+import RadiusAndUlna from "./components/skeletonpart/upperlimb/RadiusAndUlna";
+import Hand from "./components/skeletonpart/upperlimb/Hand";
+import Pelvis from "./components/skeletonpart/lowerlimb/Pelvis";
+import Acetabulum from "./components/skeletonpart/lowerlimb/Acetabulum";
+import Femur from "./components/skeletonpart/lowerlimb/Femur";
+import TibiaAndFibula from "./components/skeletonpart/lowerlimb/TibiaAndFibula";
+import Patella from "./components/skeletonpart/lowerlimb/Patella";
+import Foot from "./components/skeletonpart/lowerlimb/Foot";
 import DashboardLayout from "./components/DashboardLayout";
 
 const App = () => {
@@ -23,11 +53,24 @@ const App = () => {
 };
 
 const AppContent = () => {
+  const location = useLocation();
   const isAuthenticated = localStorage.getItem("token");
 
   return (
     <div className="flex">
+      {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
+        <div>
+          <Sidebar />
+        </div>
+      )} */}
+
       <div className="flex-1 flex flex-col">
+        {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
+          <div className="p-4">
+            <Navbar />
+          </div>
+        )} */}
+
         <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
