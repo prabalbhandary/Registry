@@ -20,7 +20,9 @@ const AddAssistant = () => {
         const assistantData = res.data?.data || res.data;
 
         const activeList = assistantData.filter((surgeon) => surgeon.is_active);
-        const inactiveList = assistantData.filter((surgeon) => !surgeon.is_active);
+        const inactiveList = assistantData.filter(
+          (surgeon) => !surgeon.is_active
+        );
         setActiveSurgeons(activeList);
         setInactiveSurgeons(inactiveList);
       } catch (error) {
