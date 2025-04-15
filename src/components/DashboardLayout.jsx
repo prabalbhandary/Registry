@@ -30,6 +30,7 @@ import Femur from "./skeletonpart/lowerlimb/Femur";
 import TibiaAndFibula from "./skeletonpart/lowerlimb/TibiaAndFibula";
 import Patella from "./skeletonpart/lowerlimb/Patella";
 import Foot from "./skeletonpart/lowerlimb/Foot";
+import SelectPage from "../pages/SelectPage";
 
 const DashboardLayout = () => {
   const location = useLocation();
@@ -92,6 +93,8 @@ const DashboardLayout = () => {
           ? "Patella - Trauma Registry"
           : location.pathname === "/foot"
           ? "Foot - Trauma Registry"
+           : location.pathname === "/select"
+          ? "Select Hospital and Assistant Surgeon - Trauma Registry"
           : "Trauma Registry"}
       </title>
 
@@ -130,6 +133,7 @@ const DashboardLayout = () => {
             {location.pathname === "/tibia_and_fibula" && <TibiaAndFibula />}
             {location.pathname === "/patella" && <Patella />}
             {location.pathname === "/foot" && <Foot />}
+            {location.pathname === "/select" && <SelectPage />}
           </div>
         </div>
       </div>

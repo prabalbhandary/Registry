@@ -108,6 +108,7 @@ const AppContent = () => {
             <Route path="/tibia_and_fibula" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/patella" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/foot" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
+            <Route path="/select" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </div>
