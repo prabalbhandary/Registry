@@ -1,29 +1,30 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { URL } from '../components/URL';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { URL } from "../components/URL";
 
 const AddAssistant = () => {
-  const [name, setName] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [name, setName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [activeSurgeons, setActiveSurgeons] = useState([]);
   const [inactiveSurgeons, setInactiveSurgeons] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [hospitals, setHospitals] = useState([]);
 
-  const [hospital_id, setHospital_id] = useState('');
-  
+  const [hospital_id, setHospital_id] = useState("");
 
   useEffect(() => {
     const fetchAssistantSurgeons = async () => {
       try {
         const res = await axios.get(`${URL}/assistant-surgeone`);
-        const activeList = res.data.data.filter(surgeon => surgeon.is_active);
-        const inactiveList = res.data.data.filter(surgeon => !surgeon.is_active);
+        const activeList = res.data.data.filter((surgeon) => surgeon.is_active);
+        const inactiveList = res.data.data.filter(
+          (surgeon) => !surgeon.is_active
+        );
         setActiveSurgeons(activeList);
         setInactiveSurgeons(inactiveList);
       } catch (error) {
-        toast.error('Failed to load assistant surgeons.');
+        toast.error("Failed to load assistant surgeons.");
       }
     };
 
@@ -34,11 +35,11 @@ const AddAssistant = () => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        if(res.data){
+        if (res.data) {
           setHospitals(res.data.data);
         }
       } catch (error) {
-        toast.error('Failed to load hospitals.');
+        toast.error("Failed to load hospitals.");
       }
     };
 
@@ -49,25 +50,25 @@ const AddAssistant = () => {
     e.preventDefault();
 
     if (!name) {
-      toast.error('Both name and hospital are required');
+      toast.error("Both name and hospital are required");
       return;
     }
 
     try {
       const res = await axios.post(`${URL}/assistant-surgeone`, {
         name,
-        hospital_id
+        hospitals_id: hospital_id, // <- match the backend's expected key
       });
 
       if (res.status === 201) {
         toast.success(res.data.message);
-        setActiveSurgeons(prev => [...prev, res.data.assistant_surgeon]);
-        setName('');
+        setActiveSurgeons((prev) => [...prev, res.data.assistant_surgeon]);
+        setName("");
       }
     } catch (error) {
       const errorMessage = error?.response?.data?.message;
       toast.error(errorMessage);
-      setError(error.response?.data?.error || '');
+      setError(error.response?.data?.error || "");
     }
   };
 
@@ -78,51 +79,61 @@ const AddAssistant = () => {
       });
 
       if (res.status === 200) {
-        const surgeonToUpdate = activeSurgeons.find(s => s.id === surgeonId) || inactiveSurgeons.find(s => s.id === surgeonId);
-        if (!surgeonToUpdate) throw new Error('Surgeon not found');
+        const surgeonToUpdate =
+          activeSurgeons.find((s) => s.id === surgeonId) ||
+          inactiveSurgeons.find((s) => s.id === surgeonId);
+        if (!surgeonToUpdate) throw new Error("Surgeon not found");
 
-        const updatedSurgeon = { ...surgeonToUpdate, is_active: !currentStatus };
+        const updatedSurgeon = {
+          ...surgeonToUpdate,
+          is_active: !currentStatus,
+        };
 
         if (!currentStatus) {
-          setActiveSurgeons(prev => [...prev, updatedSurgeon]);
-          setInactiveSurgeons(prev => prev.filter(s => s.id !== surgeonId));
+          setActiveSurgeons((prev) => [...prev, updatedSurgeon]);
+          setInactiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         } else {
-          setInactiveSurgeons(prev => [...prev, updatedSurgeon]);
-          setActiveSurgeons(prev => prev.filter(s => s.id !== surgeonId));
+          setInactiveSurgeons((prev) => [...prev, updatedSurgeon]);
+          setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         }
 
-        toast.success(`Surgeon status updated to ${!currentStatus ? 'Active' : 'Inactive'}`);
+        toast.success(
+          `Surgeon status updated to ${!currentStatus ? "Active" : "Inactive"}`
+        );
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to update surgeon status.');
+      toast.error(error.message || "Failed to update surgeon status.");
     }
   };
 
   const unlinkSurgeon = async (surgeonId) => {
     try {
-      const res = await axios.put(`${URL}/assistant-surgeone/${surgeonId}`, { is_active: 0 });
+      const res = await axios.put(`${URL}/assistant-surgeone/${surgeonId}`, {
+        is_active: 0,
+      });
 
       if (res.status === 200) {
-        const surgeonToUnlink = activeSurgeons.find(s => s.id === surgeonId);
-        if (!surgeonToUnlink) throw new Error('Surgeon not found in active list');
+        const surgeonToUnlink = activeSurgeons.find((s) => s.id === surgeonId);
+        if (!surgeonToUnlink)
+          throw new Error("Surgeon not found in active list");
 
-        setActiveSurgeons(prev => prev.filter(s => s.id !== surgeonId));
-        setInactiveSurgeons(prev => [...prev, surgeonToUnlink]);
+        setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
+        setInactiveSurgeons((prev) => [...prev, surgeonToUnlink]);
 
-        toast.success('Surgeon has been unlinked and marked as inactive.');
+        toast.success("Surgeon has been unlinked and marked as inactive.");
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to unlink surgeon.');
-      setError(error.response?.data?.error || '');
+      toast.error(error.message || "Failed to unlink surgeon.");
+      setError(error.response?.data?.error || "");
     }
   };
 
   const resetSearch = () => {
-    setSearchTerm('');
+    setSearchTerm("");
   };
 
-  const filteredInactiveSurgeons = inactiveSurgeons.filter(surgeon =>
-    surgeon.surgeon_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInactiveSurgeons = inactiveSurgeons.filter((surgeon) =>
+    surgeon.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -131,8 +142,12 @@ const AddAssistant = () => {
 
       {/* Search & Reactivate Existing Assistant Surgeons */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Existing Assistant Surgeons</h1>
-        <p className="text-gray-600 mb-6">Search Assistant Surgeons and add them</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          Add Existing Assistant Surgeons
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Search Assistant Surgeons and add them
+        </p>
 
         <div className="flex space-x-4">
           <input
@@ -142,7 +157,7 @@ const AddAssistant = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-grow p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button 
+          <button
             onClick={resetSearch}
             className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -152,11 +167,18 @@ const AddAssistant = () => {
 
         <div className="mt-6">
           {filteredInactiveSurgeons.map((surgeon) => (
-            <div key={surgeon.id} className="mb-4 p-4 border rounded-md flex justify-between items-center">
-              <p className="text-lg font-semibold text-gray-800">{surgeon.name}</p>
+            <div
+              key={surgeon.id}
+              className="mb-4 p-4 border rounded-md flex justify-between items-center"
+            >
+              <p className="text-lg font-semibold text-gray-800">
+                {surgeon.name}
+              </p>
               <button
                 className="text-blue-600 hover:text-blue-800"
-                onClick={() => toggleActiveStatus(surgeon.id, surgeon.is_active)}
+                onClick={() =>
+                  toggleActiveStatus(surgeon.id, surgeon.is_active)
+                }
               >
                 Activate
               </button>
@@ -169,12 +191,19 @@ const AddAssistant = () => {
 
       {/* Add New Assistant Surgeon */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Add New Assistant Surgeons</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          Add New Assistant Surgeons
+        </h1>
         <p className="text-gray-600 mb-6">Enter name and select hospital</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-lg text-gray-700 font-semibold mb-2">Name</label>
+            <label
+              htmlFor="name"
+              className="block text-lg text-gray-700 font-semibold mb-2"
+            >
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -186,9 +215,16 @@ const AddAssistant = () => {
           </div>
 
           <div>
-            <label htmlFor="hospital" className="block text-lg text-gray-700 font-semibold mb-2">Hospital</label>
+            <label
+              htmlFor="hospital"
+              className="block text-lg text-gray-700 font-semibold mb-2"
+            >
+              Hospital
+            </label>
             <select
               id="hospital"
+              value={hospital_id}
+              onChange={(e) => setHospital_id(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
@@ -214,16 +250,24 @@ const AddAssistant = () => {
 
       {/* List Active Assistant Surgeons */}
       <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Active Assistant Surgeons</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          Active Assistant Surgeons
+        </h1>
         <p className="text-gray-600 mb-6">List of Active Assistant Surgeons</p>
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border-collapse shadow-md rounded-lg">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">S.No</th>
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">Name</th>
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">Actions</th>
+                <th className="px-6 py-4 text-left text-gray-700 font-medium">
+                  S.No
+                </th>
+                <th className="px-6 py-4 text-left text-gray-700 font-medium">
+                  Name
+                </th>
+                <th className="px-6 py-4 text-left text-gray-700 font-medium">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -246,7 +290,10 @@ const AddAssistant = () => {
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4"
+            role="alert"
+          >
             <span className="block sm:inline">{error}</span>
           </div>
         )}
