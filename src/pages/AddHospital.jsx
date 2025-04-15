@@ -58,7 +58,7 @@ const AddHospital = () => {
 
   const toggleActiveStatus = async (hospitalId, currentStatus) => {
     try {
-      const res = await axios.put(`${URL}/hospital/${hospitalId}`, {
+      const res = await axios.get(`${URL}/activate-hospital/${hospitalId}`, {
         is_active: !currentStatus, // Toggle the current status
       });
 
@@ -100,7 +100,7 @@ const AddHospital = () => {
 
   const unlinkHospital = async (hospitalId) => {
     try {
-      const res = await axios.put(`${URL}/hospital/${hospitalId}`, { is_active: 0 });
+      const res = await axios.get(`${URL}/activate-hospital/${hospitalId}`, { is_active: 0 });
 
       if (res.status === 200) {
         // Make sure hospital exists before trying to access its properties

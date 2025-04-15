@@ -60,7 +60,7 @@ const AddAssistant = () => {
     try {
       console.log("Submitting:", { name, hospitals_id: Number(hospitals_id) });
 
-      const res = await axios.post(`${URL}/assistant-surgeon`, {
+      const res = await axios.post(`${URL}/assistant-surgeone`, {
         name,
         hospitals_id: Number(hospitals_id),
       });
@@ -82,7 +82,7 @@ const AddAssistant = () => {
 
   const toggleActiveStatus = async (surgeonId, currentStatus) => {
     try {
-      const res = await axios.put(`${URL}/assistant-surgeon/${surgeonId}`, {
+      const res = await axios.get(`${URL}/activate-assistant-surgeone/${surgeonId}`, {
         is_active: !currentStatus,
       });
 
@@ -118,7 +118,7 @@ const AddAssistant = () => {
 
   const unlinkSurgeon = async (surgeonId) => {
     try {
-      const res = await axios.put(`${URL}/assistant-surgeon/${surgeonId}`, {
+      const res = await axios.get(`${URL}/activate-assistant-surgeone/${surgeonId}`, {
         is_active: 0,
       });
 
