@@ -199,7 +199,8 @@ const AddAssistant = () => {
               onChange={(e) => setHospitals_id(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            >
+            > 
+            
               <option value="">Select Hospital</option>
               {hospitals.map((hospital) => (
                 <option key={hospital.id} value={hospital.id}>
