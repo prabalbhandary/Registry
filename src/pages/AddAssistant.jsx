@@ -10,20 +10,21 @@ const AddAssistant = () => {
   const [inactiveSurgeons, setInactiveSurgeons] = useState([]);
   const [error, setError] = useState("");
   const [hospitals, setHospitals] = useState([]);
-
-  const [hospital_id, setHospital_id] = useState("");
+  const [hospitals_id, setHospitals_id] = useState("");
 
   useEffect(() => {
     const fetchAssistantSurgeons = async () => {
       try {
         const res = await axios.get(`${URL}/assistant-surgeone`);
-        const activeList = res.data.data.filter((surgeon) => surgeon.is_active);
-        const inactiveList = res.data.data.filter(
-          (surgeon) => !surgeon.is_active
-        );
+
+        const assistantData = res.data?.data || res.data;
+
+        const activeList = assistantData.filter((surgeon) => surgeon.is_active);
+        const inactiveList = assistantData.filter((surgeon) => !surgeon.is_active);
         setActiveSurgeons(activeList);
         setInactiveSurgeons(inactiveList);
       } catch (error) {
+        console.error("Error fetching assistant surgeons:", error);
         toast.error("Failed to load assistant surgeons.");
       }
     };
@@ -35,10 +36,10 @@ const AddAssistant = () => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        if (res.data) {
-          setHospitals(res.data.data);
-        }
+        console.log("Fetched hospitals:", res.data);
+        setHospitals(res.data?.data || []);
       } catch (error) {
+        console.error("Error fetching hospitals:", error);
         toast.error("Failed to load hospitals.");
       }
     };
@@ -49,32 +50,37 @@ const AddAssistant = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
+    if (!name || !hospitals_id) {
       toast.error("Both name and hospital are required");
       return;
     }
 
     try {
-      const res = await axios.post(`${URL}/assistant-surgeone`, {
+      console.log("Submitting:", { name, hospitals_id: Number(hospitals_id) });
+
+      const res = await axios.post(`${URL}/assistant-surgeon`, {
         name,
-        hospitals_id: hospital_id, // <- match the backend's expected key
+        hospitals_id: Number(hospitals_id),
       });
 
       if (res.status === 201) {
         toast.success(res.data.message);
         setActiveSurgeons((prev) => [...prev, res.data.assistant_surgeon]);
         setName("");
+        setHospitals_id("");
+        window.location.reload();
       }
     } catch (error) {
+      console.error("Error response:", error.response?.data);
       const errorMessage = error?.response?.data?.message;
-      toast.error(errorMessage);
+      toast.error(errorMessage || "Failed to add assistant surgeon");
       setError(error.response?.data?.error || "");
     }
   };
 
   const toggleActiveStatus = async (surgeonId, currentStatus) => {
     try {
-      const res = await axios.put(`${URL}/assistant-surgeone/${surgeonId}`, {
+      const res = await axios.put(`${URL}/assistant-surgeon/${surgeonId}`, {
         is_active: !currentStatus,
       });
 
@@ -82,6 +88,7 @@ const AddAssistant = () => {
         const surgeonToUpdate =
           activeSurgeons.find((s) => s.id === surgeonId) ||
           inactiveSurgeons.find((s) => s.id === surgeonId);
+
         if (!surgeonToUpdate) throw new Error("Surgeon not found");
 
         const updatedSurgeon = {
@@ -102,13 +109,14 @@ const AddAssistant = () => {
         );
       }
     } catch (error) {
+      console.error("Error updating status:", error);
       toast.error(error.message || "Failed to update surgeon status.");
     }
   };
 
   const unlinkSurgeon = async (surgeonId) => {
     try {
-      const res = await axios.put(`${URL}/assistant-surgeone/${surgeonId}`, {
+      const res = await axios.put(`${URL}/assistant-surgeon/${surgeonId}`, {
         is_active: 0,
       });
 
@@ -123,6 +131,7 @@ const AddAssistant = () => {
         toast.success("Surgeon has been unlinked and marked as inactive.");
       }
     } catch (error) {
+      console.error("Error unlinking surgeon:", error);
       toast.error(error.message || "Failed to unlink surgeon.");
       setError(error.response?.data?.error || "");
     }
@@ -132,8 +141,10 @@ const AddAssistant = () => {
     setSearchTerm("");
   };
 
-  const filteredInactiveSurgeons = inactiveSurgeons.filter((surgeon) =>
-    surgeon.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInactiveSurgeons = inactiveSurgeons.filter(
+    (surgeon) =>
+      surgeon.name &&
+      surgeon.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -223,14 +234,14 @@ const AddAssistant = () => {
             </label>
             <select
               id="hospital"
-              value={hospital_id}
-              onChange={(e) => setHospital_id(e.target.value)}
+              value={hospitals_id}
+              onChange={(e) => setHospitals_id(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Select Hospital</option>
               {hospitals.map((hospital) => (
-                <option key={hospital.id} value={hospital.hospital_id}>
+                <option key={hospital.id} value={hospital.id}>
                   {hospital.name}
                 </option>
               ))}
@@ -290,10 +301,7 @@ const AddAssistant = () => {
         </div>
 
         {error && (
-          <div
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4"
-            role="alert"
-          >
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
             <span className="block sm:inline">{error}</span>
           </div>
         )}
