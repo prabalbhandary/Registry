@@ -11,8 +11,8 @@ const AddAssistant = () => {
   const [error, setError] = useState('');
   const [hospitals, setHospitals] = useState([]);
 
-  const [hospital_id, setHospital_id] = useState('');
-  
+  const [hospitals_id, setHospitals_id] = useState('');
+
 
   useEffect(() => {
     const fetchAssistantSurgeons = async () => {
@@ -34,7 +34,7 @@ const AddAssistant = () => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        if(res.data){
+        if (res.data) {
           setHospitals(res.data.data);
         }
       } catch (error) {
@@ -48,25 +48,30 @@ const AddAssistant = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
+    if (!name || !hospitals_id) {
       toast.error('Both name and hospital are required');
       return;
     }
 
     try {
+      // Log the data for debugging
+      console.log('Submitting:', { name, hospitals_id: Number(hospitals_id) });
+
       const res = await axios.post(`${URL}/assistant-surgeone`, {
         name,
-        hospital_id
+        hospitals_id: Number(hospitals_id) // Convert to number if needed
       });
 
       if (res.status === 201) {
         toast.success(res.data.message);
         setActiveSurgeons(prev => [...prev, res.data.assistant_surgeon]);
         setName('');
+        setHospitals_id('');
       }
     } catch (error) {
+      console.error('Error response:', error.response?.data);
       const errorMessage = error?.response?.data?.message;
-      toast.error(errorMessage);
+      toast.error(errorMessage || 'Failed to add assistant surgeon');
       setError(error.response?.data?.error || '');
     }
   };
@@ -122,8 +127,9 @@ const AddAssistant = () => {
   };
 
   const filteredInactiveSurgeons = inactiveSurgeons.filter(surgeon =>
-    surgeon.surgeon_name.toLowerCase().includes(searchTerm.toLowerCase())
+    surgeon.surgeon_name && surgeon.surgeon_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   return (
     <>
@@ -142,7 +148,7 @@ const AddAssistant = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-grow p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button 
+          <button
             onClick={resetSearch}
             className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -189,12 +195,14 @@ const AddAssistant = () => {
             <label htmlFor="hospital" className="block text-lg text-gray-700 font-semibold mb-2">Hospital</label>
             <select
               id="hospital"
+              value={hospitals_id}
+              onChange={(e) => setHospitals_id(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Select Hospital</option>
               {hospitals.map((hospital) => (
-                <option key={hospital.id} value={hospital.hospital_id}>
+                <option key={hospital.id} value={hospital.id}>
                   {hospital.name}
                 </option>
               ))}
