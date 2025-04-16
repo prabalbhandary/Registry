@@ -9,121 +9,119 @@ import RecentPatients from "../components/RecentPatients";
 const Dashboard = () => {
   const navigate = useNavigate();
   return (
-    <>
-      <div>
-        <section>
-          <p className="text-xl font-semibold text-gray-700 mb-4">LIVE STATS</p>
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 max-w-full">
-            <div className="flex shadow-lg">
-              <div className="bg-yellow-500 text-white w-1/4 h-24 flex items-center justify-center rounded-l-lg">
-                <p className="text-xl">Sur</p>
+    <div className="p-4 sm:p-6 md:p-8">
+      {/* Live Stats Section */}
+      <section>
+        <p className="text-xl font-semibold text-gray-700 mb-4">LIVE STATS</p>
+
+        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
+          {[
+            {
+              label: "Surgeries",
+              count: 0,
+              bg: "bg-yellow-500",
+              border: "border-yellow-500",
+              short: "Sur",
+              path: "/surgeries",
+            },
+            {
+              label: "Patients",
+              count: 0,
+              bg: "bg-gray-500",
+              border: "border-gray-500",
+              short: "Pat",
+              path: "/patients",
+            },
+            {
+              label: "Assistant Surgeons",
+              count: 0,
+              bg: "bg-blue-500",
+              border: "border-blue-500",
+              short: "AS",
+              path: "/assistants",
+            },
+            {
+              label: "Hospitals",
+              count: 0,
+              bg: "bg-red-500",
+              border: "border-red-500",
+              short: "HO",
+              path: "/hospitals",
+            },
+          ].map((item, index) => (
+            <div key={index} className="flex shadow-lg rounded-lg overflow-hidden">
+              <div className={`${item.bg} text-white w-1/3 sm:w-1/4 h-24 flex items-center justify-center`}>
+                <p className="text-lg font-bold">{item.short}</p>
               </div>
-              <div className="text-center border border-yellow-500 border-l-0 w-3/4 rounded-r-lg">
+              <div className={`text-center border ${item.border} border-l-0 w-2/3 sm:w-3/4 flex flex-col justify-center`}>
                 <Link
-                  to="/surgeries"
+                  to={item.path}
                   className="text-black font-medium hover:text-gray-700 hover:underline"
                 >
-                  Surgeries
+                  {item.label}
                 </Link>
-                <p className="text-xl font-semibold mt-2">0</p>
+                <p className="text-xl font-semibold mt-2">{item.count}</p>
               </div>
             </div>
-            <div className="flex shadow-lg">
-              <div className="bg-gray-500 text-white w-1/4 h-24 flex items-center justify-center rounded-l-lg">
-                <p className="text-xl">Pat</p>
-              </div>
-              <div className="text-center border border-gray-500 w-3/4 rounded-r-lg">
-                <Link
-                  to="/patients"
-                  className="text-black font-medium hover:text-gray-700 hover:underline"
-                >
-                  Patients
-                </Link>
-                <p className="text-xl font-semibold mt-2">0</p>
-              </div>
+          ))}
+        </div>
+
+        <hr className="my-6" />
+      </section>
+
+      {/* Quick Actions Section */}
+      <section className="bg-white rounded-lg p-4 sm:p-6 mb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+          {/* Add Hospital */}
+          <div
+            onClick={() => navigate("/add-hospital")}
+            className="flex items-center w-full sm:w-auto hover:bg-gray-100 p-2 rounded-full cursor-pointer transition"
+          >
+            <div className="bg-pink-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
+              <FaBars className="text-xl" />
             </div>
-            <div className="flex shadow-lg">
-              <div className="bg-blue-500 text-white w-1/4 h-24 flex items-center justify-center rounded-l-lg">
-                <p className="text-xl">AS</p>
-              </div>
-              <div className="text-center border border-blue-500 w-3/4 rounded-r-lg">
-                <Link
-                  to="/assistants"
-                  className="text-black font-medium hover:text-gray-700 hover:underline"
-                >
-                  Assistant Surgeons
-                </Link>
-                <p className="text-xl font-semibold mt-2">0</p>
-              </div>
-            </div>
-            <div className="flex shadow-lg">
-              <div className="bg-red-500 text-white w-1/4 h-24 flex items-center justify-center rounded-l-lg">
-                <p className="text-xl">HO</p>
-              </div>
-              <div className="text-center border border-red-500 w-3/4 rounded-r-lg">
-                <Link
-                  to="/hospitals"
-                  className="text-black font-medium hover:text-gray-700 hover:underline"
-                >
-                  Hospitals
-                </Link>
-                <p className="text-xl font-semibold mt-2">0</p>
-              </div>
+            <div className="flex items-center ml-4">
+              <p className="text-gray-600 font-medium hover:underline">
+                Add Hospital
+              </p>
+              <FaLongArrowAltRight className="ml-2 text-gray-500" />
             </div>
           </div>
-          <hr className="my-6" />
-        </section>
 
-        <section className="w-full p-6 bg-white rounded-lg mb-6">
-          <div className="flex items-center justify-between mb-4 space-x-6">
-            <div
-              onClick={() => navigate("/add-hospital")}
-              className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full"
-            >
-              <div className="bg-pink-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
-                <FaBars className="text-xl" />
-              </div>
-              <div className="flex items-center justify-center px-6 ml-4">
-                <p className="text-gray-500 font-medium hover:underline">
-                  Add Hospital
-                </p>
-                <FaLongArrowAltRight className="inline ml-2 text-gray-500" />
-              </div>
+          {/* Add Assistant */}
+          <div
+            onClick={() => navigate("/add-assistant")}
+            className="flex items-center w-full sm:w-auto hover:bg-gray-100 p-2 rounded-full cursor-pointer transition"
+          >
+            <div className="bg-yellow-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
+              <SiGooglesheets className="text-xl" />
             </div>
-
-            <div
-              onClick={() => navigate("/add-assistant")}
-              className="flex items-center hover:bg-gray-200 cursor-pointer rounded-full"
-            >
-              <div className="bg-yellow-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
-                <SiGooglesheets className="text-xl" />
-              </div>
-              <div className="flex items-center justify-center px-6 ml-4">
-                <p className="text-gray-500 font-medium hover:underline">
-                  Add Assistant Surgeon
-                </p>
-                <FaLongArrowAltRight className="inline ml-2 text-gray-500" />
-              </div>
+            <div className="flex items-center ml-4">
+              <p className="text-gray-600 font-medium hover:underline">
+                Add Assistant Surgeon
+              </p>
+              <FaLongArrowAltRight className="ml-2 text-gray-500" />
             </div>
           </div>
-          <hr className="my-6" />
-        </section>
+        </div>
+        <hr className="my-6" />
+      </section>
 
-        <section className="w-full rounded-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 w-full">
-            <div className="flex-1 bg-white p-4 rounded-lg">
-              <RecentSurgeries />
-            </div>
-            <div className="flex-1 bg-white p-4 rounded-lg">
-              <RecentUsers />
-            </div>
-            <div className="flex-1 bg-white p-4 rounded-lg">
-              <RecentPatients />
-            </div>
+      {/* Recent Activity Section */}
+      <section className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <RecentSurgeries />
           </div>
-        </section>
-      </div>
-    </>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <RecentUsers />
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <RecentPatients />
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 
