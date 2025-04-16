@@ -6,11 +6,8 @@ const SecondNavbar = ({ completedIndex = 0 }) => {
   const { idFromRoute } = useParams(); // Using useParams for route-specific ID
 
   useEffect(() => {
-    console.log("idFromRoute:", idFromRoute); // Log the route parameter
-    // Try to get patientId from localStorage
     const patientData = localStorage.getItem("patientId");
     if (patientData) {
-      console.log("Patient data from localStorage:", patientData); // Log data from localStorage
       setPatientId(JSON.parse(patientData).patientId); // Set patientId from localStorage
     } else if (idFromRoute) {
       console.log("Patient ID from route params:", idFromRoute); // Log route param

@@ -7,14 +7,27 @@ import { URL } from "../components/URL";
 const SelectPage = () => {
   const [hospitals, setHospitals] = useState([]);
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
-
   const navigate = useNavigate();
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.get(`${URL}/surgeon-detail`);
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        navigate("/create-surgery");
+        localStorage.setItem("surgeonDetail", JSON.stringify(res.data.data));
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Something went wrong.");
+    }
+  }
 
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        console.log("Hospital API Response:", res.data); // Debugging aid
 
         const hospitalsData = Array.isArray(res.data)
           ? res.data
@@ -24,7 +37,11 @@ const SelectPage = () => {
           throw new Error("Invalid hospitals data structure");
         }
 
-        const activeHospitals = hospitalsData.filter(hospital => hospital.is_active);
+        console.log("Fetched hospitals:", hospitalsData);
+
+        const activeHospitals = hospitalsData.filter(
+          (hospital) => hospital.is_active
+        );
 
         setHospitals(activeHospitals);
       } catch (error) {
@@ -45,6 +62,8 @@ const SelectPage = () => {
           throw new Error("Invalid assistant surgeons data");
         }
         setAssistantSurgeons(surgeons);
+        console.log("Assistant surgeons:", surgeons);
+        localStorage.setItem("assistantSurgeons", JSON.stringify(surgeons));
       } catch (error) {
         console.error("Error fetching assistant surgeons:", error);
         toast.error("Failed to load assistant surgeons.");
@@ -93,7 +112,7 @@ const SelectPage = () => {
           Back
         </button>
         <button
-          onClick={() => navigate("/create-surgery")}
+          onClick={handleSubmit}
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
         >
