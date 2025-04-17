@@ -22,7 +22,7 @@ const SelectPage = () => {
       if (res.data.success === true) {
         toast.success(res.data.message);
         navigate("/create-surgery");
-        localStorage.setItem("surgeonDetail", JSON.stringify(res.data.data));
+        localStorage.setItem("surgeonDetailId", JSON.stringify(res.data.data.id));
       }
       console.log(res)
     } catch (error) {

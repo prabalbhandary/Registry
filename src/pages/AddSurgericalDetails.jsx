@@ -7,95 +7,95 @@ import axios from "axios";
 import { URL } from "../components/URL";
 
 const AddSurgicalDetails = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  // Milaua baki
-  const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
-  const [hospitals, setHospitals] = useState([]); // Store the array of hospitals
-  const [selectedHospital, setSelectedHospital] = useState(null); // Store the selected hospital
-  const [assistantSurgeons, setAssistantSurgeons] = useState([]);
-  const [selectedAssistant, setSelectedAssistant] = useState(null); // Single assistant instead of array
-  const [date, setDate] = useState("");
-  const location = useLocation();
-  const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
+  // const navigate = useNavigate();
+  // const { id } = useParams();
+  // // Milaua baki
+  // const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
+  // const [hospitals, setHospitals] = useState([]); // Store the array of hospitals
+  // const [selectedHospital, setSelectedHospital] = useState(null); // Store the selected hospital
+  // const [assistantSurgeons, setAssistantSurgeons] = useState([]);
+  // const [selectedAssistant, setSelectedAssistant] = useState(null); // Single assistant instead of array
+  // const [date, setDate] = useState("");
+  // const location = useLocation();
+  // const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
   
-  // Parse patientId as an integer
-  const patientId = parseInt(useParams().id, 10); // Now it's an integer
+  // // Parse patientId as an integer
+  // const patientId = parseInt(useParams().id, 10); // Now it's an integer
 
-  useEffect(() => {
-    const fetchHospitals = async () => {
-      try {
-        const res = await axios.get(`${URL}/hospital`);
-        setHospitals(res.data.data); // Store the array of hospitals
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Something went wrong.");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchHospitals = async () => {
+  //     try {
+  //       const res = await axios.get(`${URL}/hospital`);
+  //       setHospitals(res.data.data); // Store the array of hospitals
+  //     } catch (error) {
+  //       toast.error(error.response?.data?.message || "Something went wrong.");
+  //     }
+  //   };
 
-    fetchHospitals();
-  }, []);
+  //   fetchHospitals();
+  // }, []);
 
-  useEffect(() => {
-    const fetchAssistantSurgeons = async () => {
-      try {
-        const res = await axios.get(`${URL}/assistant-surgeone`);
-        setAssistantSurgeons(res.data.data);
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Something went wrong.");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchAssistantSurgeons = async () => {
+  //     try {
+  //       const res = await axios.get(`${URL}/assistant-surgeone`);
+  //       setAssistantSurgeons(res.data.data);
+  //     } catch (error) {
+  //       toast.error(error.response?.data?.message || "Something went wrong.");
+  //     }
+  //   };
 
-    fetchAssistantSurgeons();
-  }, []);
+  //   fetchAssistantSurgeons();
+  // }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
   
-    // Validate input
-    if (!selectedHospital) {
-      toast.error("Please select a hospital.");
-      return;
-    }
-    if (!patientId) {
-      toast.error("Patient ID is missing.");
-      return;
-    }
-    if (!date) {
-      toast.error("Please provide the date of surgery.");
-      return;
-    }
-    if (!selectedAssistant) {
-      toast.error("Please select an assistant surgeon.");
-      return;
-    }
+  //   // Validate input
+  //   if (!selectedHospital) {
+  //     toast.error("Please select a hospital.");
+  //     return;
+  //   }
+  //   if (!patientId) {
+  //     toast.error("Patient ID is missing.");
+  //     return;
+  //   }
+  //   if (!date) {
+  //     toast.error("Please provide the date of surgery.");
+  //     return;
+  //   }
+  //   if (!selectedAssistant) {
+  //     toast.error("Please select an assistant surgeon.");
+  //     return;
+  //   }
   
-    // Prepare payload for API based on the required structure
-    const payload = {
-      patient_details_id: patientId, // patientId is now mapped to patient_details_id
-      surgeon_name: primarySurgeon, // primarySurgeon mapped to surgeon_name
-      hospitals_id: selectedHospital.id, // selectedHospital.id mapped to hospitals_id
-      assistant_surgeones_id: selectedAssistant, // selectedAssistant mapped to assistant_surgeones_id (single value)
-      surgery_date: date, // date mapped to surgery_date
-    };
+  //   // Prepare payload for API based on the required structure
+  //   const payload = {
+  //     patient_details_id: patientId, // patientId is now mapped to patient_details_id
+  //     surgeon_name: primarySurgeon, // primarySurgeon mapped to surgeon_name
+  //     hospitals_id: selectedHospital.id, // selectedHospital.id mapped to hospitals_id
+  //     assistant_surgeones_id: selectedAssistant, // selectedAssistant mapped to assistant_surgeones_id (single value)
+  //     surgery_date: date, // date mapped to surgery_date
+  //   };
 
-    console.log("Payload to be sent:", payload);
+  //   console.log("Payload to be sent:", payload);
 
-    try {
-      const res = await axios.post(`${URL}/surgical-detail`, payload);
-      toast.success("Surgical details added successfully.");
-      setCompletedIndex(2);
-      navigate(`/patient/${id}/patient-surgical-details`, { state: { completedIndex: 2 } });
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Something went wrong.");
-    }
-  };
+  //   try {
+  //     const res = await axios.post(`${URL}/surgical-detail`, payload);
+  //     toast.success("Surgical details added successfully.");
+  //     setCompletedIndex(2);
+  //     navigate(`/patient/${id}/patient-surgical-details`, { state: { completedIndex: 2 } });
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.response?.data?.message || "Something went wrong.");
+  //   }
+  // };
 
   return (
     <>
       <title>Create Surgical Details - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
-      <section className="py-6 px-4">
+      {/* <section className="py-6 px-4">
         <h1 className="text-3xl font-bold mb-4">Add Surgical Details</h1>
       </section>
       <section className="max-w-3xl mx-auto">
@@ -179,7 +179,7 @@ const AddSurgicalDetails = () => {
             </button>
           </div>
         </form>
-      </section>
+      </section> */}
     </>
   );
 };

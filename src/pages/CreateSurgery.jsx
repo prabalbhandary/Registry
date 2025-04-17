@@ -141,11 +141,11 @@ const CreateSurgery = () => {
     }
 
     try {
-      const surgeonDetail = JSON.parse(
-        localStorage.getItem("surgeonDetail")
-      )[0];
+      // const surgeonDetail = JSON.parse(
+      //   localStorage.getItem("surgeonDetail")
+      // );
       const res = await axios.post(`${URL}/patient-detail`, {
-        surgeon_detail_id: surgeonDetail.id,
+        surgeon_detail_id: localStorage.getItem("surgeonDetailId"),
         first_name,
         last_name,
         age,
