@@ -180,6 +180,7 @@ const AddSurgicalDetails = () => {
           </div>
         </form>
       </section> */}
+      <h1>Add Surgical Details</h1>
     </>
   );
 };
