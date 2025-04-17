@@ -162,12 +162,12 @@ const CreateSurgery = () => {
         MoIOther,
         incident_date: incidentDate,
         incident_time: incidentTime,
-        primaryTreatment,
-        treatmentWhere,
+        primary_treatment_received: primaryTreatment,
+        treatment_location: treatmentWhere,
         antibiotic,
-        whatTreatment,
+        treatment_details:whatTreatment,
       });
-      if (res.status === 201) {
+      if (res.data.success === true) {
         toast.success(res.data.message);
         setCompletedIndex(1);
         const patientId = res.data.data.id;
@@ -177,9 +177,13 @@ const CreateSurgery = () => {
         });
       }
     } catch (error) {
-      toast.error(error.response.data.message);
-      setError(error.response.data.error);
+      const errMsg =
+        error?.response?.data?.error || "Something went wrong. Please try again.";
+      toast.error(errMsg);
+      setError(errMsg);
+      console.log(error);
     }
+    
   };
 
   const handleProvinceChange = (e) => {

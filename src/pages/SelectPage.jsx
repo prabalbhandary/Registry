@@ -9,15 +9,22 @@ const SelectPage = () => {
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const navigate = useNavigate();
 
+  const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-      const res = await axios.get(`${URL}/surgeon-detail`);
-      if (res.status === 200) {
+      const res = await axios.post(`${URL}/surgeon-detail`, {
+        surgeon_name: primarySurgeon,
+        hospitals_id: Number(hospitals[0].id),
+        assistant_surgeones: assistantSurgeons
+      });
+      if (res.data.success === true) {
         toast.success(res.data.message);
         navigate("/create-surgery");
         localStorage.setItem("surgeonDetail", JSON.stringify(res.data.data));
       }
+      console.log(res)
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Something went wrong.");
