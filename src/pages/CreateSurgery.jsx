@@ -165,7 +165,7 @@ const CreateSurgery = () => {
         primary_treatment_received: primaryTreatment,
         treatment_location: treatmentWhere,
         antibiotic,
-        treatment_details:whatTreatment,
+        treatment_details: whatTreatment,
       });
       if (res.data.success === true) {
         toast.success(res.data.message);
@@ -178,12 +178,12 @@ const CreateSurgery = () => {
       }
     } catch (error) {
       const errMsg =
-        error?.response?.data?.error || "Something went wrong. Please try again.";
+        error?.response?.data?.error ||
+        "Something went wrong. Please try again.";
       toast.error(errMsg);
       setError(errMsg);
       console.log(error);
     }
-    
   };
 
   const handleProvinceChange = (e) => {
@@ -317,12 +317,15 @@ const CreateSurgery = () => {
     <>
       <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
-      <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-lg rounded-lg mt-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-6 sm:mb-8">
           Add Patient Information
         </h1>
+
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Responsive Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* First Name */}
             <div className="flex flex-col">
               <label
                 htmlFor="firstName"
@@ -332,10 +335,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="text"
-                value={first_name}
-                onChange={(e) => setFirst_name(e.target.value)}
                 id="firstName"
                 name="first_name"
+                value={first_name}
+                onChange={(e) => setFirst_name(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.first_name && (
@@ -344,6 +347,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Last Name */}
             <div className="flex flex-col">
               <label
                 htmlFor="lastName"
@@ -353,10 +358,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="text"
-                value={last_name}
-                onChange={(e) => setLast_name(e.target.value)}
                 id="lastName"
                 name="last_name"
+                value={last_name}
+                onChange={(e) => setLast_name(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.last_name && (
@@ -365,6 +370,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Age */}
             <div className="flex flex-col">
               <label
                 htmlFor="age"
@@ -374,16 +381,18 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
                 id="age"
                 name="age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.age && (
                 <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>
               )}
             </div>
+
+            {/* Nationality */}
             <div className="flex flex-col">
               <label
                 htmlFor="nationality"
@@ -392,10 +401,10 @@ const CreateSurgery = () => {
                 Nationality
               </label>
               <select
+                id="nationality"
                 name="nationality"
                 value={nationality}
                 onChange={(e) => setNationality(e.target.value)}
-                id="nationality"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Nationality</option>
@@ -408,6 +417,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Province */}
             <div className="flex flex-col">
               <label
                 htmlFor="province"
@@ -416,10 +427,10 @@ const CreateSurgery = () => {
                 Province
               </label>
               <select
+                id="province"
                 name="province"
                 value={province}
                 onChange={handleProvinceChange}
-                id="province"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Province</option>
@@ -439,6 +450,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* District */}
             <div className="flex flex-col">
               <label
                 htmlFor="district"
@@ -447,16 +460,16 @@ const CreateSurgery = () => {
                 District
               </label>
               <select
+                id="district"
                 name="district"
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
-                id="district"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select District</option>
-                {districts.map((districtName) => (
-                  <option key={districtName} value={districtName}>
-                    {districtName}
+                {districts.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
                   </option>
                 ))}
               </select>
@@ -466,6 +479,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Hospital Number */}
             <div className="flex flex-col">
               <label
                 htmlFor="hospital_number"
@@ -475,10 +490,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="text"
-                value={hospital_number}
-                onChange={(e) => setHospital_number(e.target.value)}
                 id="hospital_number"
                 name="hospital_number"
+                value={hospital_number}
+                onChange={(e) => setHospital_number(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.hospital_number && (
@@ -487,6 +502,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Phone Number */}
             <div className="flex flex-col">
               <label
                 htmlFor="contact_number"
@@ -496,10 +513,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="text"
-                value={phone_number}
-                onChange={(e) => setPhone_number(e.target.value)}
                 id="contact_number"
                 name="phone_number"
+                value={phone_number}
+                onChange={(e) => setPhone_number(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.phone_number && (
@@ -508,6 +525,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Gender */}
             <div className="flex flex-col">
               <label
                 htmlFor="gender"
@@ -516,10 +535,10 @@ const CreateSurgery = () => {
                 Gender
               </label>
               <select
+                id="gender"
                 name="gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                id="gender"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Gender</option>
@@ -533,6 +552,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Occupation */}
             <div className="flex flex-col">
               <label
                 htmlFor="occupation"
@@ -541,10 +562,10 @@ const CreateSurgery = () => {
                 Occupation
               </label>
               <select
+                id="occupation"
                 name="occupation"
                 value={occupation}
                 onChange={(e) => setOccupation(e.target.value)}
-                id="occupation"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Occupation</option>
@@ -559,6 +580,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* MoI & Conditional Fields */}
             <div className="flex flex-col">
               <label
                 htmlFor="moi"
@@ -699,6 +722,8 @@ const CreateSurgery = () => {
                 />
               </div>
             )}
+
+            {/* Incident Date */}
             <div className="flex flex-col">
               <label
                 htmlFor="incidentDate"
@@ -708,10 +733,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="date"
-                value={incidentDate}
-                onChange={(e) => setIncidentDate(e.target.value)}
                 id="incidentDate"
                 name="incident_datetime"
+                value={incidentDate}
+                onChange={(e) => setIncidentDate(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.incidentDate && (
@@ -720,6 +745,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Incident Time */}
             <div className="flex flex-col">
               <label
                 htmlFor="incidentTime"
@@ -729,10 +756,10 @@ const CreateSurgery = () => {
               </label>
               <input
                 type="time"
-                value={incidentTime}
-                onChange={(e) => setIncidentTime(e.target.value)}
                 id="incidentTime"
                 name="incident_datetime"
+                value={incidentTime}
+                onChange={(e) => setIncidentTime(e.target.value)}
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {fieldErrors.incidentTime && (
@@ -741,6 +768,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Primary Treatment */}
             <div className="flex flex-col">
               <label
                 htmlFor="primaryTreatment"
@@ -749,10 +778,10 @@ const CreateSurgery = () => {
                 Primary Treatment
               </label>
               <select
+                id="primaryTreatment"
                 name="primary_treatment_received"
                 value={primaryTreatment}
                 onChange={(e) => setPrimaryTreatment(e.target.value)}
-                id="primaryTreatment"
                 className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Treatment</option>
@@ -765,6 +794,8 @@ const CreateSurgery = () => {
                 </p>
               )}
             </div>
+
+            {/* Treatment Details (conditional) */}
             {primaryTreatment === "1" && (
               <>
                 <div className="flex flex-col">
@@ -776,10 +807,9 @@ const CreateSurgery = () => {
                   </label>
                   <input
                     type="text"
+                    id="treatmentWhere"
                     value={treatmentWhere}
                     onChange={(e) => setTreatmentWhere(e.target.value)}
-                    id="treatmentWhere"
-                    name="treatment_location"
                     className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
@@ -792,10 +822,9 @@ const CreateSurgery = () => {
                   </label>
                   <input
                     type="text"
+                    id="antibiotic"
                     value={antibiotic}
                     onChange={(e) => setAntibiotic(e.target.value)}
-                    id="antibiotic"
-                    name="antibiotic"
                     className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
@@ -807,37 +836,36 @@ const CreateSurgery = () => {
                     What Treatment
                   </label>
                   <textarea
+                    id="whatTreatment"
                     rows="4"
-                    cols="50"
-                    type="text"
                     value={whatTreatment}
                     onChange={(e) => setWhatTreatment(e.target.value)}
-                    id="whatTreatment"
-                    name="treatment_details"
                     className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </>
             )}
           </div>
-          <div>
-            {error && (
-              <div className="bg-red-100 rounded-lg py-5 px-6 mb-4 text-base text-red-700">
-                {error}
-              </div>
-            )}
-          </div>
-          <div className="flex justify-between mt-6">
+
+          {/* Error message */}
+          {error && (
+            <div className="bg-red-100 rounded-lg py-4 px-5 text-red-700 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Responsive Buttons */}
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
             <button
-              onClick={() => navigate("/dashboard")}
               type="button"
-              className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300"
+              onClick={() => navigate("/dashboard")}
+              className="w-full sm:w-auto px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+              className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
             >
               Save and Next
             </button>

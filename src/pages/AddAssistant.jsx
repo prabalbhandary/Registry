@@ -16,13 +16,9 @@ const AddAssistant = () => {
     const fetchAssistantSurgeons = async () => {
       try {
         const res = await axios.get(`${URL}/assistant-surgeone`);
-
         const assistantData = res.data?.data || res.data;
-
         const activeList = assistantData.filter((surgeon) => surgeon.is_active);
-        const inactiveList = assistantData.filter(
-          (surgeon) => !surgeon.is_active
-        );
+        const inactiveList = assistantData.filter((surgeon) => !surgeon.is_active);
         setActiveSurgeons(activeList);
         setInactiveSurgeons(inactiveList);
       } catch (error) {
@@ -30,7 +26,6 @@ const AddAssistant = () => {
         toast.error("Failed to load assistant surgeons.");
       }
     };
-
     fetchAssistantSurgeons();
   }, []);
 
@@ -38,28 +33,23 @@ const AddAssistant = () => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        console.log("Fetched hospitals:", res.data);
         setHospitals(res.data?.data || []);
       } catch (error) {
         console.error("Error fetching hospitals:", error);
         toast.error("Failed to load hospitals.");
       }
     };
-
     fetchHospitals();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!name || !hospitals_id) {
       toast.error("Both name and hospital are required");
       return;
     }
 
     try {
-      console.log("Submitting:", { name, hospitals_id: Number(hospitals_id) });
-
       const res = await axios.post(`${URL}/assistant-surgeone`, {
         name,
         hospitals_id: Number(hospitals_id),
@@ -74,8 +64,7 @@ const AddAssistant = () => {
       }
     } catch (error) {
       console.error("Error response:", error.response?.data);
-      const errorMessage = error?.response?.data?.message;
-      toast.error(errorMessage || "Failed to add assistant surgeon");
+      toast.error(error?.response?.data?.message || "Failed to add assistant surgeon");
       setError(error.response?.data?.error || "");
     }
   };
@@ -106,9 +95,7 @@ const AddAssistant = () => {
           setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         }
 
-        toast.success(
-          `Surgeon status updated to ${!currentStatus ? "Active" : "Inactive"}`
-        );
+        toast.success(`Surgeon status updated to ${!currentStatus ? "Active" : "Inactive"}`);
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -124,8 +111,7 @@ const AddAssistant = () => {
 
       if (res.status === 200) {
         const surgeonToUnlink = activeSurgeons.find((s) => s.id === surgeonId);
-        if (!surgeonToUnlink)
-          throw new Error("Surgeon not found in active list");
+        if (!surgeonToUnlink) throw new Error("Surgeon not found in active list");
 
         setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         setInactiveSurgeons((prev) => [...prev, surgeonToUnlink]);
@@ -139,30 +125,26 @@ const AddAssistant = () => {
     }
   };
 
-  const resetSearch = () => {
-    setSearchTerm("");
-  };
+  const resetSearch = () => setSearchTerm("");
 
-  const filteredInactiveSurgeons = inactiveSurgeons.filter(
-    (surgeon) =>
-      surgeon.name &&
-      surgeon.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInactiveSurgeons = inactiveSurgeons.filter((surgeon) =>
+    surgeon.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <>
       <title>Assistant Surgeons - Trauma Registry</title>
 
-      {/* Search & Reactivate Existing Assistant Surgeons */}
-      <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+      {/* Search and Activate Existing Assistant Surgeons */}
+      <section className="container mx-auto px-4 md:px-8 py-6 bg-white shadow-xl rounded-lg my-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Add Existing Assistant Surgeons
         </h1>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-600 mb-6 text-sm md:text-base">
           Search Assistant Surgeons and add them
         </p>
 
-        <div className="flex space-x-4">
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <input
             type="text"
             placeholder="Search Assistant Surgeons"
@@ -184,14 +166,10 @@ const AddAssistant = () => {
               key={surgeon.id}
               className="mb-4 p-4 border rounded-md flex justify-between items-center"
             >
-              <p className="text-lg font-semibold text-gray-800">
-                {surgeon.name}
-              </p>
+              <p className="text-lg font-semibold text-gray-800">{surgeon.name}</p>
               <button
                 className="text-blue-600 hover:text-blue-800"
-                onClick={() =>
-                  toggleActiveStatus(surgeon.id, surgeon.is_active)
-                }
+                onClick={() => toggleActiveStatus(surgeon.id, surgeon.is_active)}
               >
                 Activate
               </button>
@@ -203,18 +181,15 @@ const AddAssistant = () => {
       <hr className="my-6 border-gray-300" />
 
       {/* Add New Assistant Surgeon */}
-      <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+      <section className="container mx-auto px-4 md:px-8 py-6 bg-white shadow-xl rounded-lg my-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Add New Assistant Surgeons
         </h1>
-        <p className="text-gray-600 mb-6">Enter name and select hospital</p>
+        <p className="text-gray-600 mb-6 text-sm md:text-base">Enter name and select hospital</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label
-              htmlFor="name"
-              className="block text-lg text-gray-700 font-semibold mb-2"
-            >
+            <label htmlFor="name" className="block text-base md:text-lg text-gray-700 font-semibold mb-2">
               Name
             </label>
             <input
@@ -228,10 +203,7 @@ const AddAssistant = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="hospital"
-              className="block text-lg text-gray-700 font-semibold mb-2"
-            >
+            <label htmlFor="hospital" className="block text-base md:text-lg text-gray-700 font-semibold mb-2">
               Hospital
             </label>
             <select
@@ -261,34 +233,28 @@ const AddAssistant = () => {
 
       <hr className="my-6 border-gray-300" />
 
-      {/* List Active Assistant Surgeons */}
-      <section className="container mx-auto p-8 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+      {/* Active Assistant Surgeons List */}
+      <section className="container mx-auto px-4 md:px-8 py-6 bg-white shadow-xl rounded-lg my-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Active Assistant Surgeons
         </h1>
-        <p className="text-gray-600 mb-6">List of Active Assistant Surgeons</p>
+        <p className="text-gray-600 mb-6 text-sm md:text-base">List of Active Assistant Surgeons</p>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border-collapse shadow-md rounded-lg">
+          <table className="min-w-full bg-white border-collapse shadow-md rounded-lg text-sm md:text-base">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">
-                  S.No
-                </th>
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">
-                  Name
-                </th>
-                <th className="px-6 py-4 text-left text-gray-700 font-medium">
-                  Actions
-                </th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">S.No</th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">Name</th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
               {activeSurgeons.map((surgeon, index) => (
                 <tr key={surgeon.id} className="border-b">
-                  <td className="px-6 py-4">{index + 1}</td>
-                  <td className="px-6 py-4">{surgeon.name}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 md:px-6 py-3">{index + 1}</td>
+                  <td className="px-4 md:px-6 py-3">{surgeon.name}</td>
+                  <td className="px-4 md:px-6 py-3">
                     <button
                       onClick={() => unlinkSurgeon(surgeon.id)}
                       className="text-red-600 hover:text-red-800"
