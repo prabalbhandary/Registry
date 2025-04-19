@@ -172,7 +172,7 @@ const CreateSurgery = () => {
         setCompletedIndex(1);
         const patientId = res.data.data.id;
         localStorage.setItem("patientId", patientId);
-        navigate(`/add-surgerical-details/${patientId}`, {
+        navigate(`/add-surgerical-details`, {
           state: { completedIndex: 1 },
         });
       }
