@@ -85,7 +85,7 @@ const AppContent = () => {
             <Route path="/patients" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/users" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/create-surgery" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/add-surgerical-details/:id" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
+            <Route path="/add-surgerical-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/patient/:id/patient-surgical-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/patient-injury-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/diagnosis" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
@@ -99,11 +99,8 @@ const AppContent = () => {
             <Route path="/clavicle" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/scapula" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/humerus" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/elbow" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/radius_and_ulna" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/hand" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/pelvis" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/acetabulum" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/femur" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/tibia_and_fibula" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/patella" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />

@@ -1,186 +1,149 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
 import Select from "react-select";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SecondNavbar from "../components/SecondNavbar";
-import axios from "axios";
-import { URL } from "../components/URL";
+import skeleton from "../assets/skeleton.png";
 
-const AddSurgicalDetails = () => {
-  // const navigate = useNavigate();
-  // const { id } = useParams();
-  // // Milaua baki
-  // const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
-  // const [hospitals, setHospitals] = useState([]); // Store the array of hospitals
-  // const [selectedHospital, setSelectedHospital] = useState(null); // Store the selected hospital
-  // const [assistantSurgeons, setAssistantSurgeons] = useState([]);
-  // const [selectedAssistant, setSelectedAssistant] = useState(null); // Single assistant instead of array
-  // const [date, setDate] = useState("");
-  // const location = useLocation();
-  // const [completedIndex, setCompletedIndex] = useState(location.state?.completedIndex || 1);
-  
-  // // Parse patientId as an integer
-  // const patientId = parseInt(useParams().id, 10); // Now it's an integer
+const SkeletonOverlay = ({ onPartClick }) => {
+  const bodyParts = {
+    upperLimb: [
+      {
+        name: "Clavicle",
+        top: "20%",
+        left: "45%",
+        width: "10%",
+        height: "5%",
+        link: "/clavicle",
+      },
+      {
+        name: "Scapula",
+        top: "25%",
+        left: "35%",
+        width: "10%",
+        height: "10%",
+        link: "/scapula",
+      },
+      {
+        name: "Humerus",
+        top: "35%",
+        left: "30%",
+        width: "10%",
+        height: "20%",
+        link: "/humerus",
+      },
+      {
+        name: "Radius & Ulna",
+        top: "50%",
+        left: "20%",
+        width: "10%",
+        height: "20%",
+        link: "/radius_and_ulna",
+      },
+      {
+        name: "Hand",
+        top: "70%",
+        left: "15%",
+        width: "10%",
+        height: "10%",
+        link: "/hand",
+      },
+    ],
+    lowerLimb: [
+      {
+        name: "Femur",
+        top: "60%",
+        left: "40%",
+        width: "10%",
+        height: "20%",
+        link: "/femur",
+      },
+      {
+        name: "Tibia & Fibula",
+        top: "75%",
+        left: "40%",
+        width: "10%",
+        height: "20%",
+        link: "/tibia_and_fibula",
+      },
+      {
+        name: "Patella",
+        top: "65%",
+        left: "45%",
+        width: "5%",
+        height: "5%",
+        link: "/patella",
+      },
+      {
+        name: "Foot",
+        top: "90%",
+        left: "40%",
+        width: "10%",
+        height: "10%",
+        link: "/foot",
+      },
+    ],
+  };
 
-  // useEffect(() => {
-  //   const fetchHospitals = async () => {
-  //     try {
-  //       const res = await axios.get(`${URL}/hospital`);
-  //       setHospitals(res.data.data); // Store the array of hospitals
-  //     } catch (error) {
-  //       toast.error(error.response?.data?.message || "Something went wrong.");
-  //     }
-  //   };
-
-  //   fetchHospitals();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchAssistantSurgeons = async () => {
-  //     try {
-  //       const res = await axios.get(`${URL}/assistant-surgeone`);
-  //       setAssistantSurgeons(res.data.data);
-  //     } catch (error) {
-  //       toast.error(error.response?.data?.message || "Something went wrong.");
-  //     }
-  //   };
-
-  //   fetchAssistantSurgeons();
-  // }, []);
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  
-  //   // Validate input
-  //   if (!selectedHospital) {
-  //     toast.error("Please select a hospital.");
-  //     return;
-  //   }
-  //   if (!patientId) {
-  //     toast.error("Patient ID is missing.");
-  //     return;
-  //   }
-  //   if (!date) {
-  //     toast.error("Please provide the date of surgery.");
-  //     return;
-  //   }
-  //   if (!selectedAssistant) {
-  //     toast.error("Please select an assistant surgeon.");
-  //     return;
-  //   }
-  
-  //   // Prepare payload for API based on the required structure
-  //   const payload = {
-  //     patient_details_id: patientId, // patientId is now mapped to patient_details_id
-  //     surgeon_name: primarySurgeon, // primarySurgeon mapped to surgeon_name
-  //     hospitals_id: selectedHospital.id, // selectedHospital.id mapped to hospitals_id
-  //     assistant_surgeones_id: selectedAssistant, // selectedAssistant mapped to assistant_surgeones_id (single value)
-  //     surgery_date: date, // date mapped to surgery_date
-  //   };
-
-  //   console.log("Payload to be sent:", payload);
-
-  //   try {
-  //     const res = await axios.post(`${URL}/surgical-detail`, payload);
-  //     toast.success("Surgical details added successfully.");
-  //     setCompletedIndex(2);
-  //     navigate(`/patient/${id}/patient-surgical-details`, { state: { completedIndex: 2 } });
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(error.response?.data?.message || "Something went wrong.");
-  //   }
-  // };
+  const navigate = useNavigate();
 
   return (
-    <>
-      <title>Create Surgical Details - Trauma Registry</title>
-      <SecondNavbar completedIndex={completedIndex} />
-      {/* <section className="py-6 px-4">
-        <h1 className="text-3xl font-bold mb-4">Add Surgical Details</h1>
-      </section>
-      <section className="max-w-3xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="primarySurgeon" className="block text-sm font-medium text-gray-700">
-              Primary Surgeon
-            </label>
-            <input
-              id="primarySurgeon"
-              value={primarySurgeon}
-              readOnly
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="hospital" className="block text-sm font-medium text-gray-700">
-              Hospital
-            </label>
-            <select
-              id="hospital"
-              value={selectedHospital ? selectedHospital.name : ""}
-              onChange={(e) => {
-                const selected = hospitals.find(h => h.name === e.target.value);
-                setSelectedHospital(selected);
+    <div className="relative w-full max-w-md mx-auto">
+      <img src={skeleton} alt="skeleton" className="w-full h-auto opacity-50" />
+      <div className="absolute inset-0">
+        {Object.entries(bodyParts).map(([limb, parts]) =>
+          parts.map((part, index) => (
+            <button
+              key={`${limb}-${index}`}
+              onClick={() => {
+                onPartClick(part.name);
+                navigate(part.link);
               }}
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md"
+              className="absolute hover:bg-blue-200/50 focus:outline-none"
+              style={{
+                top: part.top,
+                left: part.left,
+                width: part.width,
+                height: part.height,
+                cursor: "pointer",
+              }}
+              title={part.name}
             >
-              <option value="">Select Hospital</option>
-              {hospitals.map((hospitalItem) => (
-                <option key={hospitalItem.id} value={hospitalItem.name}>
-                  {hospitalItem.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="assistantSurgeons" className="block text-sm font-medium text-gray-700">
-              Assistant Surgeons
-            </label>
-            {assistantSurgeons.length > 0 ? (
-              <Select
-                id="assistantSurgeons"
-                onChange={(selected) => setSelectedAssistant(selected ? selected.value : null)} // Single value selection
-                options={assistantSurgeons.map((assistantSurgeon) => ({
-                  value: assistantSurgeon.id,
-                  label: assistantSurgeon.name,
-                }))}
-                isClearable // Allows for clearing selection
-                className="mt-2"
-              />
-            ) : (
-              <p>No assistant surgeons available.</p>
-            )}
-          </div>
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-              Date of Surgery (AD)
-            </label>
-            <input
-              id="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              type="date"
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md"
-            />
-          </div>
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="bg-gray-300 hover:bg-gray-400 text-white py-2 px-4 rounded-md"
-            >
-              Back
+              <span className="text-xs text-white bg-blue-500/50 rounded px-1">
+                {part.name}
+              </span>
             </button>
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-            >
-              Next
-            </button>
-          </div>
-        </form>
-      </section> */}
-      <h1>Add Surgical Details</h1>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+const AddSurgicalDetails = () => {
+  const navigate = useNavigate();
+  const [selectedBodyPart, setSelectedBodyPart] = useState(null);
+  const location = useLocation();
+  const [completedIndex, setCompletedIndex] = useState(
+    location.state?.completedIndex || 2
+  );
+
+  const handleBodyPartClick = (part) => {
+    setSelectedBodyPart(part);
+    toast.info(`Selected body part: ${part}`);
+  };
+  return (
+    <>
+      <title>Patient Surgical Details - Trauma Registry</title>
+      <SecondNavbar completedIndex={completedIndex} />
+      <section>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-center mb-4">
+            Click on Body Parts for Details
+          </h2>
+          <SkeletonOverlay onPartClick={handleBodyPartClick} />
+        </div>
+      </section>
     </>
   );
 };

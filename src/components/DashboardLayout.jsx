@@ -47,7 +47,7 @@ const DashboardLayout = () => {
           ? "Users - Trauma Registry"
           : location.pathname === "/create-surgery"
           ? "Create Surgery - Trauma Registry"
-          : location.pathname === "/add-surgical-details/:id"
+          : location.pathname === "/add-surgerical-details"
           ? "Create Surgery Details - Trauma Registry"
           : location.pathname === "/patient/:id/patient-surgical-details"
           ? "Create Patient Surgical Details - Trauma Registry"
@@ -75,16 +75,10 @@ const DashboardLayout = () => {
           ? "Scapula - Trauma Registry"
           : location.pathname === "/humerus"
           ? "Humerus - Trauma Registry"
-          : location.pathname === "/elbow"
-          ? "Elbow - Trauma Registry"
-          : location.pathname === "/radius_and_elna"
+          : location.pathname === "/radius_and_ulna"
           ? "Radius & Ulna - Trauma Registry"
           : location.pathname === "/hand"
           ? "Hand - Trauma Registry"
-          : location.pathname === "/pelvis"
-          ? "Pelvis - Trauma Registry"
-          : location.pathname === "/acetabulum"
-          ? "Acetabulum - Trauma Registry"
           : location.pathname === "/femur"
           ? "Femur - Trauma Registry"
           : location.pathname === "/tibia_and_fibula"
@@ -118,17 +112,14 @@ const DashboardLayout = () => {
             {location.pathname === "/create-user" && <CreateUser />}
             {location.pathname === "/patient/:id/patient-surgical-details" && <PatientSurgicalDetails />}
             {location.pathname === "/patient-injury-detail" && <PatientInjuryDetails />}
-            {location.pathname === "/add-surgical-details/:id" && <AddSurgicalDetails />}
+            {location.pathname === "/add-surgerical-details" && <AddSurgicalDetails />}
             {location.pathname === "/assistants" && <Assistants />}
             {location.pathname === "/hospitals" && <Hospitals />}
             {location.pathname === "/clavicle" && <Clavicle />}
             {location.pathname === "/scapula" && <Scapula />}
             {location.pathname === "/humerus" && <Humerus />}
-            {location.pathname === "/elbow" && <Elbow />}
-            {location.pathname === "/radius_and_elna" && <RadiusAndUlna />}
+            {location.pathname === "/radius_and_ulna" && <RadiusAndUlna />}
             {location.pathname === "/hand" && <Hand />}
-            {location.pathname === "/pelvis" && <Pelvis />}
-            {location.pathname === "/acetabulum" && <Acetabulum />}
             {location.pathname === "/femur" && <Femur />}
             {location.pathname === "/tibia_and_fibula" && <TibiaAndFibula />}
             {location.pathname === "/patella" && <Patella />}
