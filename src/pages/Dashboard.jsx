@@ -1,9 +1,6 @@
 import React from "react";
-import { FaBars, FaLongArrowAltRight } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { SiGooglesheets } from "react-icons/si";
 import RecentSurgeries from "../components/RecentSurgeries";
-import RecentUsers from "../components/RecentUsers";
 import RecentPatients from "../components/RecentPatients";
 
 const Dashboard = () => {
@@ -69,52 +66,11 @@ const Dashboard = () => {
         <hr className="my-6" />
       </section>
 
-      {/* Quick Actions Section */}
-      <section className="bg-white rounded-lg p-4 sm:p-6 mb-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-          {/* Add Hospital */}
-          <div
-            onClick={() => navigate("/add-hospital")}
-            className="flex items-center w-full sm:w-auto hover:bg-gray-100 p-2 rounded-full cursor-pointer transition"
-          >
-            <div className="bg-pink-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
-              <FaBars className="text-xl" />
-            </div>
-            <div className="flex items-center ml-4">
-              <p className="text-gray-600 font-medium hover:underline">
-                Add Hospital
-              </p>
-              <FaLongArrowAltRight className="ml-2 text-gray-500" />
-            </div>
-          </div>
-
-          {/* Add Assistant */}
-          <div
-            onClick={() => navigate("/add-assistant")}
-            className="flex items-center w-full sm:w-auto hover:bg-gray-100 p-2 rounded-full cursor-pointer transition"
-          >
-            <div className="bg-yellow-500 text-white w-12 h-12 flex items-center justify-center rounded-full">
-              <SiGooglesheets className="text-xl" />
-            </div>
-            <div className="flex items-center ml-4">
-              <p className="text-gray-600 font-medium hover:underline">
-                Add Assistant Surgeon
-              </p>
-              <FaLongArrowAltRight className="ml-2 text-gray-500" />
-            </div>
-          </div>
-        </div>
-        <hr className="my-6" />
-      </section>
-
       {/* Recent Activity Section */}
       <section className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <RecentSurgeries />
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <RecentUsers />
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <RecentPatients />
