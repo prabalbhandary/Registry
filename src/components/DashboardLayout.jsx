@@ -45,7 +45,7 @@ const DashboardLayout = () => {
           : location.pathname === "/create-surgery"
           ? "Create Surgery - Trauma Registry"
           : location.pathname === "/add-surgerical-details"
-          ? "Create Surgery Details - Trauma Registry"
+          ? "Select a part to Proceed - Trauma Registry"
           : location.pathname === "/patient/:id/patient-surgical-details"
           ? "Create Patient Surgical Details - Trauma Registry"
           : location.pathname === "/patient-injury-detail"
