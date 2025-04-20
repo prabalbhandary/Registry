@@ -141,9 +141,6 @@ const CreateSurgery = () => {
     }
 
     try {
-      // const surgeonDetail = JSON.parse(
-      //   localStorage.getItem("surgeonDetail")
-      // );
       const res = await axios.post(`${URL}/patient-detail`, {
         surgeon_detail_id: localStorage.getItem("surgeonDetailId"),
         first_name,
@@ -612,7 +609,7 @@ const CreateSurgery = () => {
                   htmlFor="subMoi"
                   className="text-lg font-medium text-gray-700"
                 >
-                  RTA Sub Options
+                  RTA Injury
                 </label>
                 <select
                   name="type_of_injury"
@@ -621,7 +618,7 @@ const CreateSurgery = () => {
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select Sub Option</option>
+                  <option value="">Select Injury</option>
                   <option value="4 Wheeler occupant">4 Wheeler occupant</option>
                   <option value="2 Wheeler rider">2 Wheeler rider</option>
                   <option value="2 Wheeler Pillion rider">
@@ -642,7 +639,7 @@ const CreateSurgery = () => {
                   htmlFor="subMoi"
                   className="text-lg font-medium text-gray-700"
                 >
-                  Fall Sub Options
+                  Fall Injury
                 </label>
                 <select
                   name="subMoi"
@@ -651,6 +648,7 @@ const CreateSurgery = () => {
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
+                  <option value="">Select Fall Injury</option>
                   <option value="From height">From height</option>
                   <option value="From Standing height">
                     From Standing height
@@ -669,7 +667,7 @@ const CreateSurgery = () => {
                   htmlFor="subMoi"
                   className="text-lg font-medium text-gray-700"
                 >
-                  Sports Sub Options
+                  Sports Injury
                 </label>
                 <select
                   name="subMoi"
@@ -678,6 +676,7 @@ const CreateSurgery = () => {
                   id="subMoi"
                   className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
+                  <option value="">Select Sports Injury</option>
                   <option value="Football">Football</option>
                   <option value="Cricket">Cricket</option>
                   <option value="Basketball">Basketball</option>
