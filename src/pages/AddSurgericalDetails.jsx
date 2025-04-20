@@ -10,45 +10,35 @@ const SkeletonOverlay = ({ onPartClick }) => {
       {
         name: "Clavicle",
         top: "20%",
-        left: "45%",
-        width: "10%",
-        height: "5%",
+        left: "50%",
         link: "/clavicle",
         position: "right",
       },
       {
         name: "Scapula",
         top: "25%",
-        left: "35%",
-        width: "10%",
-        height: "10%",
+        left: "40%",
         link: "/scapula",
         position: "left",
       },
       {
         name: "Humerus",
         top: "35%",
-        left: "30%",
-        width: "10%",
-        height: "20%",
+        left: "35%",
         link: "/humerus",
         position: "left",
       },
       {
         name: "Radius & Ulna",
-        top: "50%",
-        left: "20%",
-        width: "10%",
-        height: "20%",
+        top: "52%",
+        left: "25%",
         link: "/radius_and_ulna",
         position: "right",
       },
       {
         name: "Hand",
         top: "70%",
-        left: "15%",
-        width: "10%",
-        height: "10%",
+        left: "20%",
         link: "/hand",
         position: "left",
       },
@@ -57,36 +47,28 @@ const SkeletonOverlay = ({ onPartClick }) => {
       {
         name: "Femur",
         top: "60%",
-        left: "40%",
-        width: "10%",
-        height: "20%",
+        left: "45%",
         link: "/femur",
         position: "right",
       },
       {
         name: "Tibia & Fibula",
-        top: "75%",
-        left: "40%",
-        width: "10%",
-        height: "20%",
+        top: "77%",
+        left: "45%",
         link: "/tibia_and_fibula",
         position: "right",
       },
       {
         name: "Patella",
-        top: "65%",
-        left: "45%",
-        width: "5%",
-        height: "5%",
+        top: "66%",
+        left: "50%",
         link: "/patella",
         position: "left",
       },
       {
         name: "Foot",
-        top: "90%",
-        left: "40%",
-        width: "10%",
-        height: "10%",
+        top: "93%",
+        left: "45%",
         link: "/foot",
         position: "right",
       },
@@ -96,43 +78,51 @@ const SkeletonOverlay = ({ onPartClick }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative w-full max-w-[500px] sm:max-w-[600px] md:max-w-[700px] mx-auto">
+    <div className="relative w-full max-w-[600px] mx-auto">
       <img
         src={skeleton}
         alt="skeleton"
         className="w-full h-auto object-contain"
       />
-      <div className="absolute inset-0">
-        {Object.entries(bodyParts).map(([limb, parts]) =>
-          parts.map((part, index) => (
-            <button
-              key={`${limb}-${index}`}
-              onClick={() => {
-                onPartClick(part.name);
-                navigate(part.link);
-              }}
-              className="absolute hover:bg-blue-200/50 focus:outline-none transition-all duration-200"
-              style={{
-                top: part.top,
-                left: part.left,
-                width: part.width,
-                height: part.height,
-              }}
-              title={part.name}
-            >
-              <span
-                className={`absolute z-10 ${
-                  part.position === "left" ? "left-[-110%]" : "right-[-110%]"
-                } text-[8px] sm:text-[10px] md:text-xs text-white bg-blue-600/60 rounded px-1 py-0.5 whitespace-nowrap`}
-                style={{
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                }}
-              >
-                {part.name}
-              </span>
-            </button>
-          ))
+      <div className="absolute inset-0 pointer-events-none">
+        {Object.entries(bodyParts).flatMap(([limb, parts], index) =>
+          parts.map((part, idx) => {
+            const isLeft = part.position === "left";
+            const labelOffset = isLeft ? "-150px" : "110%";
+            const lineStart = isLeft ? "-10px" : "100%";
+
+            return (
+              <React.Fragment key={`${limb}-${idx}`}>
+                {/* Line */}
+                <div
+                  className="absolute h-[2px] bg-blue-500"
+                  style={{
+                    top: part.top,
+                    left: lineStart,
+                    width: isLeft ? "50px" : "50px",
+                    transform: "translateY(-50%)",
+                  }}
+                ></div>
+
+                {/* Clickable Label */}
+                <button
+                  onClick={() => {
+                    onPartClick(part.name);
+                    navigate(part.link);
+                  }}
+                  className="absolute z-10 text-white bg-blue-600 text-xs sm:text-sm px-2 py-1 rounded pointer-events-auto hover:bg-blue-700 transition"
+                  style={{
+                    top: part.top,
+                    left: labelOffset,
+                    transform: "translateY(-50%)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {part.name}
+                </button>
+              </React.Fragment>
+            );
+          })
         )}
       </div>
     </div>
@@ -158,7 +148,7 @@ const AddSurgicalDetails = () => {
       <SecondNavbar completedIndex={completedIndex} />
       <section className="px-4 sm:px-8 md:px-16 mt-8">
         <h2 className="text-xl sm:text-2xl font-semibold text-center mb-4">
-          Click on Body Parts for Details
+          Click on Body Part Labels for Details
         </h2>
         <SkeletonOverlay onPartClick={handleBodyPartClick} />
       </section>
