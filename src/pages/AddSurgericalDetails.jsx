@@ -82,7 +82,7 @@ const SkeletonOverlay = ({ onPartClick }) => {
       <img
         src={skeleton}
         alt="skeleton"
-        className="w-full h-auto object-contain"
+        className="w-full h-full object-contain"
       />
       <div className="absolute inset-0 pointer-events-none">
         {Object.entries(bodyParts).flatMap(([limb, parts], index) =>
