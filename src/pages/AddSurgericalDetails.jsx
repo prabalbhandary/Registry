@@ -7,11 +7,11 @@ import skeleton from "../assets/skeleton.png";
 const SkeletonOverlay = ({ onPartClick }) => {
   const bodyParts = {
     upperLimb: [
-      { name: "Clavicle", top: "20%", left: "50%", link: "/clavicle" },
-      { name: "Scapula", top: "25%", left: "40%", link: "/scapula" },
-      { name: "Humerus", top: "35%", left: "35%", link: "/humerus" },
-      { name: "Radius & Ulna", top: "52%", left: "25%", link: "/radius_and_ulna" },
-      { name: "Hand", top: "70%", left: "20%", link: "/hand" },
+      { name: "Clavicle", top: "25%", left: "50%", link: "/clavicle" },
+      { name: "Scapula", top: "35%", left: "40%", link: "/scapula" },
+      { name: "Humerus", top: "52%", left: "35%", link: "/humerus" },
+      { name: "Radius & Ulna", top: "70%", left: "25%", link: "/radius_and_ulna" },
+      { name: "Hand", top: "90%", left: "20%", link: "/hand" },
     ],
     lowerLimb: [
       { name: "Femur", top: "60%", left: "45%", link: "/femur" },
@@ -69,7 +69,7 @@ const AddSurgicalDetails = () => {
       <SecondNavbar completedIndex={completedIndex} />
       <section className="px-4 sm:px-8 md:px-16 mt-8">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Select a Body Part to Proceed</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Select a Part to Proceed</h2>
           <p className="text-sm text-gray-500 mt-1">Click on the skeleton image to continue</p>
         </div>
         <SkeletonOverlay onPartClick={handleBodyPartClick} />
