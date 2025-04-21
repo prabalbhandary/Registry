@@ -2,40 +2,53 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Select from "react-select";
 import { URL } from "../components/URL";
 
 const SelectPage = () => {
   const [hospitals, setHospitals] = useState([]);
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
-  const navigate = useNavigate();
-
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [selectedAssistants, setSelectedAssistants] = useState([]);
   const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
 
-  const handleSubmit = async(e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!selectedHospital) {
+      toast.error("Please select a hospital.");
+      return;
+    }
+
+    if (selectedAssistants.length === 0) {
+      toast.error("Please select at least one assistant surgeon.");
+      return;
+    }
+
     try {
       const res = await axios.post(`${URL}/surgeon-detail`, {
         surgeon_name: primarySurgeon,
-        hospitals_id: Number(hospitals[0].id),
-        assistant_surgeones: assistantSurgeons
+        hospitals_id: selectedHospital.value,
+        assistant_surgeones: selectedAssistants.map((s) => s.value),
       });
+
       if (res.data.success === true) {
         toast.success(res.data.message);
-        navigate("/create-surgery");
         localStorage.setItem("surgeonDetailId", JSON.stringify(res.data.data.id));
+        navigate("/create-surgery");
       }
-      console.log(res)
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(error.response?.data?.message || "Something went wrong.");
     }
-  }
+  };
 
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-
         const hospitalsData = Array.isArray(res.data)
           ? res.data
           : res.data?.data;
@@ -44,11 +57,12 @@ const SelectPage = () => {
           throw new Error("Invalid hospitals data structure");
         }
 
-        console.log("Fetched hospitals:", hospitalsData);
-
-        const activeHospitals = hospitalsData.filter(
-          (hospital) => hospital.is_active
-        );
+        const activeHospitals = hospitalsData
+          .filter((hospital) => hospital.is_active)
+          .map((hospital) => ({
+            value: hospital.id,
+            label: hospital.name,
+          }));
 
         setHospitals(activeHospitals);
       } catch (error) {
@@ -65,11 +79,17 @@ const SelectPage = () => {
       try {
         const res = await axios.get(`${URL}/assistant-surgeone`);
         const surgeons = res?.data?.data;
+
         if (!Array.isArray(surgeons)) {
           throw new Error("Invalid assistant surgeons data");
         }
-        setAssistantSurgeons(surgeons);
-        console.log("Assistant surgeons:", surgeons);
+
+        const options = surgeons.map((s) => ({
+          value: s.id,
+          label: s.name,
+        }));
+
+        setAssistantSurgeons(options);
         localStorage.setItem("assistantSurgeons", JSON.stringify(surgeons));
       } catch (error) {
         console.error("Error fetching assistant surgeons:", error);
@@ -86,28 +106,25 @@ const SelectPage = () => {
         <h1 className="text-lg font-semibold mb-2 text-gray-700">
           Select Hospital
         </h1>
-        <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Select Hospital</option>
-          {hospitals.map((hospital) => (
-            <option key={hospital.id} value={hospital.id}>
-              {hospital.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          options={hospitals}
+          value={selectedHospital}
+          onChange={setSelectedHospital}
+          placeholder="Select Hospital"
+        />
       </div>
 
       <div className="mb-6">
         <h1 className="text-lg font-semibold mb-2 text-gray-700">
-          Select Assistant Surgeon
+          Select Assistant Surgeon(s)
         </h1>
-        <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Select Assistant Surgeon</option>
-          {assistantSurgeons.map((assistantSurgeon) => (
-            <option key={assistantSurgeon.id} value={assistantSurgeon.id}>
-              {assistantSurgeon.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          isMulti
+          options={assistantSurgeons}
+          value={selectedAssistants}
+          onChange={setSelectedAssistants}
+          placeholder="Select Assistant Surgeons"
+        />
       </div>
 
       <div className="flex justify-between">
