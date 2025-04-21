@@ -52,20 +52,19 @@ const CreateSurgery = () => {
 
   const calculatePresentationDelay = () => {
     if (!incidentDate || !incidentTime) return "";
-  
+
     const incidentDateTime = new Date(`${incidentDate}T${incidentTime}`);
     const now = new Date();
     const diffMs = now - incidentDateTime;
-  
+
     if (diffMs < 0) return "Invalid incident time";
-  
+
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
     const hours = Math.floor(diffMinutes / 60);
     const minutes = diffMinutes % 60;
-  
+
     return `${hours}h ${minutes}m`;
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -785,17 +784,16 @@ const CreateSurgery = () => {
               )}
             </div>
             {/* Presentation Delay */}
-{incidentDate && incidentTime && (
-  <div className="flex flex-col">
-    <label className="text-lg font-medium text-gray-700">
-      Presentation Delay
-    </label>
-    <p className="mt-2 p-4 border border-gray-200 rounded-lg bg-gray-50 text-gray-900">
-      {calculatePresentationDelay()}
-    </p>
-  </div>
-)}
-
+            {incidentDate && incidentTime && (
+              <div className="flex flex-col">
+                <label className="text-lg font-medium text-gray-700">
+                  Presentation Delay
+                </label>
+                <p className="mt-2 p-4 border border-gray-200 rounded-lg bg-gray-50 text-gray-900">
+                  {calculatePresentationDelay()}
+                </p>
+              </div>
+            )}
 
             {/* Primary Treatment */}
             <div className="flex flex-col">
