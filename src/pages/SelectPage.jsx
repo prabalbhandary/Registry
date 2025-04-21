@@ -85,7 +85,7 @@ const SelectPage = () => {
         }
 
         const options = surgeons.map((s) => ({
-          value: s.id,
+          value: s.name,
           label: s.name,
         }));
 
