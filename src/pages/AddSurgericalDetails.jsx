@@ -7,19 +7,19 @@ import skeleton from "../assets/skeleton.png";
 const SkeletonOverlay = ({ onPartClick }) => {
   const bodyParts = {
     upperLimb: [
-      { name: "Clavicle", top: "25%", left: "50%", link: "/clavicle" },
-      { name: "Scapula", top: "35%", left: "40%", link: "/scapula" },
-      { name: "Humerus", top: "52%", left: "35%", link: "/humerus" },
-      { name: "Radius & Ulna", top: "70%", left: "25%", link: "/radius_and_ulna" },
-      { name: "Hand", top: "90%", left: "20%", link: "/hand" },
+      { name: "Clavicle", top: "17%", left: "48%", link: "/clavicle" },
+      { name: "Scapula", top: "24%", left: "38%", link: "/scapula" },
+      { name: "Humerus", top: "36%", left: "35%", link: "/humerus" },
+      { name: "Radius & Ulna", top: "52%", left: "30%", link: "/radius_and_ulna" },
+      { name: "Hand", top: "65%", left: "28%", link: "/hand" },
     ],
     lowerLimb: [
-      { name: "Femur", top: "60%", left: "45%", link: "/femur" },
-      { name: "Patella", top: "66%", left: "50%", link: "/patella" },
-      { name: "Tibia & Fibula", top: "77%", left: "45%", link: "/tibia_and_fibula" },
-      { name: "Foot", top: "93%", left: "45%", link: "/foot" },
+      { name: "Femur", top: "52%", left: "47%", link: "/femur" },
+      { name: "Patella", top: "63%", left: "49%", link: "/patella" },
+      { name: "Tibia & Fibula", top: "72%", left: "48%", link: "/tibia_and_fibula" },
+      { name: "Foot", top: "91%", left: "47%", link: "/foot" },
     ],
-  };
+  };  
 
   const navigate = useNavigate();
 
