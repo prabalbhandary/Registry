@@ -1,27 +1,27 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { URL } from '../components/URL';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { URL } from "../components/URL";
 
 const AddHospital = () => {
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
   const [hospitals, setHospitals] = useState([]);
   const [inactiveHospitals, setInactiveHospitals] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
         const res = await axios.get(`${URL}/hospital`);
-        const active = res.data.data.filter(h => h.is_active);
-        const inactive = res.data.data.filter(h => !h.is_active);
+        const active = res.data.data.filter((h) => h.is_active);
+        const inactive = res.data.data.filter((h) => !h.is_active);
         setHospitals(active);
         setInactiveHospitals(inactive);
       } catch (err) {
-        console.error('Error fetching hospitals:', err);
-        toast.error('Failed to load hospitals.');
+        console.error("Error fetching hospitals:", err);
+        toast.error("Failed to load hospitals.");
       }
     };
     fetchHospitals();
@@ -30,7 +30,7 @@ const AddHospital = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !address) {
-      toast.error('Both name and address are required');
+      toast.error("Both name and address are required");
       return;
     }
 
@@ -39,13 +39,13 @@ const AddHospital = () => {
       if (res.status === 201) {
         toast.success(res.data.message);
         setHospitals((prev) => [...prev, res.data.hospital]);
-        setName('');
-        setAddress('');
+        setName("");
+        setAddress("");
         window.location.reload();
       }
     } catch (err) {
-      console.error('Add hospital error:', err);
-      toast.error(err?.response?.data?.message || 'Error adding hospital');
+      console.error("Add hospital error:", err);
+      toast.error(err?.response?.data?.message || "Error adding hospital");
       setError(err.response?.data?.error);
     }
   };
@@ -57,26 +57,31 @@ const AddHospital = () => {
       });
 
       if (res.status === 200) {
-        const hospitalToUpdate = hospitals.find(h => h.id === hospitalId) ||
-                                  inactiveHospitals.find(h => h.id === hospitalId);
+        const hospitalToUpdate =
+          hospitals.find((h) => h.id === hospitalId) ||
+          inactiveHospitals.find((h) => h.id === hospitalId);
 
-        if (!hospitalToUpdate) throw new Error('Hospital not found');
+        if (!hospitalToUpdate) throw new Error("Hospital not found");
 
         const updated = { ...hospitalToUpdate, is_active: !currentStatus };
 
         if (!currentStatus) {
           setHospitals((prev) => [...prev, updated]);
-          setInactiveHospitals((prev) => prev.filter(h => h.id !== hospitalId));
+          setInactiveHospitals((prev) =>
+            prev.filter((h) => h.id !== hospitalId)
+          );
         } else {
           setInactiveHospitals((prev) => [...prev, updated]);
-          setHospitals((prev) => prev.filter(h => h.id !== hospitalId));
+          setHospitals((prev) => prev.filter((h) => h.id !== hospitalId));
         }
 
-        toast.success(`Hospital marked as ${!currentStatus ? 'Active' : 'Inactive'}`);
+        toast.success(
+          `Hospital marked as ${!currentStatus ? "Active" : "Inactive"}`
+        );
       }
     } catch (err) {
-      console.error('Toggle status error:', err);
-      toast.error(err.message || 'Failed to update hospital status.');
+      console.error("Toggle status error:", err);
+      toast.error(err.message || "Failed to update hospital status.");
       setError(err.response?.data?.error);
     }
   };
@@ -88,26 +93,27 @@ const AddHospital = () => {
       });
 
       if (res.status === 200) {
-        const target = hospitals.find(h => h.id === hospitalId);
-        if (!target) throw new Error('Hospital not found');
+        const target = hospitals.find((h) => h.id === hospitalId);
+        if (!target) throw new Error("Hospital not found");
 
-        setHospitals((prev) => prev.filter(h => h.id !== hospitalId));
+        setHospitals((prev) => prev.filter((h) => h.id !== hospitalId));
         setInactiveHospitals((prev) => [...prev, target]);
 
-        toast.success('Hospital has been unlinked.');
+        toast.success("Hospital has been unlinked.");
       }
     } catch (err) {
-      console.error('Unlink error:', err);
-      toast.error(err.message || 'Failed to unlink hospital.');
+      console.error("Unlink error:", err);
+      toast.error(err.message || "Failed to unlink hospital.");
       setError(err.response?.data?.error);
     }
   };
 
-  const resetSearch = () => setSearchTerm('');
+  const resetSearch = () => setSearchTerm("");
 
-  const filteredInactiveHospitals = inactiveHospitals.filter(h =>
-    h.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    h.address.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInactiveHospitals = inactiveHospitals.filter(
+    (h) =>
+      h.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      h.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -117,7 +123,9 @@ const AddHospital = () => {
       {/* Add Existing Hospital */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">Add Existing Hospitals</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">
+            Add Existing Hospitals
+          </h1>
           <p className="text-gray-600 mb-6 text-sm sm:text-base">
             Search and activate previously listed hospitals.
           </p>
@@ -149,7 +157,9 @@ const AddHospital = () => {
                   <p className="text-sm text-gray-600">{hospital.address}</p>
                 </div>
                 <button
-                  onClick={() => toggleActiveStatus(hospital.id, hospital.is_active)}
+                  onClick={() =>
+                    toggleActiveStatus(hospital.id, hospital.is_active)
+                  }
                   className="text-blue-600 hover:text-blue-800 font-medium"
                 >
                   Activate
@@ -163,14 +173,19 @@ const AddHospital = () => {
       {/* Add New Hospital */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">Add New Hospital</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">
+            Add New Hospital
+          </h1>
           <p className="text-gray-600 mb-6 text-sm sm:text-base">
             Add new hospitals you work with to the trauma registry.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="hospital_name" className="block font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="hospital_name"
+                className="block font-semibold text-gray-700 mb-2"
+              >
                 Hospital Name
               </label>
               <input
@@ -183,7 +198,10 @@ const AddHospital = () => {
             </div>
 
             <div>
-              <label htmlFor="address" className="block font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="address"
+                className="block font-semibold text-gray-700 mb-2"
+              >
                 Address
               </label>
               <input
@@ -208,7 +226,9 @@ const AddHospital = () => {
       {/* Active Hospitals */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">Active Hospitals</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">
+            Active Hospitals
+          </h1>
           <p className="text-gray-600 mb-6 text-sm sm:text-base">
             List of all active hospitals in the registry.
           </p>

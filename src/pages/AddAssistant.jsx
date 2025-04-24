@@ -18,7 +18,9 @@ const AddAssistant = () => {
         const res = await axios.get(`${URL}/assistant-surgeone`);
         const assistantData = res.data?.data || res.data;
         const activeList = assistantData.filter((surgeon) => surgeon.is_active);
-        const inactiveList = assistantData.filter((surgeon) => !surgeon.is_active);
+        const inactiveList = assistantData.filter(
+          (surgeon) => !surgeon.is_active
+        );
         setActiveSurgeons(activeList);
         setInactiveSurgeons(inactiveList);
       } catch (error) {
@@ -64,16 +66,21 @@ const AddAssistant = () => {
       }
     } catch (error) {
       console.error("Error response:", error.response?.data);
-      toast.error(error?.response?.data?.message || "Failed to add assistant surgeon");
+      toast.error(
+        error?.response?.data?.message || "Failed to add assistant surgeon"
+      );
       setError(error.response?.data?.error || "");
     }
   };
 
   const toggleActiveStatus = async (surgeonId, currentStatus) => {
     try {
-      const res = await axios.get(`${URL}/activate-assistant-surgeone/${surgeonId}`, {
-        is_active: !currentStatus,
-      });
+      const res = await axios.get(
+        `${URL}/activate-assistant-surgeone/${surgeonId}`,
+        {
+          is_active: !currentStatus,
+        }
+      );
 
       if (res.status === 200) {
         const surgeonToUpdate =
@@ -95,7 +102,9 @@ const AddAssistant = () => {
           setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         }
 
-        toast.success(`Surgeon status updated to ${!currentStatus ? "Active" : "Inactive"}`);
+        toast.success(
+          `Surgeon status updated to ${!currentStatus ? "Active" : "Inactive"}`
+        );
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -105,13 +114,17 @@ const AddAssistant = () => {
 
   const unlinkSurgeon = async (surgeonId) => {
     try {
-      const res = await axios.get(`${URL}/activate-assistant-surgeone/${surgeonId}`, {
-        is_active: 0,
-      });
+      const res = await axios.get(
+        `${URL}/activate-assistant-surgeone/${surgeonId}`,
+        {
+          is_active: 0,
+        }
+      );
 
       if (res.status === 200) {
         const surgeonToUnlink = activeSurgeons.find((s) => s.id === surgeonId);
-        if (!surgeonToUnlink) throw new Error("Surgeon not found in active list");
+        if (!surgeonToUnlink)
+          throw new Error("Surgeon not found in active list");
 
         setActiveSurgeons((prev) => prev.filter((s) => s.id !== surgeonId));
         setInactiveSurgeons((prev) => [...prev, surgeonToUnlink]);
@@ -166,10 +179,14 @@ const AddAssistant = () => {
               key={surgeon.id}
               className="mb-4 p-4 border rounded-md flex justify-between items-center"
             >
-              <p className="text-lg font-semibold text-gray-800">{surgeon.name}</p>
+              <p className="text-lg font-semibold text-gray-800">
+                {surgeon.name}
+              </p>
               <button
                 className="text-blue-600 hover:text-blue-800"
-                onClick={() => toggleActiveStatus(surgeon.id, surgeon.is_active)}
+                onClick={() =>
+                  toggleActiveStatus(surgeon.id, surgeon.is_active)
+                }
               >
                 Activate
               </button>
@@ -185,11 +202,16 @@ const AddAssistant = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Add New Assistant Surgeons
         </h1>
-        <p className="text-gray-600 mb-6 text-sm md:text-base">Enter name and select hospital</p>
+        <p className="text-gray-600 mb-6 text-sm md:text-base">
+          Enter name and select hospital
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-base md:text-lg text-gray-700 font-semibold mb-2">
+            <label
+              htmlFor="name"
+              className="block text-base md:text-lg text-gray-700 font-semibold mb-2"
+            >
               Name
             </label>
             <input
@@ -203,7 +225,10 @@ const AddAssistant = () => {
           </div>
 
           <div>
-            <label htmlFor="hospital" className="block text-base md:text-lg text-gray-700 font-semibold mb-2">
+            <label
+              htmlFor="hospital"
+              className="block text-base md:text-lg text-gray-700 font-semibold mb-2"
+            >
               Hospital
             </label>
             <select
@@ -238,15 +263,23 @@ const AddAssistant = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Active Assistant Surgeons
         </h1>
-        <p className="text-gray-600 mb-6 text-sm md:text-base">List of Active Assistant Surgeons</p>
+        <p className="text-gray-600 mb-6 text-sm md:text-base">
+          List of Active Assistant Surgeons
+        </p>
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border-collapse shadow-md rounded-lg text-sm md:text-base">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">S.No</th>
-                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">Name</th>
-                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">Actions</th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">
+                  S.No
+                </th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">
+                  Name
+                </th>
+                <th className="px-4 md:px-6 py-3 text-left text-gray-700 font-medium">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
