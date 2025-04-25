@@ -44,14 +44,14 @@ const Register = () => {
         <article className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
           <header className="text-center mb-8">
             <Link to="/" className="text-3xl font-semibold text-blue-600">
-              Trauma Registry
+              Nepal Orthopedic Association
             </Link>
             <img src={Logo} alt="Logo" className="w-32 h-32 mx-auto mb-4" />
           </header>
 
           <form onSubmit={handleSubmit}>
             <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-              Create an Account
+              Create an Account in Trauma Registry
             </h1>
 
             <section className="mb-4">

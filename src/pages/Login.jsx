@@ -34,7 +34,7 @@ const Login = () => {
         <article className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
           <header className="text-center mb-8">
             <Link to="/" className="block text-3xl font-bold text-blue-600">
-              Trauma Registry
+            Nepal Orthopedic Association
             </Link>
             <img src={Logo} alt="Logo" className="w-32 h-32 mx-auto mb-4" />
           </header>
