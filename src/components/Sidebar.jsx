@@ -167,7 +167,7 @@ const Sidebar = () => {
             }
           >
             <CiClock1 className="text-xl" />
-            <span>Patients</span>
+            <span>Follow Up</span>
           </NavLink>
 
           {/* <NavLink
