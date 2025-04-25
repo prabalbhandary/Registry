@@ -40,6 +40,7 @@ import TibiaAndFibula from "./components/skeletonpart/lowerlimb/TibiaAndFibula";
 import Patella from "./components/skeletonpart/lowerlimb/Patella";
 import Foot from "./components/skeletonpart/lowerlimb/Foot";
 import DashboardLayout from "./components/DashboardLayout";
+import Terms from "./pages/Terms";
 
 const App = () => {
   return (
@@ -103,6 +104,7 @@ const AppContent = () => {
             <Route path="/patella" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/foot" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/select" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
+            {/* <Route path="/terms" element={isAuthenticated ? <Terms /> : <Navigate to="/dashboard" />} /> */}
           </Routes>
         </div>
       </div>

@@ -8,8 +8,8 @@ const SkeletonOverlay = ({ onPartClick }) => {
   const bodyParts = {
     upperLimb: [
       { name: "Clavicle", top: "24%", left: "64%", link: "/clavicle" },
-      { name: "Scapula", top: "30%", left: "75%", link: "/scapula" },
-      { name: "Humerus", top: "36%", left: "80%", link: "/humerus" },
+      { name: "Scapula", top: "32%", left: "64.5%", link: "/scapula" },
+      { name: "Humerus", top: "36%", left: "75%", link: "/humerus" },
       {
         name: "Radius & Ulna",
         top: "53%",
@@ -19,15 +19,15 @@ const SkeletonOverlay = ({ onPartClick }) => {
       { name: "Hand", top: "64%", left: "90%", link: "/hand" },
     ],
     lowerLimb: [
-      { name: "Femur", top: "62%", left: "20%", link: "/femur" },
-      { name: "Patella", top: "72%", left: "15%", link: "/patella" },
+      { name: "Femur", top: "62%", left: "38%", link: "/femur" },
+      { name: "Patella", top: "72%", left: "38%", link: "/patella" },
       {
         name: "Tibia & Fibula",
         top: "83%",
-        left: "15%",
+        left: "38%",
         link: "/tibia_and_fibula",
       },
-      { name: "Foot", top: "96%", left: "15%", link: "/foot" },
+      { name: "Foot", top: "96%", left: "38%", link: "/foot" },
     ],
   };
 

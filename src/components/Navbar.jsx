@@ -23,12 +23,12 @@ const Navbar = () => {
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
             <h2 className="text-2xl font-bold">Surgeries</h2>
-            <Link
+            {/* <Link
               to="/create-surgery"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
             >
               Create Surgery
-            </Link>
+            </Link> */}
           </div>
           <hr />
         </>
@@ -37,17 +37,17 @@ const Navbar = () => {
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
             <h2 className="text-2xl font-bold">Patients</h2>
-            <Link
+            {/* <Link
               to="/create-patient"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
             >
               Create Patient
-            </Link>
+            </Link> */}
           </div>
           <hr />
         </>
       )}
-      {location.pathname === "/users" && (
+      {/* {location.pathname === "/users" && (
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
             <h2 className="text-2xl font-bold">Users</h2>
@@ -60,7 +60,7 @@ const Navbar = () => {
           </div>
           <hr />
         </>
-      )}
+      )} */}
       {location.pathname === "/add-hospital" && (
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
