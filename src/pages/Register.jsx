@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Logo from "../assets/logo.png";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -45,6 +46,7 @@ const Register = () => {
             <Link to="/" className="text-3xl font-semibold text-blue-600">
               Trauma Registry
             </Link>
+            <img src={Logo} alt="Logo" className="w-32 h-32 mx-auto mb-4" />
           </header>
 
           <form onSubmit={handleSubmit}>

@@ -8,26 +8,26 @@ const SkeletonOverlay = ({ onPartClick }) => {
   const bodyParts = {
     upperLimb: [
       { name: "Clavicle", top: "24%", left: "64%", link: "/clavicle" },
-      { name: "Scapula", top: "30%", left: "30%", link: "/scapula" },
-      { name: "Humerus", top: "36%", left: "24%", link: "/humerus" },
+      { name: "Scapula", top: "30%", left: "75%", link: "/scapula" },
+      { name: "Humerus", top: "36%", left: "80%", link: "/humerus" },
       {
         name: "Radius & Ulna",
         top: "53%",
-        left: "25%",
+        left: "82%",
         link: "/radius_and_ulna",
       },
-      { name: "Hand", top: "64%", left: "15%", link: "/hand" },
+      { name: "Hand", top: "64%", left: "90%", link: "/hand" },
     ],
     lowerLimb: [
-      { name: "Femur", top: "62%", left: "40%", link: "/femur" },
-      { name: "Patella", top: "72%", left: "50%", link: "/patella" },
+      { name: "Femur", top: "62%", left: "20%", link: "/femur" },
+      { name: "Patella", top: "72%", left: "15%", link: "/patella" },
       {
         name: "Tibia & Fibula",
         top: "83%",
-        left: "50%",
+        left: "15%",
         link: "/tibia_and_fibula",
       },
-      { name: "Foot", top: "96%", left: "50%", link: "/foot" },
+      { name: "Foot", top: "96%", left: "15%", link: "/foot" },
     ],
   };
 
@@ -41,26 +41,45 @@ const SkeletonOverlay = ({ onPartClick }) => {
         className="w-full h-auto object-contain"
       />
       <div className="absolute inset-0 pointer-events-none">
-        {Object.entries(bodyParts).flatMap(([limb, parts]) =>
-          parts.map((part, idx) => (
-            <button
-              key={`${limb}-${idx}`}
-              onClick={() => {
-                onPartClick(part.name);
-                navigate(part.link);
-              }}
-              className="absolute z-10 pointer-events-auto bg-blue-600 text-white text-[10px] sm:text-xs px-2 py-1 rounded-full shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition-all"
-              style={{
-                top: part.top,
-                left: part.left,
-                transform: "translate(-50%, -50%)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {part.name}
-            </button>
-          ))
-        )}
+        {/* Lower Limb Buttons on Left */}
+        {bodyParts.lowerLimb.map((part, idx) => (
+          <button
+            key={`lower-${idx}`}
+            onClick={() => {
+              onPartClick(part.name);
+              navigate(part.link);
+            }}
+            className="absolute z-10 pointer-events-auto bg-blue-600 text-white text-[10px] sm:text-xs px-2 py-1 rounded-full shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition-all"
+            style={{
+              top: part.top,
+              left: part.left,
+              transform: "translate(-50%, -50%)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {part.name}
+          </button>
+        ))}
+
+        {/* Upper Limb Buttons on Right */}
+        {bodyParts.upperLimb.map((part, idx) => (
+          <button
+            key={`upper-${idx}`}
+            onClick={() => {
+              onPartClick(part.name);
+              navigate(part.link);
+            }}
+            className="absolute z-10 pointer-events-auto bg-blue-600 text-white text-[10px] sm:text-xs px-2 py-1 rounded-full shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition-all"
+            style={{
+              top: part.top,
+              left: part.left,
+              transform: "translate(-50%, -50%)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {part.name}
+          </button>
+        ))}
       </div>
     </div>
   );
