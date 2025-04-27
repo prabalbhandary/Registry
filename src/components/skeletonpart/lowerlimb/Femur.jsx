@@ -1,6 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { URL } from "../../URL";
+import { toast } from "react-toastify";
 
 const Femur = () => {
+  const patientId = localStorage.getItem("patientId");
   const [fractureType, setFractureType] = useState("");
   const [side, setSide] = useState("");
   const [location, setLocation] = useState("");
@@ -25,11 +29,42 @@ const Femur = () => {
     "GA IIIC": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
   };
 
-  const handleSave = (type) => {
+  const handleSave = async(type) => {
     if (type === "followup") {
-      setSavedMessage("✅ Saved to Follow Up!");
+      try {
+        setSavedMessage("✅ Saved to Follow Up!");
+        const res = await axios.post(`${URL}/femur-fracture`, {
+          patient_detail_id: patientId,
+          fracture_type: fractureType,
+          fracture_side: side,
+          fracture_location: location,
+          fracture_classification: classification,
+          fracture_sub_classification: subClassification,
+          plan,
+          treatment_status: "followup",
+        })
+        toast.success(res.data.message);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
     } else {
-      setSavedMessage("✅ Saved to Surgery!");
+      try {
+        setSavedMessage("✅ Saved to Surgery!");
+        const res = await axios.post(`${URL}/femur-fracture`, {
+          patient_detail_id: patientId,
+          fracture_type: fractureType,
+          fracture_side: side,
+          fracture_location: location,
+          fracture_other_location: otherLocation,
+          fracture_classification: classification,
+          fracture_sub_classification: subClassification,
+          plan,
+          treatment_status: "surgery",
+        })
+        toast.success(res.data.message);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
     }
   };
 
