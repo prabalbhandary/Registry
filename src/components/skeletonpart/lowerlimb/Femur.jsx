@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState } from "react";
 import { URL } from "../../URL";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Femur = () => {
   const patientId = localStorage.getItem("patientId");
+  const navigate = useNavigate();
   const [fractureType, setFractureType] = useState("");
   const [side, setSide] = useState("");
   const [location, setLocation] = useState("");
@@ -44,6 +46,7 @@ const Femur = () => {
           treatment_status: "followup",
         })
         toast.success(res.data.message);
+        navigate("/patients");
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -62,6 +65,7 @@ const Femur = () => {
           treatment_status: "surgery",
         })
         toast.success(res.data.message);
+        navigate("/surgeries");
       } catch (error) {
         toast.error(error.response.data.message);
       }
