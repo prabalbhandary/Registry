@@ -107,7 +107,7 @@ const Register = () => {
                 className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
               >
                 {showConfirmPassword ? (
