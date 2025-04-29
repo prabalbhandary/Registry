@@ -25,8 +25,7 @@ const Sidebar = () => {
         }
       );
       if (res.status === 200) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.clear();
         toast.success(res.data.message);
         navigate("/");
       }
