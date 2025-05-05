@@ -32,7 +32,6 @@ const Femur = () => {
   };
 
   const handleSave = async(type) => {
-    if (type === "followup") {
       try {
         setSavedMessage("✅ Saved to Follow Up!");
         const res = await axios.post(`${URL}/femur-fracture`, {
@@ -50,26 +49,6 @@ const Femur = () => {
       } catch (error) {
         toast.error(error.response.data.message);
       }
-    } else {
-      try {
-        setSavedMessage("✅ Saved to Surgery!");
-        const res = await axios.post(`${URL}/femur-fracture`, {
-          patient_detail_id: patientId,
-          fracture_type: fractureType,
-          fracture_side: side,
-          fracture_location: location,
-          fracture_other_location: otherLocation,
-          fracture_classification: classification,
-          fracture_sub_classification: subClassification,
-          plan,
-          treatment_status: "surgery",
-        })
-        toast.success(res.data.message);
-        navigate("/surgeries");
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    }
   };
 
   return (
@@ -226,9 +205,9 @@ const Femur = () => {
             </button>
             <button
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-              onClick={() => handleSave("surgery")}
+              onClick={() => navigate("/surgery")}
             >
-              Save to Surgery
+              Proceed to Surgery
             </button>
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"

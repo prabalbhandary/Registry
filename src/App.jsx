@@ -104,6 +104,7 @@ const AppContent = () => {
             <Route path="/patella" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/foot" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             <Route path="/select" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
+            <Route path="/surgery" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
             {/* <Route path="/terms" element={isAuthenticated ? <Terms /> : <Navigate to="/dashboard" />} /> */}
           </Routes>
         </div>
