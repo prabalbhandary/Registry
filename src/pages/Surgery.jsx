@@ -7,11 +7,20 @@ const Surgery = () => {
   const [internalTypeOther, setInternalTypeOther] = useState("");
   const [extramedullaryType, setExtramedullaryType] = useState("");
   const [extramedullaryOther, setExtramedullaryOther] = useState("");
+  const [extramedullarySize, setExtramedullarySize] = useState("");
+  const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
+  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
   const [antigradeOther, setAntigradeOther] = useState("");
+  const [antigradeSize, setAntigradeSize] = useState("");
+  const [antigradeDiameter, setAntigradeDiameter] = useState("");
+  const [antigradeElaboration, setAntigradeElaboration] = useState("");
   const [retrogradeType, setRetrogradeType] = useState("");
   const [retrogradeOther, setRetrogradeOther] = useState("");
+  const [retrogradeSize, setRetrogradeSize] = useState("");
+  const [retrogradeDiameter, setRetrogradeDiameter] = useState("");
+  const [retrogradeElaboration, setRetrogradeElaboration] = useState("");
   const [materialUsed, setMaterialUsed] = useState("");
   const [description, setDescription] = useState("");
   const [combinedText, setCombinedText] = useState("");
@@ -43,61 +52,45 @@ const Surgery = () => {
       internalTypeOther,
       extramedullaryType,
       extramedullaryOther,
+      extramedullarySize,
+      extramedullaryScrews,
+      extramedullaryElaboration,
       intramedullaryType,
       antigradeType,
       antigradeOther,
+      antigradeSize,
+      antigradeDiameter,
+      antigradeElaboration,
       retrogradeType,
       retrogradeOther,
+      retrogradeSize,
+      retrogradeDiameter,
+      retrogradeElaboration,
       materialUsed,
-      combinedText,
       description,
+      combinedText,
     };
 
     console.log("Submitted form data:", formData);
     setSubmittedData(formData);
   };
 
-  const showPlateFields = [
-    "dcp",
-    "recomplate",
-    "abps",
-    "lcps",
-    "pflcps",
-    "dflcps",
-    "other",
-  ].includes(extramedullaryType);
-  const showNailFieldsAntigrade = [
-    "solid-nail",
-    "hollow-nail",
-    "pfn",
-    "other",
-  ].includes(antigradeType);
-  const showNailFieldsRetrograde = [
-    "solid-nail",
-    "hollow-nail",
-    "dfn",
-    "other",
-  ].includes(retrogradeType);
+  const showPlateFields = ["dcp", "recomplate", "abps", "lcps", "pflcps", "dflcps"].includes(extramedullaryType);
+  const showNailFieldsAntigrade = ["solid-nail", "hollow-nail", "pfn"].includes(antigradeType);
+  const showNailFieldsRetrograde = ["solid-nail", "hollow-nail", "dfn"].includes(retrogradeType);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Surgery Form
-      </h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Surgery Form</h2>
 
       <form onSubmit={handleSubmit}>
         {/* Surgery Type */}
-        <label
-          htmlFor="surgery-select"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Select Surgery Type:
-        </label>
+        <label htmlFor="surgery-select" className="block mb-2">Select Surgery Type:</label>
         <select
           id="surgery-select"
           value={surgeryType}
           onChange={handleSurgeryChange}
-          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+          className="w-full mb-4 border px-4 py-2 rounded"
           required
         >
           <option value="">--Please choose an option--</option>
@@ -106,20 +99,14 @@ const Surgery = () => {
           <option value="combined">Combined</option>
         </select>
 
-        {/* External Options */}
+        {/* External Type */}
         {surgeryType === "external" && (
-          <div>
-            <label
-              htmlFor="external-type"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
-              Select External Fixture Type:
-            </label>
+          <>
+            <label className="block mb-2">Select External Fixture Type:</label>
             <select
-              id="external-type"
               value={externalType}
               onChange={(e) => setExternalType(e.target.value)}
-              className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+              className="w-full mb-4 border px-4 py-2 rounded"
             >
               <option value="">--Select External Type--</option>
               <option value="conventional">Conventional</option>
@@ -127,33 +114,22 @@ const Surgery = () => {
               <option value="illizarov">Illizarov</option>
               <option value="other">Other</option>
             </select>
-          </div>
+          </>
         )}
 
-        {/* Internal Options */}
+        {/* Internal Fixture */}
         {surgeryType === "internal" && (
-          <div>
-            <label
-              htmlFor="internal-type"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Select Internal Fixture Type:
-            </label>
+          <>
+            <label className="block mb-2">Select Internal Fixture Type:</label>
             <select
-              id="internal-type"
               value={internalType}
               onChange={(e) => {
                 setInternalType(e.target.value);
                 setInternalTypeOther("");
                 setExtramedullaryType("");
-                setExtramedullaryOther("");
                 setIntramedullaryType("");
-                setAntigradeType("");
-                setAntigradeOther("");
-                setRetrogradeType("");
-                setRetrogradeOther("");
               }}
-              className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+              className="w-full mb-4 border px-4 py-2 rounded"
             >
               <option value="">--Select Internal Type--</option>
               <option value="extramedullary">Extramedullary</option>
@@ -166,35 +142,29 @@ const Surgery = () => {
                 type="text"
                 value={internalTypeOther}
                 onChange={(e) => setInternalTypeOther(e.target.value)}
-                placeholder="Enter other internal type"
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                className="w-full mb-4 border px-4 py-2 rounded"
+                placeholder="Enter internal type"
               />
             )}
 
-            {/* Extramedullary Options */}
+            {/* Extramedullary */}
             {internalType === "extramedullary" && (
-              <div>
-                <label
-                  htmlFor="extramedullary-type"
-                  className="block mb-2 text-sm text-gray-700"
-                >
-                  Select Extramedullary Type:
-                </label>
+              <>
+                <label className="block mb-2">Select Extramedullary Type:</label>
                 <select
-                  id="extramedullary-type"
                   value={extramedullaryType}
                   onChange={(e) => setExtramedullaryType(e.target.value)}
-                  className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                  className="w-full mb-4 border px-4 py-2 rounded"
                 >
                   <option value="">--Select Option--</option>
-                  <option value="dcp">DCP: Dynamic Compression Plate</option>
+                  <option value="dcp">DCP</option>
                   <option value="recomplate">Recomplate</option>
-                  <option value="abps">ABPs: Angular Blade Plates</option>
-                  <option value="dhs">DHS: Dynamic Hip Screw</option>
-                  <option value="dcs">DCS: Dynamic Condylar Screw</option>
-                  <option value="lcps">LCPs: Locking Compression Plate</option>
-                  <option value="pflcps">PFLCPs: Proximal Femoral LCPs</option>
-                  <option value="dflcps">DFLCPs: Distal Femoral LCPs</option>
+                  <option value="abps">ABPs</option>
+                  <option value="dhs">DHS</option>
+                  <option value="dcs">DCS</option>
+                  <option value="lcps">LCPs</option>
+                  <option value="pflcps">PFLCPs</option>
+                  <option value="dflcps">DFLCPs</option>
                   <option value="other">Other</option>
                 </select>
 
@@ -202,71 +172,60 @@ const Surgery = () => {
                   <>
                     <input
                       type="text"
-                      value={extramedullaryOther}
-                      onChange={(e) => setExtramedullaryOther(e.target.value)}
-                      placeholder="Enter plate name"
-                      className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                      value={extramedullarySize}
+                      onChange={(e) => setExtramedullarySize(e.target.value)}
+                      placeholder="Size of the Plate (holes)"
+                      className="w-full mb-2 border px-4 py-2 rounded"
                     />
                     <input
                       type="text"
-                      placeholder="Enter plate length"
-                      className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                      value={extramedullaryScrews}
+                      onChange={(e) => setExtramedullaryScrews(e.target.value)}
+                      placeholder="Number of Screws"
+                      className="w-full mb-2 border px-4 py-2 rounded"
                     />
                     <input
                       type="text"
-                      placeholder="Enter screw count"
-                      className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                      value={extramedullaryElaboration}
+                      onChange={(e) => setExtramedullaryElaboration(e.target.value)}
+                      placeholder="Elaboration"
+                      className="w-full mb-4 border px-4 py-2 rounded"
                     />
                   </>
                 )}
-              </div>
+              </>
             )}
 
-            {/* Intramedullary Options */}
+            {/* Intramedullary */}
             {internalType === "intramedullary" && (
-              <div>
-                <label
-                  htmlFor="intramedullary-type"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Select Intramedullary Type:
-                </label>
+              <>
+                <label className="block mb-2">Select Intramedullary Type:</label>
                 <select
-                  id="intramedullary-type"
                   value={intramedullaryType}
                   onChange={(e) => {
                     setIntramedullaryType(e.target.value);
                     setAntigradeType("");
-                    setAntigradeOther("");
                     setRetrogradeType("");
-                    setRetrogradeOther("");
                   }}
-                  className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                  className="w-full mb-4 border px-4 py-2 rounded"
                 >
-                  <option value="">--Select Option--</option>
+                  <option value="">--Select--</option>
                   <option value="antigrade">Antigrade</option>
                   <option value="retrograde">Retrograde</option>
                 </select>
 
-                {/* Antigrade */}
                 {intramedullaryType === "antigrade" && (
-                  <div>
-                    <label
-                      htmlFor="antigrade-type"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                      Select Antigrade Type:
-                    </label>
+                  <>
+                    <label className="block mb-2">Antigrade Type:</label>
                     <select
-                      id="antigrade-type"
                       value={antigradeType}
                       onChange={(e) => setAntigradeType(e.target.value)}
-                      className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                      className="w-full mb-4 border px-4 py-2 rounded"
                     >
-                      <option value="">--Select Option--</option>
+                      <option value="">--Select--</option>
                       <option value="solid-nail">Solid Nail</option>
                       <option value="hollow-nail">Hollow Nail</option>
-                      <option value="pfn">PFN: Proximal Femoral Nail</option>
+                      <option value="pfn">PFN</option>
                       <option value="other">Other</option>
                     </select>
 
@@ -274,45 +233,42 @@ const Surgery = () => {
                       <>
                         <input
                           type="text"
-                          value={antigradeOther}
-                          onChange={(e) => setAntigradeOther(e.target.value)}
-                          placeholder="Enter nail name"
-                          className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                          value={antigradeSize}
+                          onChange={(e) => setAntigradeSize(e.target.value)}
+                          placeholder="Nail Length"
+                          className="w-full mb-2 border px-4 py-2 rounded"
                         />
                         <input
                           type="text"
-                          placeholder="Enter nail length"
-                          className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                          value={antigradeDiameter}
+                          onChange={(e) => setAntigradeDiameter(e.target.value)}
+                          placeholder="Nail Diameter"
+                          className="w-full mb-2 border px-4 py-2 rounded"
                         />
                         <input
                           type="text"
-                          placeholder="Enter nail diameter"
-                          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                          value={antigradeElaboration}
+                          onChange={(e) => setAntigradeElaboration(e.target.value)}
+                          placeholder="Elaboration"
+                          className="w-full mb-4 border px-4 py-2 rounded"
                         />
                       </>
                     )}
-                  </div>
+                  </>
                 )}
 
-                {/* Retrograde */}
                 {intramedullaryType === "retrograde" && (
-                  <div>
-                    <label
-                      htmlFor="retrograde-type"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                      Select Retrograde Type:
-                    </label>
+                  <>
+                    <label className="block mb-2">Retrograde Type:</label>
                     <select
-                      id="retrograde-type"
                       value={retrogradeType}
                       onChange={(e) => setRetrogradeType(e.target.value)}
-                      className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                      className="w-full mb-4 border px-4 py-2 rounded"
                     >
-                      <option value="">--Select Option--</option>
+                      <option value="">--Select--</option>
                       <option value="solid-nail">Solid Nail</option>
                       <option value="hollow-nail">Hollow Nail</option>
-                      <option value="dfn">DFN: Distal Femoral Nail</option>
+                      <option value="dfn">DFN</option>
                       <option value="other">Other</option>
                     </select>
 
@@ -320,93 +276,72 @@ const Surgery = () => {
                       <>
                         <input
                           type="text"
-                          value={retrogradeOther}
-                          onChange={(e) => setRetrogradeOther(e.target.value)}
-                          placeholder="Enter nail name"
-                          className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                          value={retrogradeSize}
+                          onChange={(e) => setRetrogradeSize(e.target.value)}
+                          placeholder="Nail Length"
+                          className="w-full mb-2 border px-4 py-2 rounded"
                         />
                         <input
                           type="text"
-                          placeholder="Enter nail length"
-                          className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
+                          value={retrogradeDiameter}
+                          onChange={(e) => setRetrogradeDiameter(e.target.value)}
+                          placeholder="Nail Diameter"
+                          className="w-full mb-2 border px-4 py-2 rounded"
                         />
                         <input
                           type="text"
-                          placeholder="Enter nail diameter"
-                          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+                          value={retrogradeElaboration}
+                          onChange={(e) => setRetrogradeElaboration(e.target.value)}
+                          placeholder="Elaboration"
+                          className="w-full mb-4 border px-4 py-2 rounded"
                         />
                       </>
                     )}
-                  </div>
+                  </>
                 )}
-              </div>
+              </>
             )}
-          </div>
+          </>
         )}
 
         {/* Combined */}
         {surgeryType === "combined" && (
-          <div>
-            <label
-              htmlFor="combined-text"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Describe Combined Surgery:
-            </label>
+          <>
+            <label className="block mb-2">Describe Combined Surgery:</label>
             <input
               type="text"
-              id="combined-text"
               value={combinedText}
               onChange={(e) => setCombinedText(e.target.value)}
-              className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
+              className="w-full mb-4 border px-4 py-2 rounded"
               placeholder="Enter combined surgery details..."
             />
-          </div>
+          </>
         )}
 
-        {/* Material */}
-        <div>
-          <label
-            htmlFor="material-used"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Material Used:
-          </label>
-          <select
-            id="material-used"
-            value={materialUsed}
-            onChange={(e) => setMaterialUsed(e.target.value)}
-            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="">--Select Material--</option>
-            <option value="stainless-steel">Stainless Steel</option>
-            <option value="titanium">Titanium</option>
-          </select>
-        </div>
+        {/* Material Used */}
+        <label className="block mb-2">Material Used:</label>
+        <select
+          value={materialUsed}
+          onChange={(e) => setMaterialUsed(e.target.value)}
+          className="w-full mb-4 border px-4 py-2 rounded"
+          required
+        >
+          <option value="">--Select Material--</option>
+          <option value="stainless-steel">Stainless Steel</option>
+          <option value="titanium">Titanium</option>
+        </select>
 
         {/* Description */}
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Description:
-          </label>
-          <textarea
-            id="description"
-            rows="3"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-            placeholder="Enter any additional notes or description..."
-          />
-        </div>
+        <label className="block mb-2">Description:</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows="3"
+          className="w-full mb-4 border px-4 py-2 rounded"
+          placeholder="Any additional notes..."
+        />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-        >
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Submit
         </button>
       </form>
