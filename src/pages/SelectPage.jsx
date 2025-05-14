@@ -107,17 +107,23 @@ const SelectPage = () => {
         <h1 className="text-lg font-semibold mb-2 text-gray-700">
           Select Hospital
         </h1>
-        <div className="flex items-center justify-center bg-red-500">
-          <Select
-          options={hospitals}
-          value={selectedHospital}
-          onChange={setSelectedHospital}
-          placeholder="Select Hospital"
-          className="w-[95%]"
-        />
-        <button className="w-[5%]">
-          <FaPlus />
-        </button>
+        <div className="flex items-center w-full">
+          <div className="relative flex-1">
+            <Select
+              options={hospitals}
+              value={selectedHospital}
+              onChange={setSelectedHospital}
+              placeholder="Select Hospital"
+              className="select-hospital"
+            />
+          </div>
+
+          <button
+            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Add new hospital"
+          >
+            <FaPlus />
+          </button>
         </div>
       </div>
 
@@ -125,13 +131,24 @@ const SelectPage = () => {
         <h1 className="text-lg font-semibold mb-2 text-gray-700">
           Select Assistant Surgeon(s)
         </h1>
-        <Select
-          isMulti
-          options={assistantSurgeons}
-          value={selectedAssistants}
-          onChange={setSelectedAssistants}
-          placeholder="Select Assistant Surgeons"
-        />
+        <div className="flex items-center w-full">
+          <div className="relative flex-1">
+            <Select
+              isMulti
+              options={assistantSurgeons}
+              value={selectedAssistants}
+              onChange={setSelectedAssistants}
+              placeholder="Select Assistant Surgeons"
+            />
+          </div>
+          <button
+            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Add new hospital"
+          >
+            <FaPlus />
+          </button>
+        </div>
+
       </div>
 
       <div className="flex justify-between">
