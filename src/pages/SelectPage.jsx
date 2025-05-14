@@ -114,7 +114,7 @@ const SelectPage = () => {
               value={selectedHospital}
               onChange={setSelectedHospital}
               placeholder="Select Hospital"
-              className="select-hospital"
+
             />
           </div>
 
