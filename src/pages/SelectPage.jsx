@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { URL } from "../components/URL";
+import { FaPlus } from "react-icons/fa6";
 
 const SelectPage = () => {
   const [hospitals, setHospitals] = useState([]);
@@ -106,12 +107,18 @@ const SelectPage = () => {
         <h1 className="text-lg font-semibold mb-2 text-gray-700">
           Select Hospital
         </h1>
-        <Select
+        <div className="flex items-center justify-center bg-red-500">
+          <Select
           options={hospitals}
           value={selectedHospital}
           onChange={setSelectedHospital}
           placeholder="Select Hospital"
+          className="w-[95%]"
         />
+        <button className="w-[5%]">
+          <FaPlus />
+        </button>
+        </div>
       </div>
 
       <div className="mb-6">

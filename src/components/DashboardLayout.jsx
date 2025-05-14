@@ -93,10 +93,10 @@ const DashboardLayout = () => {
       </title>
 
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/5 fixed md:relative top-0 left-0 h-full bg-gray-800 z-10">
+        <div className="w-full md:w-1/5 fixed md:relative top-0 left-0 h-full z-10">
           <Sidebar />
         </div>
-        <div className="w-full md:w-4/5 p-6 overflow-y-auto">
+        <div className="w-full md:w-4/5 p-6 mt-8 md:mt-0 overflow-y-auto">
           <Navbar />
           <div>
             {location.pathname === "/dashboard" && <Dashboard />}
