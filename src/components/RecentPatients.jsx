@@ -1,15 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { URL } from './URL';
 
 const RecentPatients = () => {
-  const patients = [
-    { name: 'John Doe', hn: 28 },
-    { name: 'Jane Smith', hn: 34 },
-    { name: 'Alice Johnson', hn: 45 },
-    { name: 'Bob Brown', hn: 39 },
-    { name: 'Charlie Davis', hn: 50 },
-    { name: 'David Evans', hn: 29 },
-    { name: 'Eva Green', hn: 37 },
-  ];
+  const [patients, setPatients] = useState([]);
+
+  useEffect(() => {
+  const fetchPatients = async () => {
+    try {
+      const res = await axios.get(`${URL}/patient-detail`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      // Ensure it's always an array
+      const data = Array.isArray(res.data.data)
+        ? res.data.data
+        : res.data.patients || [];
+
+      setPatients(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || 'Error fetching patients');
+    }
+  };
+
+  fetchPatients();
+}, []);
+
 
   const displayData = patients.length > 5 ? patients.slice(0, 5) : patients;
 
@@ -27,8 +47,8 @@ const RecentPatients = () => {
           <tbody>
             {displayData.map((patient, index) => (
               <tr key={index} className="border-b">
-                <td className="px-4 py-2 text-gray-700">{patient.name}</td>
-                <td className="px-4 py-2 text-gray-700">{patient.hn}</td>
+                <td className="px-4 py-2 text-gray-700">{patient.first_name}</td>
+                <td className="px-4 py-2 text-gray-700">{patient.hospital_number}</td>
               </tr>
             ))}
           </tbody>
