@@ -1,4 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { URL } from "../components/URL";
+import { useNavigate } from "react-router-dom";
 
 const Surgery = () => {
   const [surgeryType, setSurgeryType] = useState("");
@@ -10,6 +14,7 @@ const Surgery = () => {
   const [extramedullarySize, setExtramedullarySize] = useState("");
   const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
   const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
+  const navigate = useNavigate();
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
   const [antigradeOther, setAntigradeOther] = useState("");
@@ -36,9 +41,7 @@ const Surgery = () => {
     setExtramedullaryOther("");
     setIntramedullaryType("");
     setAntigradeType("");
-    setAntigradeOther("");
     setRetrogradeType("");
-    setRetrogradeOther("");
     setCombinedText("");
   };
 
@@ -46,48 +49,84 @@ const Surgery = () => {
     e.preventDefault();
 
     const formData = {
-      surgeryType,
-      externalType,
-      internalType,
-      internalTypeOther,
-      extramedullaryType,
-      extramedullaryOther,
-      extramedullarySize,
-      extramedullaryScrews,
-      extramedullaryElaboration,
-      intramedullaryType,
-      antigradeType,
-      antigradeOther,
-      antigradeSize,
-      antigradeDiameter,
-      antigradeElaboration,
-      retrogradeType,
-      retrogradeOther,
-      retrogradeSize,
-      retrogradeDiameter,
-      retrogradeElaboration,
-      materialUsed,
-      description,
-      combinedText,
+      patient_detail_id: localStorage.getItem("patientId"),
+      fixture:
+        surgeryType === "combined"
+          ? "Combined"
+          : surgeryType === "internal"
+          ? internalType
+          : externalType || "External",
+      fixture_type:
+        internalType === "other"
+          ? internalTypeOther
+          : internalType === "intramedullary"
+          ? intramedullaryType
+          : internalType === "extramedullary"
+          ? extramedullaryType
+          : externalType || "",
+      fixture_sub_type:
+        extramedullaryType || antigradeType || retrogradeType || "",
+      size_of_plate:
+        extramedullarySize || antigradeSize || retrogradeSize || "",
+      number_of_screws: extramedullaryScrews || "",
+
+      elaboration:
+        extramedullaryElaboration ||
+        antigradeElaboration ||
+        retrogradeElaboration ||
+        "",
+      material_used: materialUsed,
+      description: surgeryType === "combined" ? combinedText : description,
     };
 
-    console.log("Submitted form data:", formData);
-    setSubmittedData(formData);
+    try {
+      const res = await axios.post(`${URL}/create-surgery`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      toast.success(res?.data?.message || "Form submitted successfully!");
+      navigate("/surgeries");
+      setSubmittedData(res.data);
+    } catch (error) {
+      console.log("Error submitting form:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          "An error occurred while submitting the form."
+      );
+    }
   };
 
-  const showPlateFields = ["dcp", "recomplate", "abps", "lcps", "pflcps", "dflcps"].includes(extramedullaryType);
-  const showNailFieldsAntigrade = ["solid-nail", "hollow-nail", "pfn"].includes(antigradeType);
-  const showNailFieldsRetrograde = ["solid-nail", "hollow-nail", "dfn"].includes(retrogradeType);
+  const showPlateFields = [
+    "dcp",
+    "recomplate",
+    "abps",
+    "lcps",
+    "pflcps",
+    "dflcps",
+  ].includes(extramedullaryType);
+
+  const showNailFieldsAntigrade = ["solid-nail", "hollow-nail", "pfn"].includes(
+    antigradeType
+  );
+
+  const showNailFieldsRetrograde = [
+    "solid-nail",
+    "hollow-nail",
+    "dfn",
+  ].includes(retrogradeType);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Surgery Form</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Surgery Form
+      </h2>
 
       <form onSubmit={handleSubmit}>
         {/* Surgery Type */}
-        <label htmlFor="surgery-select" className="block mb-2">Select Surgery Type:</label>
+        <label className="block mb-2">Select Surgery Type:</label>
         <select
-          id="surgery-select"
           value={surgeryType}
           onChange={handleSurgeryChange}
           className="w-full mb-4 border px-4 py-2 rounded"
@@ -99,7 +138,7 @@ const Surgery = () => {
           <option value="combined">Combined</option>
         </select>
 
-        {/* External Type */}
+        {/* External */}
         {surgeryType === "external" && (
           <>
             <label className="block mb-2">Select External Fixture Type:</label>
@@ -108,7 +147,7 @@ const Surgery = () => {
               onChange={(e) => setExternalType(e.target.value)}
               className="w-full mb-4 border px-4 py-2 rounded"
             >
-              <option value="">--Select External Type--</option>
+              <option value="">--Select--</option>
               <option value="conventional">Conventional</option>
               <option value="rail-fixator">Rail Fixator</option>
               <option value="illizarov">Illizarov</option>
@@ -117,7 +156,7 @@ const Surgery = () => {
           </>
         )}
 
-        {/* Internal Fixture */}
+        {/* Internal */}
         {surgeryType === "internal" && (
           <>
             <label className="block mb-2">Select Internal Fixture Type:</label>
@@ -131,7 +170,7 @@ const Surgery = () => {
               }}
               className="w-full mb-4 border px-4 py-2 rounded"
             >
-              <option value="">--Select Internal Type--</option>
+              <option value="">--Select--</option>
               <option value="extramedullary">Extramedullary</option>
               <option value="intramedullary">Intramedullary</option>
               <option value="other">Other</option>
@@ -150,13 +189,15 @@ const Surgery = () => {
             {/* Extramedullary */}
             {internalType === "extramedullary" && (
               <>
-                <label className="block mb-2">Select Extramedullary Type:</label>
+                <label className="block mb-2">
+                  Select Extramedullary Type:
+                </label>
                 <select
                   value={extramedullaryType}
                   onChange={(e) => setExtramedullaryType(e.target.value)}
                   className="w-full mb-4 border px-4 py-2 rounded"
                 >
-                  <option value="">--Select Option--</option>
+                  <option value="">--Select--</option>
                   <option value="dcp">DCP</option>
                   <option value="recomplate">Recomplate</option>
                   <option value="abps">ABPs</option>
@@ -174,7 +215,7 @@ const Surgery = () => {
                       type="text"
                       value={extramedullarySize}
                       onChange={(e) => setExtramedullarySize(e.target.value)}
-                      placeholder="Size of the Plate (holes)"
+                      placeholder="Plate Size (holes)"
                       className="w-full mb-2 border px-4 py-2 rounded"
                     />
                     <input
@@ -187,7 +228,9 @@ const Surgery = () => {
                     <input
                       type="text"
                       value={extramedullaryElaboration}
-                      onChange={(e) => setExtramedullaryElaboration(e.target.value)}
+                      onChange={(e) =>
+                        setExtramedullaryElaboration(e.target.value)
+                      }
                       placeholder="Elaboration"
                       className="w-full mb-4 border px-4 py-2 rounded"
                     />
@@ -199,7 +242,9 @@ const Surgery = () => {
             {/* Intramedullary */}
             {internalType === "intramedullary" && (
               <>
-                <label className="block mb-2">Select Intramedullary Type:</label>
+                <label className="block mb-2">
+                  Select Intramedullary Type:
+                </label>
                 <select
                   value={intramedullaryType}
                   onChange={(e) => {
@@ -214,6 +259,7 @@ const Surgery = () => {
                   <option value="retrograde">Retrograde</option>
                 </select>
 
+                {/* Antigrade */}
                 {intramedullaryType === "antigrade" && (
                   <>
                     <label className="block mb-2">Antigrade Type:</label>
@@ -248,7 +294,9 @@ const Surgery = () => {
                         <input
                           type="text"
                           value={antigradeElaboration}
-                          onChange={(e) => setAntigradeElaboration(e.target.value)}
+                          onChange={(e) =>
+                            setAntigradeElaboration(e.target.value)
+                          }
                           placeholder="Elaboration"
                           className="w-full mb-4 border px-4 py-2 rounded"
                         />
@@ -257,6 +305,7 @@ const Surgery = () => {
                   </>
                 )}
 
+                {/* Retrograde */}
                 {intramedullaryType === "retrograde" && (
                   <>
                     <label className="block mb-2">Retrograde Type:</label>
@@ -284,14 +333,18 @@ const Surgery = () => {
                         <input
                           type="text"
                           value={retrogradeDiameter}
-                          onChange={(e) => setRetrogradeDiameter(e.target.value)}
+                          onChange={(e) =>
+                            setRetrogradeDiameter(e.target.value)
+                          }
                           placeholder="Nail Diameter"
                           className="w-full mb-2 border px-4 py-2 rounded"
                         />
                         <input
                           type="text"
                           value={retrogradeElaboration}
-                          onChange={(e) => setRetrogradeElaboration(e.target.value)}
+                          onChange={(e) =>
+                            setRetrogradeElaboration(e.target.value)
+                          }
                           placeholder="Elaboration"
                           className="w-full mb-4 border px-4 py-2 rounded"
                         />
@@ -329,19 +382,27 @@ const Surgery = () => {
           <option value="">--Select Material--</option>
           <option value="stainless-steel">Stainless Steel</option>
           <option value="titanium">Titanium</option>
+          <option value="titanium alloy">Titanium Alloy</option>
         </select>
 
         {/* Description */}
-        <label className="block mb-2">Description:</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows="3"
-          className="w-full mb-4 border px-4 py-2 rounded"
-          placeholder="Any additional notes..."
-        />
+        {surgeryType !== "combined" && (
+          <>
+            <label className="block mb-2">Description:</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows="3"
+              className="w-full mb-4 border px-4 py-2 rounded"
+              placeholder="Any additional notes..."
+            />
+          </>
+        )}
 
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        >
           Submit
         </button>
       </form>
