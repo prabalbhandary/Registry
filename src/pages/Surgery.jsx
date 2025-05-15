@@ -42,7 +42,7 @@ const Surgery = () => {
     setCombinedText("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
