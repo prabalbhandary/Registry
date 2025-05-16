@@ -37,7 +37,7 @@ const RecentPatients = () => {
     <div className="rounded-lg">
       <p className="text-xl font-semibold text-gray-800 mb-4">Recent Patients</p>
       <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
-        <table className="min-w-full table-auto border-collapse">
+        <table className="min-w-full table-auto border-separate border-spacing-0">
           <thead>
             <tr>
               <th className="px-4 py-2 bg-blue-100 text-left text-sm font-medium text-gray-600">Name</th>
