@@ -47,6 +47,7 @@ const Patients = () => {
             <table className="min-w-full border border-gray-300">
               <thead className="bg-gray-200">
                 <tr>
+                  <th className="border px-4 py-2">#</th>
                   <th className="border px-4 py-2">Name</th>
                   <th className="border px-4 py-2">Age</th>
                   <th className="border px-4 py-2">Gender</th>
@@ -55,6 +56,7 @@ const Patients = () => {
               <tbody>
                 {patients.map((patient, index) => (
                   <tr key={index} className="hover:bg-gray-100">
+                    <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4 py-2">{patient.first_name} {patient.last_name}</td>
                     <td className="border px-4 py-2">{patient.age}</td>
                     <td className="border px-4 py-2">{patient.gender}</td>
