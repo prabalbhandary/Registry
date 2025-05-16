@@ -1,10 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import RecentSurgeries from "../components/RecentSurgeries";
 import RecentPatients from "../components/RecentPatients";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { URL } from "../components/URL";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [sCount, setSCount] = useState(0);
+  const [pCount, setPCount] = useState(0);
+  const [aCount, setACount] = useState(0);
+  const [hCount, setHCount] = useState(0);
+  useEffect(() => {
+    const fetchSugeryCount = async () => {
+      try {
+        const res = await axios.get(`${URL}/surgery-count`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setSCount(res.data.count);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || "Error fetching data");
+      }
+    }
+    const fetchPatientCount = async () => {
+      try {
+        const res = await axios.get(`${URL}/patient-count`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setPCount(res.data.count);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || "Error fetching data");
+      }
+    }
+    const fetchAssistantCount = async () => {
+      try {
+        const res = await axios.get(`${URL}/assistant-surgeon-count`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setACount(res.data.count);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || "Error fetching data");
+      }
+    }
+    const fetchHospitalCount = async () => {
+      try {
+        const res = await axios.get(`${URL}/hospital-count`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setHCount(res.data.count);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || "Error fetching data");
+      }
+    }
+    fetchSugeryCount();
+    fetchPatientCount();
+    fetchAssistantCount();
+    fetchHospitalCount();
+  }, [])
   return (
     <div className="p-4 sm:p-6 md:p-8">
       {/* Live Stats Section */}
@@ -15,7 +80,7 @@ const Dashboard = () => {
           {[
             {
               label: "Surgeries",
-              count: 0,
+              count: sCount,
               bg: "bg-yellow-500",
               border: "border-yellow-500",
               short: "Sur",
@@ -23,7 +88,7 @@ const Dashboard = () => {
             },
             {
               label: "Patients",
-              count: 0,
+              count: pCount,
               bg: "bg-gray-500",
               border: "border-gray-500",
               short: "Pat",
@@ -31,7 +96,7 @@ const Dashboard = () => {
             },
             {
               label: "Assistant Surgeons",
-              count: 0,
+              count: aCount,
               bg: "bg-blue-500",
               border: "border-blue-500",
               short: "AS",
@@ -39,7 +104,7 @@ const Dashboard = () => {
             },
             {
               label: "Hospitals",
-              count: 0,
+              count: hCount,
               bg: "bg-red-500",
               border: "border-red-500",
               short: "HO",
