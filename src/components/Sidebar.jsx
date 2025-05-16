@@ -121,7 +121,7 @@ const Sidebar = () => {
                 handleLogout();
                 setMenuOpen(false);
               }}
-              className="block text-sm text-red-500 p-2 rounded w-full hover:bg-red-600 hover:text-white"
+              className="block text-sm text-red-500 p-2 rounded w-full hover:bg-red-600 hover:text-white transition duration-200"
             >
               Logout
             </button>
