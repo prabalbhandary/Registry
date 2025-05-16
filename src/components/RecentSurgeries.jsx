@@ -1,52 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { URL } from "./URL";
+import { toast } from "react-toastify";
 
 const RecentSurgeries = () => {
-  const surgeries = [
-    { date: "01/01/2023", patient: "John Doe" },
-    { date: "01/02/2023", patient: "Jane Smith" },
-    { date: "01/03/2023", patient: "Alice Johnson" },
-    { date: "01/04/2023", patient: "Bob Brown" },
-    { date: "01/05/2023", patient: "Charlie Davis" },
-    { date: "01/06/2023", patient: "David Evans" },
-    { date: "01/07/2023", patient: "Eva Green" },
-  ];
+  const [surgeries, setSurgeries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSurgeries = async () => {
+      try {
+        const res = await axios.get(`${URL}/create-surgery`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setSurgeries(res.data.data);
+        console.log(res.data.data);
+      } catch (error) {
+        console.error("Failed to fetch surgeries:", error);
+        toast.error(
+          error.response?.data?.message || "Failed to fetch surgeries"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSurgeries();
+  }, []);
 
   const displayData = surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries;
 
   return (
     <div className="bg-white rounded-lg">
-      <p className="text-xl font-semibold text-gray-800 mb-4">Recent Surgeries</p>
-      <div className="overflow-y-auto" style={{ maxHeight: "350px" }}>
-        <table className="min-w-full table-auto border-separate border-spacing-0">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 bg-indigo-100 text-left text-sm font-semibold text-gray-600 border-b">
-                Date of Surgery
-              </th>
-              <th className="px-6 py-3 bg-indigo-100 text-left text-sm font-semibold text-gray-600 border-b">
-                Patient Name
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayData.map((surgery, index) => (
-              <tr
-                key={index}
-                className={`hover:bg-gray-50 ${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                }`}
-              >
-                <td className="px-6 py-4 text-sm text-gray-700 border-b">
-                  {surgery.date}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-700 border-b">
-                  {surgery.patient}
-                </td>
+      <p className="text-xl font-semibold text-gray-800 mb-4">
+        Recent Surgeries
+      </p>
+      {loading ? (
+        <p className="text-gray-600 px-6 py-4">Loading...</p>
+      ) : (
+        <div className="overflow-y-auto" style={{ maxHeight: "350px" }}>
+          <table className="min-w-full table-auto border-separate border-spacing-0">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 bg-indigo-100 text-left text-sm font-semibold text-gray-600 border-b">
+                  Date of Surgery
+                </th>
+                <th className="px-6 py-3 bg-indigo-100 text-left text-sm font-semibold text-gray-600 border-b">
+                  Patient Name
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {displayData.map((surgery, index) => (
+                <tr
+                  key={index}
+                  className={`hover:bg-gray-50 ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  }`}
+                >
+                  <td className="px-6 py-4 text-sm text-gray-700 border-b">
+                    {new Date(surgery.created_at).toISOString().split("T")[0]}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700 border-b">
+                    {surgery.patient_detail.first_name}{" "}
+                    {surgery.patient_detail.last_name}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
