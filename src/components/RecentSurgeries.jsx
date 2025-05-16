@@ -29,7 +29,10 @@ const RecentSurgeries = () => {
     fetchSurgeries();
   }, []);
 
-  const displayData = surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries;
+  // Option 1: Display max 5 surgeries (and skip null patient_detail)
+  const displayData = (surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries).filter(
+    (surgery) => surgery.patient_detail !== null
+  );
 
   return (
     <div className="bg-white rounded-lg">
@@ -63,8 +66,9 @@ const RecentSurgeries = () => {
                     {new Date(surgery.created_at).toISOString().split("T")[0]}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700 border-b">
-                    {surgery.patient_detail.first_name}{" "}
-                    {surgery.patient_detail.last_name}
+                    {surgery.patient_detail
+                      ? `${surgery.patient_detail.first_name} ${surgery.patient_detail.last_name}`
+                      : "Unknown"}
                   </td>
                 </tr>
               ))}

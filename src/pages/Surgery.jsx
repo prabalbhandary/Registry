@@ -14,7 +14,8 @@ const Surgery = () => {
   const [extramedullarySize, setExtramedullarySize] = useState("");
   const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
   const [extramedullaryDiameter, setExtramedullaryDiameter] = useState("");
-  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
+  const [extramedullaryElaboration, setExtramedullaryElaboration] =
+    useState("");
   const navigate = useNavigate();
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
@@ -59,29 +60,36 @@ const Surgery = () => {
         surgeryType === "combined"
           ? "Combined"
           : surgeryType === "internal"
-          ? internalType
-          : externalType || "External",
+          ? "Internal"
+          : "External",
       fixture_type:
-        internalType === "other"
-          ? internalTypeOther
-          : internalType === "intramedullary"
-          ? intramedullaryType
-          : internalType === "extramedullary"
-          ? extramedullaryType
-          : externalType || "",
+        surgeryType === "internal"
+          ? internalType === "other"
+            ? otherFixtureType
+            : internalType === "extramedullary"
+            ? extramedullaryType === "other"
+              ? extramedullaryOther
+              : extramedullaryType
+            : intramedullaryType
+          : surgeryType === "external"
+          ? externalType === "other"
+            ? otherFixtureType
+            : externalType
+          : "",
       fixture_sub_type:
-        extramedullaryType || antigradeType || retrogradeType || "",
+        antigradeType || retrogradeType || extramedullaryType || "",
       size_of_plate:
         extramedullarySize || antigradeSize || retrogradeSize || "",
       number_of_screws: extramedullaryScrews || "",
-
       elaboration:
         extramedullaryElaboration ||
         antigradeElaboration ||
         retrogradeElaboration ||
         "",
       material_used: materialUsed,
-      description: surgeryType === "combined" ? combinedText : description,
+      description: surgeryType !== "combined" ? description : null,
+      combined_surgery_description:
+        surgeryType === "combined" ? combinedText : null,
     };
 
     try {
