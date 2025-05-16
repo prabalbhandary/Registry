@@ -55,7 +55,7 @@ const RecentSurgeries = () => {
               {displayData.map((surgery, index) => (
                 <tr
                   key={index}
-                  className={`hover:bg-gray-50 ${
+                  className={`hover:bg-gray-50 cursor-pointer ${
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                   }`}
                 >
