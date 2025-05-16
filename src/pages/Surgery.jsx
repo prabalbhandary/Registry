@@ -34,6 +34,7 @@ const Surgery = () => {
   const [antigradeText, setAntigradeText] = useState("");
   const [retrogradeText, setRetrogradeText] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
+  const [otherFixtureType, setOtherFixtureType] = useState("");
 
   const handleSurgeryChange = (e) => {
     const selectedType = e.target.value;
@@ -161,8 +162,8 @@ const Surgery = () => {
             {externalType === "other" && (
               <input
                 type="text"
-                value={externalTypeOther}
-                onChange={(e) => setExternalTypeOther(e.target.value)}
+                value={otherFixtureType}
+                onChange={(e) => setOtherFixtureType(e.target.value)}
                 className="w-full mb-4 border px-4 py-2 rounded"
                 placeholder="Enter external type"
               />
@@ -193,8 +194,8 @@ const Surgery = () => {
             {internalType === "other" && (
               <input
                 type="text"
-                value={internalTypeOther}
-                onChange={(e) => setInternalTypeOther(e.target.value)}
+                value={otherFixtureType}
+                onChange={(e) => setOtherFixtureType(e.target.value)}
                 className="w-full mb-4 border px-4 py-2 rounded"
                 placeholder="Enter internal type"
               />
