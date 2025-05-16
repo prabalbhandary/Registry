@@ -16,7 +16,6 @@ const RecentSurgeries = () => {
           },
         });
         setSurgeries(res.data.data);
-        console.log(res.data.data);
       } catch (error) {
         console.error("Failed to fetch surgeries:", error);
         toast.error(
