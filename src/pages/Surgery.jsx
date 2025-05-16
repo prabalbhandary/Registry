@@ -13,6 +13,7 @@ const Surgery = () => {
   const [extramedullaryOther, setExtramedullaryOther] = useState("");
   const [extramedullarySize, setExtramedullarySize] = useState("");
   const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
+  const [extramedullaryDiameter, setExtramedullaryDiameter] = useState("");
   const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
   const navigate = useNavigate();
   const [intramedullaryType, setIntramedullaryType] = useState("");
@@ -29,6 +30,9 @@ const Surgery = () => {
   const [materialUsed, setMaterialUsed] = useState("");
   const [description, setDescription] = useState("");
   const [combinedText, setCombinedText] = useState("");
+  const [externalTypeOther, setExternalTypeOther] = useState("");
+  const [antigradeText, setAntigradeText] = useState("");
+  const [retrogradeText, setRetrogradeText] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
 
   const handleSurgeryChange = (e) => {
