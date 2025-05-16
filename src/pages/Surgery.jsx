@@ -153,6 +153,16 @@ const Surgery = () => {
               <option value="illizarov">Illizarov</option>
               <option value="other">Other</option>
             </select>
+
+            {externalType === "other" && (
+              <input
+                type="text"
+                value={externalTypeOther}
+                onChange={(e) => setExternalTypeOther(e.target.value)}
+                className="w-full mb-4 border px-4 py-2 rounded"
+                placeholder="Enter external type"
+              />
+            )}
           </>
         )}
 
