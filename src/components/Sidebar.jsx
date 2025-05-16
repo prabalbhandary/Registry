@@ -184,7 +184,7 @@ const Sidebar = () => {
         </div>
 
         {/* Progress Section */}
-        <div className="mt-8 text-sm">
+        {/* <div className="mt-8 text-sm">
           <p className="text-gray-700 font-semibold">PROGRESS STEPS</p>
           <ul className="space-y-4 mt-2">
             <li className="flex flex-col items-start space-y-3">
@@ -210,7 +210,7 @@ const Sidebar = () => {
               </div>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </>
   );
