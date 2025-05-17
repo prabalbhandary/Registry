@@ -5,18 +5,18 @@ import { URL } from "../components/URL";
 import { useNavigate } from "react-router-dom";
 
 const Surgery = () => {
-  const [surgeryType, setSurgeryType] = useState("");
+  const navigate = useNavigate();
+
+  const [surgeryType, setSurgeryType] = useState("internal");
   const [externalType, setExternalType] = useState("");
-  const [internalType, setInternalType] = useState("");
+  const [internalType, setInternalType] = useState("other");
   const [internalTypeOther, setInternalTypeOther] = useState("");
   const [extramedullaryType, setExtramedullaryType] = useState("");
   const [extramedullaryOther, setExtramedullaryOther] = useState("");
-  const [extramedullarySize, setExtramedullarySize] = useState("");
-  const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
+  const [extramedullarySize, setExtramedullarySize] = useState("4.5mm");
+  const [extramedullaryScrews, setExtramedullaryScrews] = useState("6");
   const [extramedullaryDiameter, setExtramedullaryDiameter] = useState("");
-  const [extramedullaryElaboration, setExtramedullaryElaboration] =
-    useState("");
-  const navigate = useNavigate();
+  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("Performed under general anesthesia.");
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
   const [antigradeOther, setAntigradeOther] = useState("");
@@ -28,14 +28,14 @@ const Surgery = () => {
   const [retrogradeSize, setRetrogradeSize] = useState("");
   const [retrogradeDiameter, setRetrogradeDiameter] = useState("");
   const [retrogradeElaboration, setRetrogradeElaboration] = useState("");
-  const [materialUsed, setMaterialUsed] = useState("");
-  const [description, setDescription] = useState("");
+  const [materialUsed, setMaterialUsed] = useState("titanium alloy");
+  const [description, setDescription] = useState("No complications during the surgery.");
   const [combinedText, setCombinedText] = useState("");
   const [externalTypeOther, setExternalTypeOther] = useState("");
   const [antigradeText, setAntigradeText] = useState("");
   const [retrogradeText, setRetrogradeText] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
-  const [otherFixtureType, setOtherFixtureType] = useState("");
+  const [otherFixtureType, setOtherFixtureType] = useState("other fixture type");
   const [errors, setErrors] = useState({});
 
   const handleSurgeryChange = (e) => {
@@ -54,10 +54,8 @@ const Surgery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const newErrors = {};
 
-    // Validation for externalType === 'other'
     if (
       surgeryType === "external" &&
       externalType === "other" &&
@@ -66,14 +64,13 @@ const Surgery = () => {
       newErrors.otherFixtureType = "Please enter external fixation type.";
     }
 
-    // If there are errors, stop and show them
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       toast.error("Please fix the errors before submitting.");
       return;
     }
 
-    setErrors({}); // clear previous errors if any
+    setErrors({});
 
     const formData = {
       patient_detail_id: localStorage.getItem("patientId"),
@@ -129,7 +126,7 @@ const Surgery = () => {
       navigate("/surgeries");
       setSubmittedData(res.data);
     } catch (error) {
-      console.log("Error submitting form:", error);
+      console.error("Error submitting form:", error);
       toast.error(
         error?.response?.data?.message ||
           "An error occurred while submitting the form."
@@ -158,10 +155,7 @@ const Surgery = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Surgery Form
-      </h2>
-
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Surgery Form</h2>
       <form onSubmit={handleSubmit}>
         {/* Surgery Type */}
         <label className="block mb-2">Select Surgery Type:</label>
