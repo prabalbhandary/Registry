@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import user from "../assets/user.png";
-import { FaChevronUp, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaChevronUp, FaChevronDown, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { MdOutlineHome } from "react-icons/md";
 import { CiUser, CiClock1 } from "react-icons/ci";
 import { toast } from "react-toastify";
@@ -72,11 +72,12 @@ const Sidebar = () => {
           onClick={() => setDropDownOpened(!dropDownOpened)}
           className="flex items-center mb-4 cursor-pointer hover:bg-gray-400 p-2 rounded-lg"
         >
-          <img
+          {/* <img
             src={user}
             alt="User"
             className="w-12 h-12 rounded-full mr-4 shrink-0"
-          />
+          /> */}
+          <FaUser className="w-12 h-12 rounded-full mr-4 shrink-0 text-gray-600" />
           <div className="flex flex-col min-w-0">
             <p className="text-lg font-semibold text-gray-800 truncate">
               {userInfo?.name}

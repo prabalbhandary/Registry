@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import SecondNavbar from "../components/SecondNavbar";
+// import SecondNavbar from "../components/SecondNavbar";
 import skeleton from "../assets/skeleton.png";
 
 const SkeletonOverlay = ({ onPartClick }) => {
@@ -190,7 +190,7 @@ const PatientSurgicalDetails = () => {
   return (
     <>
       <title>Patient Surgical Details - Trauma Registry</title>
-      <SecondNavbar completedIndex={completedIndex} />
+      {/* <SecondNavbar completedIndex={completedIndex} /> */}
       <section className="max-w-4xl mx-auto p-4">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
           Add Patient Surgical Details
