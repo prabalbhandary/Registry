@@ -146,15 +146,15 @@ const Surgery = () => {
           required
         >
           <option value="">--Please choose an option--</option>
-          <option value="internal">Internal fixtures</option>
-          <option value="external">External fixtures</option>
+          <option value="internal">Internal fixation</option>
+          <option value="external">External fixation</option>
           <option value="combined">Combined</option>
         </select>
 
         {/* External */}
         {surgeryType === "external" && (
           <>
-            <label className="block mb-2">Select External Fixture Type:</label>
+            <label className="block mb-2">Select External Fixation Type:</label>
             <select
               value={externalType}
               onChange={(e) => setExternalType(e.target.value)}
@@ -182,7 +182,7 @@ const Surgery = () => {
         {/* Internal */}
         {surgeryType === "internal" && (
           <>
-            <label className="block mb-2">Select Internal Fixture Type:</label>
+            <label className="block mb-2">Select Internal Fixation Type:</label>
             <select
               value={internalType}
               onChange={(e) => {
