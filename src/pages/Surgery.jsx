@@ -36,6 +36,7 @@ const Surgery = () => {
   const [retrogradeText, setRetrogradeText] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
   const [otherFixtureType, setOtherFixtureType] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleSurgeryChange = (e) => {
     const selectedType = e.target.value;
@@ -53,6 +54,26 @@ const Surgery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    // Validation for externalType === 'other'
+    if (
+      surgeryType === "external" &&
+      externalType === "other" &&
+      !otherFixtureType.trim()
+    ) {
+      newErrors.otherFixtureType = "Please enter external fixation type.";
+    }
+
+    // If there are errors, stop and show them
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fix the errors before submitting.");
+      return;
+    }
+
+    setErrors({}); // clear previous errors if any
 
     const formData = {
       patient_detail_id: localStorage.getItem("patientId"),
@@ -78,6 +99,11 @@ const Surgery = () => {
           : "",
       fixture_sub_type:
         antigradeType || retrogradeType || extramedullaryType || "",
+      otherFixtureType:
+        (surgeryType === "internal" && internalType === "other") ||
+        (surgeryType === "external" && externalType === "other")
+          ? otherFixtureType
+          : "",
       size_of_plate:
         extramedullarySize || antigradeSize || retrogradeSize || "",
       number_of_screws: extramedullaryScrews || "",
