@@ -31,8 +31,6 @@ const Surgeries = () => {
     <>
       <title>Surgeries - Trauma Registry</title>
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Surgeries</h1>
-
         {loading ? (
           <p>Loading...</p>
         ) : surgeries.length === 0 ? (
