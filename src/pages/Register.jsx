@@ -33,7 +33,16 @@ const Register = () => {
         navigate("/login");
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      const response = error.response?.data;
+
+      if (response?.errors) {
+        // Loop through each field's error messages
+        Object.values(response.errors).forEach((fieldErrors) => {
+          fieldErrors.forEach((msg) => toast.error(msg));
+        });
+      } else {
+        toast.error(response?.message || "An error occurred");
+      }
     }
   };
 
@@ -149,7 +158,7 @@ const Register = () => {
               <input type="checkbox" />
               <p>I hereby agree to Terms & Conditions {" "}
                 {/* <Link to="/terms" className="underline">Terms and Conditions</Link> */}
-                 of Nepal Orthopedic Association for using Trauma Registry.</p>
+                of Nepal Orthopedic Association for using Trauma Registry.</p>
             </section>
 
             <section className="mb-6">

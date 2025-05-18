@@ -23,7 +23,16 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred");
+      const response = error.response?.data;
+
+      if (response?.errors) {
+        // Loop through each field's error messages
+        Object.values(response.errors).forEach((fieldErrors) => {
+          fieldErrors.forEach((msg) => toast.error(msg));
+        });
+      } else {
+        toast.error(response?.message || "An error occurred");
+      }
     }
   };
 
@@ -34,7 +43,7 @@ const Login = () => {
         <article className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
           <header className="text-center mb-8">
             <Link to="/" className="block text-3xl font-bold text-blue-600">
-            Nepal Orthopedic Association
+              Nepal Orthopedic Association
             </Link>
             <img src={Logo} alt="Logo" className="w-32 h-32 mx-auto mb-4" />
           </header>
