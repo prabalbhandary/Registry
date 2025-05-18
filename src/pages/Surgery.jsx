@@ -7,35 +7,28 @@ import { useNavigate } from "react-router-dom";
 const Surgery = () => {
   const navigate = useNavigate();
 
-  const [surgeryType, setSurgeryType] = useState("internal");
+  const [surgeryType, setSurgeryType] = useState("");
   const [externalType, setExternalType] = useState("");
-  const [internalType, setInternalType] = useState("other");
-  const [internalTypeOther, setInternalTypeOther] = useState("");
+  const [internalType, setInternalType] = useState("");
   const [extramedullaryType, setExtramedullaryType] = useState("");
   const [extramedullaryOther, setExtramedullaryOther] = useState("");
-  const [extramedullarySize, setExtramedullarySize] = useState("4.5mm");
-  const [extramedullaryScrews, setExtramedullaryScrews] = useState("6");
-  const [extramedullaryDiameter, setExtramedullaryDiameter] = useState("");
-  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("Performed under general anesthesia.");
+  const [extramedullarySize, setExtramedullarySize] = useState("");
+  const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
+  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
-  const [antigradeOther, setAntigradeOther] = useState("");
   const [antigradeSize, setAntigradeSize] = useState("");
   const [antigradeDiameter, setAntigradeDiameter] = useState("");
   const [antigradeElaboration, setAntigradeElaboration] = useState("");
   const [retrogradeType, setRetrogradeType] = useState("");
-  const [retrogradeOther, setRetrogradeOther] = useState("");
   const [retrogradeSize, setRetrogradeSize] = useState("");
   const [retrogradeDiameter, setRetrogradeDiameter] = useState("");
   const [retrogradeElaboration, setRetrogradeElaboration] = useState("");
-  const [materialUsed, setMaterialUsed] = useState("titanium alloy");
-  const [description, setDescription] = useState("No complications during the surgery.");
+  const [materialUsed, setMaterialUsed] = useState("");
+  const [description, setDescription] = useState("");
   const [combinedText, setCombinedText] = useState("");
-  const [externalTypeOther, setExternalTypeOther] = useState("");
-  const [antigradeText, setAntigradeText] = useState("");
-  const [retrogradeText, setRetrogradeText] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
-  const [otherFixtureType, setOtherFixtureType] = useState("other fixture type");
+  const [otherFixtureType, setOtherFixtureType] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleSurgeryChange = (e) => {
