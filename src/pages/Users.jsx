@@ -9,7 +9,11 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-import { PiToggleLeftFill, PiToggleRightFill, PiTrashFill  } from "react-icons/pi";
+import {
+  PiToggleLeftFill,
+  PiToggleRightFill,
+  PiTrashFill,
+} from "react-icons/pi";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -123,6 +127,71 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  // Card view for mobile screens
+  const UserCard = ({ user, index }) => (
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+      <div className="flex justify-between items-center mb-2">
+        <div className="font-bold">
+          {index + 1}. {user.name}
+        </div>
+        <button
+          onClick={() => handleDelete(user.id)}
+          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 flex items-center text-sm"
+        >
+          <PiTrashFill className="mr-1" />
+          Delete
+        </button>
+      </div>
+      <div className="text-gray-600 mb-1">{user.email}</div>
+      <div className="flex justify-between mt-2">
+        <div className="flex items-center">
+          <span className="text-gray-700 mr-2">Admin:</span>
+          <label className="inline-flex items-center cursor-pointer">
+            {user.is_admin ? (
+              <>
+                <PiToggleRightFill
+                  className="text-green-500 text-3xl cursor-pointer"
+                  onClick={() => handleChangeRole(user.id, user.is_admin)}
+                />
+                <FaUserShield className="text-blue-600 ml-1" />
+              </>
+            ) : (
+              <>
+                <PiToggleLeftFill
+                  className="text-gray-400 text-3xl cursor-pointer"
+                  onClick={() => handleChangeRole(user.id, user.is_admin)}
+                />
+                <FaUser className="text-gray-500 ml-1" />
+              </>
+            )}
+          </label>
+        </div>
+        <div className="flex items-center">
+          <span className="text-gray-700 mr-2">Approved:</span>
+          <label className="inline-flex items-center cursor-pointer">
+            {user.is_approved ? (
+              <>
+                <PiToggleRightFill
+                  className="text-green-500 text-3xl cursor-pointer"
+                  onClick={() => handleToggle(user.id, user.is_approved)}
+                />
+                <FaCheckCircle className="text-green-600 ml-1" />
+              </>
+            ) : (
+              <>
+                <PiToggleLeftFill
+                  className="text-gray-400 text-3xl cursor-pointer"
+                  onClick={() => handleToggle(user.id, user.is_approved)}
+                />
+                <FaTimesCircle className="text-red-500 ml-1" />
+              </>
+            )}
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <title>Users - Trauma Registry</title>
@@ -130,112 +199,148 @@ const Users = () => {
         <h2 className="text-2xl font-bold">Users</h2>
       </div>
       <hr />
-      <div className="overflow-x-auto">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
+
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <p className="text-lg">Loading...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded m-4">
           <p>Error fetching users: {error.message}</p>
-        ) : (
-          <table className="min-w-full bg-white">
-            <thead>
-              <tr className="border-b">
-                <th className="py-2 px-4">S.No.</th>
-                <th className="py-2 px-4">Username</th>
-                <th className="py-2 px-4">Email</th>
-                <th className="py-2 px-4">Is Admin</th>
-                <th className="py-2 px-4">Is Approved</th>
-                <th className="py-2 px-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={user.id} className="border-b">
-                  <td className="py-2 px-4 text-center">{index + 1}</td>
-                  <td className="py-2 px-4 text-center">
-                    {user.name}
-                  </td>
-                  <td className="py-2 px-4 text-center">
-                    {user.email}
-                  </td>
+        </div>
+      ) : (
+        <>
+          {/* For mobile screens: Card view */}
+          <div className="md:hidden px-4 py-2">
+            {users.map((user, index) => (
+              <UserCard key={user.id} user={user} index={index} />
+            ))}
+          </div>
 
-                  {/* Role Toggle */}
-                  <td className="py-2 px-4 text-center">
-                    <div className="flex items-center justify-center space-x-2">
-                      <label className="inline-flex items-center cursor-pointer">
-                        {user.is_admin ? (
-                          <PiToggleRightFill
-                            className="text-green-500 text-5xl cursor-pointer"
-                            title="Click to make user"
-                            onClick={() =>
-                              handleChangeRole(user.id, user.is_admin)
-                            }
-                          />
-                        ) : (
-                          <PiToggleLeftFill
-                            className="text-gray-400 text-5xl cursor-pointer"
-                            title="Click to make admin"
-                            onClick={() =>
-                              handleChangeRole(user.id, user.is_admin)
-                            }
-                          />
-                        )}
-                      </label>
-                      {user.is_admin ? (
-                        <FaUserShield className="text-blue-600" title="Admin" />
-                      ) : (
-                        <FaUser className="text-gray-500" title="User" />
-                      )}
-                    </div>
-                  </td>
-
-                  {/* Approval Toggle */}
-                  <td className="py-2 px-4 text-center">
-                    <div className="flex items-center justify-center space-x-2">
-                      <label className="inline-flex items-center cursor-pointer">
-                        {user.is_approved ? (
-                          <PiToggleRightFill
-                            className="text-green-500 text-5xl cursor-pointer"
-                            title="Click to make user"
-                            onClick={() => handleToggle(user.id)}
-                          />
-                        ) : (
-                          <PiToggleLeftFill
-                            className="text-gray-400 text-5xl cursor-pointer"
-                            title="Click to make admin"
-                            onClick={() => handleToggle(user.id)}
-                          />
-                        )}
-                      </label>
-                      {user.is_approved ? (
-                        <FaCheckCircle
-                          className="text-green-600"
-                          title="Approved"
-                        />
-                      ) : (
-                        <FaTimesCircle
-                          className="text-red-500"
-                          title="Not Approved"
-                        />
-                      )}
-                    </div>
-                  </td>
-
-                  {/* Delete Button */}
-                  <td className="flex justify-center py-2 px-4 text-center">
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className="bg-red-500 text-white py-3 px-4 rounded hover:bg-red-600 flex items-center justify-center"
-                    >
-                      <PiTrashFill className="text-white" />
-                      <span className="ml-2">Delete</span>
-                    </button>
-                  </td>
+          {/* For tablet and desktop: Table view */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr className="bg-gray-100 border-b">
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    S.No.
+                  </th>
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    Username
+                  </th>
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    Email
+                  </th>
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    Is Admin
+                  </th>
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    Is Approved
+                  </th>
+                  <th className="py-2 px-2 lg:px-4 text-sm lg:text-base">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={user.id} className="border-b hover:bg-gray-50">
+                    <td className="py-2 px-2 lg:px-4 text-center text-sm lg:text-base">
+                      {index + 1}
+                    </td>
+                    <td className="py-2 px-2 lg:px-4 text-center text-sm lg:text-base">
+                      {user.name}
+                    </td>
+                    <td className="py-2 px-2 lg:px-4 text-center text-sm lg:text-base">
+                      {user.email}
+                    </td>
+
+                    {/* Role Toggle */}
+                    <td className="py-2 px-2 lg:px-4 text-center">
+                      <div className="flex items-center justify-center space-x-1">
+                        <label className="inline-flex items-center cursor-pointer">
+                          {user.is_admin ? (
+                            <PiToggleRightFill
+                              className="text-green-500 text-4xl cursor-pointer"
+                              title="Click to make user"
+                              onClick={() =>
+                                handleChangeRole(user.id, user.is_admin)
+                              }
+                            />
+                          ) : (
+                            <PiToggleLeftFill
+                              className="text-gray-400 text-4xl cursor-pointer"
+                              title="Click to make admin"
+                              onClick={() =>
+                                handleChangeRole(user.id, user.is_admin)
+                              }
+                            />
+                          )}
+                        </label>
+                        {user.is_admin ? (
+                          <FaUserShield
+                            className="text-blue-600"
+                            title="Admin"
+                          />
+                        ) : (
+                          <FaUser className="text-gray-500" title="User" />
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Approval Toggle */}
+                    <td className="py-2 px-2 lg:px-4 text-center">
+                      <div className="flex items-center justify-center space-x-1">
+                        <label className="inline-flex items-center cursor-pointer">
+                          {user.is_approved ? (
+                            <PiToggleRightFill
+                              className="text-green-500 text-4xl cursor-pointer"
+                              title="Click to disable"
+                              onClick={() =>
+                                handleToggle(user.id, user.is_approved)
+                              }
+                            />
+                          ) : (
+                            <PiToggleLeftFill
+                              className="text-gray-400 text-4xl cursor-pointer"
+                              title="Click to approve"
+                              onClick={() =>
+                                handleToggle(user.id, user.is_approved)
+                              }
+                            />
+                          )}
+                        </label>
+                        {user.is_approved ? (
+                          <FaCheckCircle
+                            className="text-green-600"
+                            title="Approved"
+                          />
+                        ) : (
+                          <FaTimesCircle
+                            className="text-red-500"
+                            title="Not Approved"
+                          />
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Delete Button */}
+                    <td className="py-2 px-2 lg:px-4 text-center">
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="bg-red-500 text-white py-1 px-2 lg:py-2 lg:px-3 rounded hover:bg-red-600 flex items-center justify-center text-sm"
+                      >
+                        <PiTrashFill className="text-white" />
+                        <span className="ml-1 hidden sm:inline">Delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </>
   );
 };
