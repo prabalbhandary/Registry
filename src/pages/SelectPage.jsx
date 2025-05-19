@@ -11,11 +11,12 @@ const SelectPage = () => {
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [selectedAssistants, setSelectedAssistants] = useState([]);
-  const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
-  const [name, setName] = useState("");
-  const [hospitals_id, setHospitals_id] = useState("");
-  const [address, setAddress] = useState("");
-  const [error, setError] = useState("");
+  const [primarySurgeon] = useState("Dr. Shubham");
+
+  const [hospitalName, setHospitalName] = useState("");
+  const [hospitalAddress, setHospitalAddress] = useState("");
+  const [assistantName, setAssistantName] = useState("");
+  const [assistantHospitalId, setAssistantHospitalId] = useState("");
 
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
   const [isAssistantModalOpen, setIsAssistantModalOpen] = useState(false);
@@ -51,73 +52,82 @@ const SelectPage = () => {
         navigate("/create-surgery");
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Something went wrong.");
+      console.error("Submit error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          "Something went wrong."
+      );
     }
   };
 
   const addHospital = async (e) => {
     e.preventDefault();
-    if (!name || !address) {
+    if (!hospitalName || !hospitalAddress) {
       toast.error("Both name and address are required");
       return;
     }
 
     try {
-      const res = await axios.post(`${URL}/hospital`, { name, address });
+      const res = await axios.post(`${URL}/hospital`, {
+        name: hospitalName,
+        address: hospitalAddress,
+      });
+
       if (res.status === 201) {
         toast.success(res.data.message);
         setHospitals((prev) => [
           ...prev,
-          { value: res.data.hospital.id, label: res.data.hospital.name },
+          {
+            value: res.data.hospital.id,
+            label: res.data.hospital.name,
+          },
         ]);
-        navigate("/add-hospital");
-        setName("");
-        setAddress("");
+        setHospitalName("");
+        setHospitalAddress("");
         setIsHospitalModalOpen(false);
       }
-    } catch (err) {
-      console.error("Add hospital error:", err);
-      toast.error(err?.response?.data?.message || "Error adding hospital");
-      setError(err.response?.data?.error);
+    } catch (error) {
+      console.error("Add hospital error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          "Error adding hospital"
+      );
     }
   };
 
   const addAssistantSurgeon = async (e) => {
     e.preventDefault();
-    if (!name || !hospitals_id) {
+    if (!assistantName || !assistantHospitalId) {
       toast.error("Both name and hospital are required");
       return;
     }
 
     try {
       const res = await axios.post(`${URL}/assistant-surgeone`, {
-        name,
-        hospitals_id: Number(hospitals_id),
+        name: assistantName,
+        hospitals_id: Number(assistantHospitalId),
       });
 
       if (res.status === 201) {
         toast.success(res.data.message);
-
-        // Update assistant surgeons list
-        const newSurgeon = {
-          value: res.data.assistant_surgeon.name,
-          label: res.data.assistant_surgeon.name,
-        };
-
-        setAssistantSurgeons((prev) => [...prev, newSurgeon]);
-
         navigate("/add-assistant");
-        setName("");
-        setHospitals_id("");
+        setAssistantSurgeons((prev) => [
+          ...prev,
+          { value: assistantName, label: assistantName },
+        ]);
+        setAssistantName("");
+        setAssistantHospitalId("");
         setIsAssistantModalOpen(false);
       }
     } catch (error) {
-      console.error("Error response:", error.response?.data);
+      console.error("Add assistant surgeon error:", error);
       toast.error(
-        error?.response?.data?.message || "Failed to add assistant surgeon"
+        error?.response?.data?.message ||
+          error.message ||
+          "Failed to add assistant surgeon"
       );
-      setError(error.response?.data?.error || "");
     }
   };
 
@@ -193,8 +203,7 @@ const SelectPage = () => {
           </div>
           <button
             onClick={() => setIsHospitalModalOpen(true)}
-            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Add new hospital"
+            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600"
           >
             <FaPlus />
           </button>
@@ -217,8 +226,7 @@ const SelectPage = () => {
           </div>
           <button
             onClick={() => setIsAssistantModalOpen(true)}
-            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Add new assistant surgeon"
+            className="p-3 bg-blue-500 ml-1 text-white rounded-md hover:bg-blue-600"
           >
             <FaPlus />
           </button>
@@ -250,15 +258,15 @@ const SelectPage = () => {
             <input
               type="text"
               placeholder="Hospital Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={hospitalName}
+              onChange={(e) => setHospitalName(e.target.value)}
               className="w-full p-2 border rounded mb-4"
             />
             <input
               type="text"
               placeholder="Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={hospitalAddress}
+              onChange={(e) => setHospitalAddress(e.target.value)}
               className="w-full p-2 border rounded mb-4"
             />
             <div className="flex justify-end space-x-2">
@@ -289,14 +297,14 @@ const SelectPage = () => {
             </h2>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={assistantName}
+              onChange={(e) => setAssistantName(e.target.value)}
               placeholder="Assistant Surgeon Name"
               className="w-full p-2 border rounded mb-4"
             />
             <select
-              value={hospitals_id}
-              onChange={(e) => setHospitals_id(e.target.value)} // FIXED HERE
+              value={assistantHospitalId}
+              onChange={(e) => setAssistantHospitalId(e.target.value)}
               className="w-full p-2 border rounded mb-4"
             >
               <option value="">Select Hospital</option>
