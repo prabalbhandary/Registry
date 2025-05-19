@@ -104,21 +104,21 @@ const Sidebar = () => {
           <div className="bg-gray-200 shadow-xl p-4 rounded-lg mb-4">
             <NavLink
               to="/add-hospital"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {setMenuOpen(false); setDropDownOpened(false)}}
               className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
             >
               Add Hospital
             </NavLink>
             <NavLink
               to="/add-assistant"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {setMenuOpen(false); setDropDownOpened(false)}}
               className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
             >
               Add Assistant
             </NavLink>
             <NavLink
               to="/profile"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {setMenuOpen(false); setDropDownOpened(false)}}
               className="block text-sm text-gray-800 hover:bg-gray-500 hover:text-white rounded p-2"
             >
               View Profile
@@ -128,6 +128,7 @@ const Sidebar = () => {
               onClick={() => {
                 handleLogout();
                 setMenuOpen(false);
+                setDropDownOpened(false);
               }}
               className="block text-sm text-red-500 p-2 rounded w-full hover:bg-red-600 hover:text-white transition duration-200"
             >
