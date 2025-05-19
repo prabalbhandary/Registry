@@ -9,6 +9,7 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
+import { PiToggleLeftFill, PiToggleRightFill, PiTrashFill  } from "react-icons/pi";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -48,7 +49,7 @@ const Users = () => {
     }
   };
 
-  const handleApproveDisapproveUser = async (id, is_approved) => {
+  const handleToggle = async (id, is_approved) => {
     try {
       const res = await axios.get(`${URL}/approve-user/${id}`, {
         headers: {
@@ -75,7 +76,7 @@ const Users = () => {
 
   const handleChangeRole = async (id, is_admin) => {
     try {
-      const res = await axios.get(`${URL}/user/${id}`, {
+      const res = await axios.put(`${URL}/user/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -137,39 +138,47 @@ const Users = () => {
         ) : (
           <table className="min-w-full bg-white">
             <thead>
-              <tr>
-                <th className="py-2 px-4 border-b">ID</th>
-                <th className="py-2 px-4 border-b">Username</th>
-                <th className="py-2 px-4 border-b">Email</th>
-                <th className="py-2 px-4 border-b">Role</th>
-                <th className="py-2 px-4 border-b">Status</th>
-                <th className="py-2 px-4 border-b">Actions</th>
+              <tr className="border-b">
+                <th className="py-2 px-4">S.No.</th>
+                <th className="py-2 px-4">Username</th>
+                <th className="py-2 px-4">Email</th>
+                <th className="py-2 px-4">Is Admin</th>
+                <th className="py-2 px-4">Is Approved</th>
+                <th className="py-2 px-4">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td className="py-2 px-4 border-b text-center">{user.id}</td>
-                  <td className="py-2 px-4 border-b text-center">
+              {users.map((user, index) => (
+                <tr key={user.id} className="border-b">
+                  <td className="py-2 px-4 text-center">{index + 1}</td>
+                  <td className="py-2 px-4 text-center">
                     {user.name}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 text-center">
                     {user.email}
                   </td>
 
                   {/* Role Toggle */}
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={user.is_admin}
-                          onChange={() =>
-                            handleChangeRole(user.id, user.is_admin)
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-300 peer-checked:bg-blue-500 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 transition-all duration-300 ease-in-out"></div>
+                        {user.is_admin ? (
+                          <PiToggleRightFill
+                            className="text-green-500 text-5xl cursor-pointer"
+                            title="Click to make user"
+                            onClick={() =>
+                              handleChangeRole(user.id, user.is_admin)
+                            }
+                          />
+                        ) : (
+                          <PiToggleLeftFill
+                            className="text-gray-400 text-5xl cursor-pointer"
+                            title="Click to make admin"
+                            onClick={() =>
+                              handleChangeRole(user.id, user.is_admin)
+                            }
+                          />
+                        )}
                       </label>
                       {user.is_admin ? (
                         <FaUserShield className="text-blue-600" title="Admin" />
@@ -180,21 +189,22 @@ const Users = () => {
                   </td>
 
                   {/* Approval Toggle */}
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={user.is_approved}
-                          onChange={() =>
-                            handleApproveDisapproveUser(
-                              user.id,
-                              user.is_approved
-                            )
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full peer-focus:ring-4 peer-focus:ring-green-300 transition-all duration-300 ease-in-out"></div>
+                        {user.is_approved ? (
+                          <PiToggleRightFill
+                            className="text-green-500 text-5xl cursor-pointer"
+                            title="Click to make user"
+                            onClick={() => handleToggle(user.id)}
+                          />
+                        ) : (
+                          <PiToggleLeftFill
+                            className="text-gray-400 text-5xl cursor-pointer"
+                            title="Click to make admin"
+                            onClick={() => handleToggle(user.id)}
+                          />
+                        )}
                       </label>
                       {user.is_approved ? (
                         <FaCheckCircle
@@ -211,12 +221,13 @@ const Users = () => {
                   </td>
 
                   {/* Delete Button */}
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="flex justify-center py-2 px-4 text-center">
                     <button
                       onClick={() => handleDelete(user.id)}
-                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white py-3 px-4 rounded hover:bg-red-600 flex items-center justify-center"
                     >
-                      Delete
+                      <PiTrashFill className="text-white" />
+                      <span className="ml-2">Delete</span>
                     </button>
                   </td>
                 </tr>
