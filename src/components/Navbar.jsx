@@ -11,12 +11,12 @@ const Navbar = () => {
           <div className="bg-white text-black p-4 flex justify-between items-center">
             <h2 className="text-2xl font-bold">Home</h2>
 
-            <Link
+            {role === "admin" && (<Link
               to="/select"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
             >
               Create Patient
-            </Link>
+            </Link>)}
           </div>
           <hr />
         </>

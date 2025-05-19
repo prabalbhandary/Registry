@@ -177,7 +177,7 @@ const Sidebar = () => {
             <span>Follow Up</span>
           </NavLink>
 
-          <NavLink
+          {role === "admin" && (<NavLink
             to="/users"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
@@ -188,7 +188,7 @@ const Sidebar = () => {
           >
             <CiUser className="text-xl" />
             <span>Users</span>
-          </NavLink>
+          </NavLink>)}
         </div>
 
         {/* Progress Section */}
