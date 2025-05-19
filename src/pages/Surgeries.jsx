@@ -190,4 +190,4 @@ const Surgeries = () => {
   );
 };
 
-export default Surg;
+export default Surgeries;
