@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { URL } from "../components/URL";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import {
   FaUserShield,
   FaUser,
@@ -15,21 +16,35 @@ const Users = () => {
   const [error, setError] = useState(null);
 
   const handleDelete = async (id) => {
-    try {
-      const res = await axios.delete(`${URL}/user/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (res.status === 200) {
-        toast.success("User deleted successfully");
-        setUsers(users.filter((user) => user.id !== id));
-      } else {
-        toast.error("Failed to delete user");
+    const confirmResult = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (confirmResult.isConfirmed) {
+      try {
+        const res = await axios.delete(`${URL}/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (res.status === 200) {
+          toast.success("User deleted successfully");
+          setUsers(users.filter((user) => user.id !== id));
+          Swal.fire("Deleted!", "User has been deleted.", "success");
+        } else {
+          toast.error("Failed to delete user");
+        }
+      } catch (error) {
+        setError(error);
+        console.error("Error deleting user:", error);
       }
-    } catch (error) {
-      setError(error);
-      console.error("Error deleting user:", error);
     }
   };
 
@@ -41,6 +56,7 @@ const Users = () => {
         },
         params: { is_approved: !is_approved },
       });
+
       if (res.status === 200) {
         toast.success("User status updated");
         setUsers(
@@ -65,6 +81,7 @@ const Users = () => {
         },
         params: { is_admin: !is_admin },
       });
+
       if (res.status === 200) {
         toast.success("User role updated");
         setUsers(
@@ -140,7 +157,7 @@ const Users = () => {
                     {user.email}
                   </td>
 
-                  {/* Role Toggle with Icon */}
+                  {/* Role Toggle */}
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <label className="inline-flex items-center cursor-pointer">
@@ -162,7 +179,7 @@ const Users = () => {
                     </div>
                   </td>
 
-                  {/* Approval Toggle with Icon */}
+                  {/* Approval Toggle */}
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <label className="inline-flex items-center cursor-pointer">
