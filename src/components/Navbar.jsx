@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
-  const role = JSON.parse(localStorage.getItem("user"))?.role;
+  const role = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
   return (
     <>
       {location.pathname === "/dashboard" && (
@@ -11,7 +11,7 @@ const Navbar = () => {
           <div className="bg-white text-black p-4 flex justify-between items-center">
             <h2 className="text-2xl font-bold">Home</h2>
 
-            {role === "admin" && (<Link
+            {role && (<Link
               to="/select"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
             >

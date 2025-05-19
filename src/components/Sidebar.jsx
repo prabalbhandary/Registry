@@ -18,7 +18,7 @@ const Sidebar = () => {
   const [dropDownOpened, setDropDownOpened] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // For mobile menu toggle
   const navigate = useNavigate();
-  const role = JSON.parse(localStorage.getItem("user"))?.role;
+  const role = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
 
   const handleLogout = async () => {
     try {
@@ -177,7 +177,7 @@ const Sidebar = () => {
             <span>Follow Up</span>
           </NavLink>
 
-          {role === "admin" && (<NavLink
+          {role && (<NavLink
             to="/users"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
