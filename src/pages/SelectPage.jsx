@@ -14,7 +14,6 @@ const SelectPage = () => {
   const [primarySurgeon, setPrimarySurgeon] = useState("Dr. Shubham");
   const [name, setName] = useState("");
   const [hospitals_id, setHospitals_id] = useState("");
-  const [activeSurgeons, setActiveSurgeons] = useState([]);
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
 
@@ -68,10 +67,14 @@ const SelectPage = () => {
       const res = await axios.post(`${URL}/hospital`, { name, address });
       if (res.status === 201) {
         toast.success(res.data.message);
-        setHospitals((prev) => [...prev, res.data.hospital]);
+        setHospitals((prev) => [
+          ...prev,
+          { value: res.data.hospital.id, label: res.data.hospital.name },
+        ]);
         navigate("/add-hospital");
         setName("");
         setAddress("");
+        setIsHospitalModalOpen(false);
       }
     } catch (err) {
       console.error("Add hospital error:", err);
@@ -95,10 +98,19 @@ const SelectPage = () => {
 
       if (res.status === 201) {
         toast.success(res.data.message);
-        setActiveSurgeons((prev) => [...prev, res.data.assistant_surgeon]);
+
+        // Update assistant surgeons list
+        const newSurgeon = {
+          value: res.data.assistant_surgeon.name,
+          label: res.data.assistant_surgeon.name,
+        };
+
+        setAssistantSurgeons((prev) => [...prev, newSurgeon]);
+
         navigate("/add-assistant");
         setName("");
         setHospitals_id("");
+        setIsAssistantModalOpen(false);
       }
     } catch (error) {
       console.error("Error response:", error.response?.data);
@@ -107,10 +119,6 @@ const SelectPage = () => {
       );
       setError(error.response?.data?.error || "");
     }
-  };
-
-  const handleHospitalChange = (selectedOption) => {
-    setHospitals_id(selectedOption.value);
   };
 
   useEffect(() => {
@@ -287,8 +295,8 @@ const SelectPage = () => {
               className="w-full p-2 border rounded mb-4"
             />
             <select
-              value={selectedHospital}
-              onChange={handleHospitalChange}
+              value={hospitals_id}
+              onChange={(e) => setHospitals_id(e.target.value)} // FIXED HERE
               className="w-full p-2 border rounded mb-4"
             >
               <option value="">Select Hospital</option>
