@@ -58,10 +58,10 @@ const Users = () => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id}>
-                  <td className="py-2 px-4 border-b">{user.id}</td>
-                  <td className="py-2 px-4 border-b">{user.name}</td>
-                  <td className="py-2 px-4 border-b">{user.email}</td>
-                  <td className="py-2 px-4 border-b">{user.is_admin ? "Admin" : "User"}</td>
+                  <td className="py-2 px-4 border-b items-center text-center justify-center">{user.id}</td>
+                  <td className="py-2 px-4 border-b items-center text-center justify-center">{user.name}</td>
+                  <td className="py-2 px-4 border-b items-center text-center justify-center">{user.email}</td>
+                  <td className="py-2 px-4 border-b items-center text-center justify-center">{user.is_admin ? "Admin" : "User"}</td>
                 </tr>
               ))}
             </tbody>
