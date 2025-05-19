@@ -118,23 +118,6 @@ const Profile = () => {
                   </div>
                 </dl>
               </div>
-              
-              <div className="bg-gray-50 px-4 py-4 sm:px-6">
-                <div className="flex justify-end space-x-3">
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Edit Profile
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Change Password
-                  </button>
-                </div>
-              </div>
             </div>
           )}
         </div>
