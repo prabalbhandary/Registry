@@ -54,6 +54,8 @@ const AppContent = () => {
   const location = useLocation();
   const isAuthenticated = localStorage.getItem("token");
 
+  const role = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
+
   return (
     <div className="flex">
       {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
@@ -135,7 +137,7 @@ const AppContent = () => {
             <Route
               path="/users"
               element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+               role && isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
               }
             />
             <Route
