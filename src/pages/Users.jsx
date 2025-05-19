@@ -2,6 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { URL } from "../components/URL";
 import { toast } from "react-toastify";
+import {
+  FaUserShield,
+  FaUser,
+  FaCheckCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -29,15 +35,12 @@ const Users = () => {
 
   const handleApproveDisapproveUser = async (id, is_approved) => {
     try {
-      const res = await axios.get(
-        `${URL}/approve-user/${id}`,
-        { is_approved: !is_approved },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.get(`${URL}/approve-user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: { is_approved: !is_approved },
+      });
       if (res.status === 200) {
         toast.success("User status updated");
         setUsers(
@@ -56,15 +59,12 @@ const Users = () => {
 
   const handleChangeRole = async (id, is_admin) => {
     try {
-      const res = await axios.get(
-        `${URL}/user/${id}`,
-        { is_admin: !is_admin },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.get(`${URL}/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: { is_admin: !is_admin },
+      });
       if (res.status === 200) {
         toast.success("User role updated");
         setUsers(
@@ -139,33 +139,62 @@ const Users = () => {
                   <td className="py-2 px-4 border-b text-center">
                     {user.email}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {user.is_admin ? "Admin" : "User"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {user.is_approved ? "Approved" : "Not Approved"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center space-x-2">
-                    <button
-                      onClick={() =>
-                        handleApproveDisapproveUser(user.id, user.is_approved)
-                      }
-                      className={`py-2 px-4 rounded text-white ${
-                        user.is_approved
-                          ? "bg-yellow-500 hover:bg-yellow-600"
-                          : "bg-green-500 hover:bg-green-600"
-                      }`}
-                    >
-                      {user.is_approved ? "Disapprove" : "Approve"}
-                    </button>
 
-                    <button
-                      onClick={() => handleChangeRole(user.id, user.is_admin)}
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                      {user.is_admin ? "Make User" : "Make Admin"}
-                    </button>
+                  {/* Role Toggle with Icon */}
+                  <td className="py-2 px-4 border-b text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <label className="inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={user.is_admin}
+                          onChange={() =>
+                            handleChangeRole(user.id, user.is_admin)
+                          }
+                        />
+                        <div className="w-11 h-6 bg-gray-300 peer-checked:bg-blue-500 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 transition-all duration-300 ease-in-out"></div>
+                      </label>
+                      {user.is_admin ? (
+                        <FaUserShield className="text-blue-600" title="Admin" />
+                      ) : (
+                        <FaUser className="text-gray-500" title="User" />
+                      )}
+                    </div>
+                  </td>
 
+                  {/* Approval Toggle with Icon */}
+                  <td className="py-2 px-4 border-b text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <label className="inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={user.is_approved}
+                          onChange={() =>
+                            handleApproveDisapproveUser(
+                              user.id,
+                              user.is_approved
+                            )
+                          }
+                        />
+                        <div className="w-11 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full peer-focus:ring-4 peer-focus:ring-green-300 transition-all duration-300 ease-in-out"></div>
+                      </label>
+                      {user.is_approved ? (
+                        <FaCheckCircle
+                          className="text-green-600"
+                          title="Approved"
+                        />
+                      ) : (
+                        <FaTimesCircle
+                          className="text-red-500"
+                          title="Not Approved"
+                        />
+                      )}
+                    </div>
+                  </td>
+
+                  {/* Delete Button */}
+                  <td className="py-2 px-4 border-b text-center">
                     <button
                       onClick={() => handleDelete(user.id)}
                       className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
