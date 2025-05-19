@@ -69,6 +69,7 @@ const SelectPage = () => {
       if (res.status === 201) {
         toast.success(res.data.message);
         setHospitals((prev) => [...prev, res.data.hospital]);
+        navigate("/add-hospital");
         setName("");
         setAddress("");
         window.location.reload();
@@ -96,6 +97,7 @@ const SelectPage = () => {
       if (res.status === 201) {
         toast.success(res.data.message);
         setActiveSurgeons((prev) => [...prev, res.data.assistant_surgeon]);
+        navigate("/add-assistant");
         setName("");
         setHospitals_id("");
         window.location.reload();
