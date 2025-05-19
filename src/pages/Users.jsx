@@ -54,6 +54,33 @@ const Users = () => {
     }
   };
 
+  const handleChangeRole = async (id, is_admin) => {
+    try {
+      const res = await axios.get(
+        `${URL}/user/${id}`,
+        { is_admin: !is_admin },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        toast.success("User role updated");
+        setUsers(
+          users.map((user) =>
+            user.id === id ? { ...user, is_admin: !user.is_admin } : user
+          )
+        );
+      } else {
+        toast.error("Failed to update user role");
+      }
+    } catch (error) {
+      setError(error);
+      console.error("Error updating user role:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -106,12 +133,8 @@ const Users = () => {
               {users.map((user) => (
                 <tr key={user.id}>
                   <td className="py-2 px-4 border-b text-center">{user.id}</td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {user.name}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {user.email}
-                  </td>
+                  <td className="py-2 px-4 border-b text-center">{user.name}</td>
+                  <td className="py-2 px-4 border-b text-center">{user.email}</td>
                   <td className="py-2 px-4 border-b text-center">
                     {user.is_admin ? "Admin" : "User"}
                   </td>
@@ -131,9 +154,17 @@ const Users = () => {
                     >
                       {user.is_approved ? "Disapprove" : "Approve"}
                     </button>
+
+                    <button
+                      onClick={() => handleChangeRole(user.id, user.is_admin)}
+                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                    >
+                      {user.is_admin ? "Make User" : "Make Admin"}
+                    </button>
+
                     <button
                       onClick={() => handleDelete(user.id)}
-                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none"
+                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
                     >
                       Delete
                     </button>
