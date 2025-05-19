@@ -18,7 +18,9 @@ const Surgeries = () => {
         setSurgeries(res.data.data);
       } catch (error) {
         console.log(error);
-        toast.error(error.response?.data?.message || "Error fetching surgeries");
+        toast.error(
+          error.response?.data?.message || "Error fetching surgeries"
+        );
       } finally {
         setLoading(false);
       }
@@ -59,15 +61,26 @@ const Surgeries = () => {
                   <tr key={surgery.id} className="hover:bg-gray-50">
                     <td className="px-4 py-2 border">{index + 1}</td>
                     <td className="px-4 py-2 border">
-                      {surgery.patient_detail?.first_name} {surgery.patient_detail?.last_name}
+                      {surgery.patient_detail?.first_name}{" "}
+                      {surgery.patient_detail?.last_name}
                     </td>
-                    <td className="px-4 py-2 border">{surgery.patient_detail?.age}</td>
+                    <td className="px-4 py-2 border">
+                      {surgery.patient_detail?.age}
+                    </td>
                     <td className="px-4 py-2 border">{surgery.fixture}</td>
                     <td className="px-4 py-2 border">{surgery.fixture_type}</td>
-                    <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
-                    <td className="px-4 py-2 border">{surgery.size_of_plate}</td>
-                    <td className="px-4 py-2 border">{surgery.number_of_screws}</td>
-                    <td className="px-4 py-2 border">{surgery.material_used}</td>
+                    <td className="px-4 py-2 border">
+                      {surgery.fixture_sub_type}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      {surgery.size_of_plate}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      {surgery.number_of_screws}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      {surgery.material_used}
+                    </td>
                     <td className="px-4 py-2 border">{surgery.description}</td>
                     <td className="px-4 py-2 border">{surgery.elaboration}</td>
                     <td className="px-4 py-2 border">

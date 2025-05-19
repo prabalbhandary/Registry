@@ -43,7 +43,11 @@ const OTPResend = () => {
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm text-center">
         <h3 className="text-2xl font-bold text-blue-800 mb-4">OTP Resend</h3>
         <Link to="/">
-          <img src={logo} alt="Logo" className="w-20 h-20 mb-6 rounded-full mx-auto" />
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-20 h-20 mb-6 rounded-full mx-auto"
+          />
         </Link>
         <div className="mb-6">
           {isResendAllowed ? (
@@ -55,12 +59,16 @@ const OTPResend = () => {
             </button>
           ) : (
             <p className="text-gray-700 text-lg">
-              Please wait {timeLeft} second{timeLeft !== 1 && "s"} before resending OTP.
+              Please wait {timeLeft} second{timeLeft !== 1 && "s"} before
+              resending OTP.
             </p>
           )}
         </div>
         <p className="text-sm text-gray-600 mt-4">
-          Need help? <Link to="/" className="text-blue-500 hover:underline">Contact Support</Link>
+          Need help?{" "}
+          <Link to="/" className="text-blue-500 hover:underline">
+            Contact Support
+          </Link>
         </p>
       </div>
     </div>

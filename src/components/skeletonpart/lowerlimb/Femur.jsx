@@ -21,8 +21,18 @@ const Femur = () => {
   const sideOptions = ["Right", "Left"];
   const locationOptions = ["Proximal", "Midshaft", "Distal", "Other"];
 
-  const closedClassifications = ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"];
-  const openClassifications = ["GA I", "GA II", "GA IIIA", "GA IIIB", "GA IIIC"];
+  const closedClassifications = [
+    "AO32A (Simple)",
+    "AO32B (Wedge)",
+    "AO32C (Complex)",
+  ];
+  const openClassifications = [
+    "GA I",
+    "GA II",
+    "GA IIIA",
+    "GA IIIB",
+    "GA IIIC",
+  ];
 
   const subclassifications = {
     "GA I": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
@@ -32,7 +42,7 @@ const Femur = () => {
     "GA IIIC": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
   };
 
-  const handleSave = async(type) => {
+  const handleSave = async (type) => {
     try {
       setIsLoading(true);
       setSavedMessage("✅ Saved to Follow Up!");
@@ -75,11 +85,17 @@ const Femur = () => {
     } else if (field === "classification") {
       setSubClassification("");
     }
-    
+
     setSavedMessage("");
   };
 
-  const renderSelect = (value, setter, options, placeholder, dependencyField) => (
+  const renderSelect = (
+    value,
+    setter,
+    options,
+    placeholder,
+    dependencyField
+  ) => (
     <div className="w-full">
       <select
         className="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
@@ -99,41 +115,71 @@ const Femur = () => {
     </div>
   );
 
-  const showSummary = fractureType && side && location && classification && 
+  const showSummary =
+    fractureType &&
+    side &&
+    location &&
+    classification &&
     (location !== "Other" || (location === "Other" && otherLocation));
 
   const formValid = showSummary;
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-md">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Femur Fracture Assessment</h1>
-      
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+        Femur Fracture Assessment
+      </h1>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* Fracture Type */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fracture Type</label>
-          {renderSelect(fractureType, setFractureType, fractureOptions, "Select Fracture Type", "fractureType")}
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Fracture Type
+          </label>
+          {renderSelect(
+            fractureType,
+            setFractureType,
+            fractureOptions,
+            "Select Fracture Type",
+            "fractureType"
+          )}
         </div>
 
         {/* Side */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Side</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Side
+          </label>
           {fractureType ? (
             renderSelect(side, setSide, sideOptions, "Select Side", "side")
           ) : (
-            <select className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed" disabled>
+            <select
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed"
+              disabled
+            >
               <option>Select Fracture Type First</option>
             </select>
           )}
         </div>
-        
+
         {/* Location */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Location
+          </label>
           {side ? (
-            renderSelect(location, setLocation, locationOptions, "Select Location", "location")
+            renderSelect(
+              location,
+              setLocation,
+              locationOptions,
+              "Select Location",
+              "location"
+            )
           ) : (
-            <select className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed" disabled>
+            <select
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed"
+              disabled
+            >
               <option>Select Side First</option>
             </select>
           )}
@@ -142,7 +188,9 @@ const Femur = () => {
         {/* Other Location */}
         {location === "Other" && (
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Specify Location</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Specify Location
+            </label>
             <input
               type="text"
               className="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -158,17 +206,24 @@ const Femur = () => {
 
         {/* Classification */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Classification</label>
-          {(location && (location !== "Other" || otherLocation)) ? (
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Classification
+          </label>
+          {location && (location !== "Other" || otherLocation) ? (
             renderSelect(
-              classification, 
-              setClassification, 
-              fractureType === "Closed" ? closedClassifications : openClassifications, 
-              "Select Classification", 
+              classification,
+              setClassification,
+              fractureType === "Closed"
+                ? closedClassifications
+                : openClassifications,
+              "Select Classification",
               "classification"
             )
           ) : (
-            <select className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed" disabled>
+            <select
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed"
+              disabled
+            >
               <option>Complete Location First</option>
             </select>
           )}
@@ -177,11 +232,13 @@ const Femur = () => {
         {/* SubClassification (only for Open fractures) */}
         {fractureType === "Open" && classification && (
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sub-Classification</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Sub-Classification
+            </label>
             {renderSelect(
-              subClassification, 
-              setSubClassification, 
-              subclassifications[classification] || [], 
+              subClassification,
+              setSubClassification,
+              subclassifications[classification] || [],
               "Select Sub-Classification"
             )}
           </div>
@@ -191,7 +248,9 @@ const Femur = () => {
       {/* Plan textarea - full width */}
       {formValid && (
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Plan</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Treatment Plan
+          </label>
           <textarea
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]"
             placeholder="Describe your treatment plan here..."
@@ -204,14 +263,29 @@ const Femur = () => {
       {/* Summary Section */}
       {formValid && (
         <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Femur Fracture Summary</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Femur Fracture Summary
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div><span className="font-medium">Fracture Type:</span> {fractureType}</div>
-            <div><span className="font-medium">Side:</span> {side}</div>
-            <div><span className="font-medium">Location:</span> {location === "Other" ? otherLocation : location}</div>
-            <div><span className="font-medium">Classification:</span> {classification}</div>
+            <div>
+              <span className="font-medium">Fracture Type:</span> {fractureType}
+            </div>
+            <div>
+              <span className="font-medium">Side:</span> {side}
+            </div>
+            <div>
+              <span className="font-medium">Location:</span>{" "}
+              {location === "Other" ? otherLocation : location}
+            </div>
+            <div>
+              <span className="font-medium">Classification:</span>{" "}
+              {classification}
+            </div>
             {subClassification && (
-              <div><span className="font-medium">Sub-Classification:</span> {subClassification}</div>
+              <div>
+                <span className="font-medium">Sub-Classification:</span>{" "}
+                {subClassification}
+              </div>
             )}
           </div>
         </div>
@@ -222,13 +296,17 @@ const Femur = () => {
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="flex flex-col xs:flex-row gap-3">
             <button
-              className={`px-4 py-2 rounded-lg font-medium text-white ${isLoading ? 'bg-green-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'} transition-colors shadow-sm`}
+              className={`px-4 py-2 rounded-lg font-medium text-white ${
+                isLoading
+                  ? "bg-green-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+              } transition-colors shadow-sm`}
               onClick={() => handleSave("followup")}
               disabled={isLoading}
             >
-              {isLoading ? 'Saving...' : 'Save to Follow Up'}
+              {isLoading ? "Saving..." : "Save to Follow Up"}
             </button>
-            
+
             <button
               className="px-4 py-2 rounded-lg font-medium text-white bg-red-500 hover:bg-red-600 transition-colors shadow-sm"
               onClick={() => navigate("/surgery")}
@@ -237,7 +315,7 @@ const Femur = () => {
               Proceed to Surgery
             </button>
           </div>
-          
+
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
             onClick={() => navigate("/add-surgerical-details")}

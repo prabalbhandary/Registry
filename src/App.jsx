@@ -72,39 +72,210 @@ const AppContent = () => {
         <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
-            <Route path="/forget-password" element={isAuthenticated ? <Navigate to="/dashboard" /> : <ForgetPassword />} />
-            <Route path="/reset-password" element={isAuthenticated ? <Navigate to="/dashboard" /> : <ResetPassword />} />
-            <Route path="/otp" element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTP />} />
-            <Route path="/otp-resend" element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTPResend />} />
-            <Route path="/dashboard" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/surgeries" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/patients" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/users" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/create-surgery" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/add-surgerical-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/patient/:id/patient-surgical-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/patient-injury-details" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/diagnosis" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/create-patient" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/create-user" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/add-hospital" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/add-assistant" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/profile" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/assistants" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/hospitals" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/clavicle" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/scapula" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/humerus" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/radius_and_ulna" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/hand" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/femur" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/tibia_and_fibula" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/patella" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/foot" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/select" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
-            <Route path="/surgery" element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />} />
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" /> : <Register />
+              }
+            />
+            <Route
+              path="/forget-password"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/dashboard" />
+                ) : (
+                  <ForgetPassword />
+                )
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/dashboard" />
+                ) : (
+                  <ResetPassword />
+                )
+              }
+            />
+            <Route
+              path="/otp"
+              element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTP />}
+            />
+            <Route
+              path="/otp-resend"
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" /> : <OTPResend />
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/surgeries"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/patients"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/create-surgery"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/add-surgerical-details"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/patient/:id/patient-surgical-details"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/patient-injury-details"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/diagnosis"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/create-patient"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/create-user"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/add-hospital"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/add-assistant"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/assistants"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/hospitals"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/clavicle"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/scapula"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/humerus"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/radius_and_ulna"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/hand"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/femur"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/tibia_and_fibula"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/patella"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/foot"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/select"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/surgery"
+              element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              }
+            />
             {/* <Route path="/terms" element={isAuthenticated ? <Terms /> : <Navigate to="/dashboard" />} /> */}
           </Routes>
         </div>

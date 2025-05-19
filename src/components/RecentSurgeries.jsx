@@ -30,9 +30,9 @@ const RecentSurgeries = () => {
   }, []);
 
   // Option 1: Display max 5 surgeries (and skip null patient_detail)
-  const displayData = (surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries).filter(
-    (surgery) => surgery.patient_detail !== null
-  );
+  const displayData = (
+    surgeries.length > 5 ? surgeries.slice(0, 5) : surgeries
+  ).filter((surgery) => surgery.patient_detail !== null);
 
   return (
     <div className="bg-white rounded-lg">

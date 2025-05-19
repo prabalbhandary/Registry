@@ -32,7 +32,10 @@ const OTP = () => {
     }
 
     try {
-      const res = await axios.post(`${URL}/verify-otp`, { otp: otpValue, email });
+      const res = await axios.post(`${URL}/verify-otp`, {
+        otp: otpValue,
+        email,
+      });
       if (res.status === 200) {
         toast.success(res.data.message);
         navigate("/reset-password");
@@ -78,11 +81,12 @@ const OTP = () => {
               Verify OTP
             </button>
           </form>
-          <p
-            className="mt-4 text-center text-sm text-gray-600"
-          >
+          <p className="mt-4 text-center text-sm text-gray-600">
             Didn't receive the code?{" "}
-            <span onClick={() => navigate("/otp-resend")} className="text-indigo-500 cursor-pointer hover:underline">
+            <span
+              onClick={() => navigate("/otp-resend")}
+              className="text-indigo-500 cursor-pointer hover:underline"
+            >
               Resend OTP
             </span>
           </p>

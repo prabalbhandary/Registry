@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import user from "../assets/user.png";
-import { FaChevronUp, FaChevronDown, FaBars, FaTimes, FaUser } from "react-icons/fa";
+import {
+  FaChevronUp,
+  FaChevronDown,
+  FaBars,
+  FaTimes,
+  FaUser,
+} from "react-icons/fa";
 import { MdOutlineHome } from "react-icons/md";
 import { CiUser, CiClock1 } from "react-icons/ci";
 import { toast } from "react-toastify";
@@ -12,6 +18,7 @@ const Sidebar = () => {
   const [dropDownOpened, setDropDownOpened] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // For mobile menu toggle
   const navigate = useNavigate();
+  const role = JSON.parse(localStorage.getItem("user"))?.role;
 
   const handleLogout = async () => {
     try {

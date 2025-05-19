@@ -19,7 +19,10 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const res = await axios.post(`${URL}/reset-password`, {email, password });
+      const res = await axios.post(`${URL}/reset-password`, {
+        email,
+        password,
+      });
       if (res.status === 200) {
         toast.success(res.data.message);
         setEmail(localStorage.removeItem("otpEmail"));

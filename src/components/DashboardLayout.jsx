@@ -87,7 +87,7 @@ const DashboardLayout = () => {
           ? "Patella - Trauma Registry"
           : location.pathname === "/foot"
           ? "Foot - Trauma Registry"
-           : location.pathname === "/select"
+          : location.pathname === "/select"
           ? "Select Hospital and Assistant Surgeon - Trauma Registry"
           : "Trauma Registry"}
       </title>
@@ -110,9 +110,15 @@ const DashboardLayout = () => {
             {location.pathname === "/create-surgery" && <CreateSurgery />}
             {location.pathname === "/create-patient" && <CreatePatient />}
             {location.pathname === "/create-user" && <CreateUser />}
-            {location.pathname === "/patient/:id/patient-surgical-details" && <PatientSurgicalDetails />}
-            {location.pathname === "/patient-injury-detail" && <PatientInjuryDetails />}
-            {location.pathname === "/add-surgerical-details" && <AddSurgicalDetails />}
+            {location.pathname === "/patient/:id/patient-surgical-details" && (
+              <PatientSurgicalDetails />
+            )}
+            {location.pathname === "/patient-injury-detail" && (
+              <PatientInjuryDetails />
+            )}
+            {location.pathname === "/add-surgerical-details" && (
+              <AddSurgicalDetails />
+            )}
             {location.pathname === "/assistants" && <Assistants />}
             {location.pathname === "/hospitals" && <Hospitals />}
             {location.pathname === "/clavicle" && <Clavicle />}

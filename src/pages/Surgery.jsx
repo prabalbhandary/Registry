@@ -14,7 +14,8 @@ const Surgery = () => {
   const [extramedullaryOther, setExtramedullaryOther] = useState("");
   const [extramedullarySize, setExtramedullarySize] = useState("");
   const [extramedullaryScrews, setExtramedullaryScrews] = useState("");
-  const [extramedullaryElaboration, setExtramedullaryElaboration] = useState("");
+  const [extramedullaryElaboration, setExtramedullaryElaboration] =
+    useState("");
   const [intramedullaryType, setIntramedullaryType] = useState("");
   const [antigradeType, setAntigradeType] = useState("");
   const [antigradeSize, setAntigradeSize] = useState("");
@@ -148,7 +149,9 @@ const Surgery = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Surgery Form</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Surgery Form
+      </h2>
       <form onSubmit={handleSubmit}>
         {/* Surgery Type */}
         <label className="block mb-2">Select Surgery Type:</label>

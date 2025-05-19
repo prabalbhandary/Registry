@@ -156,9 +156,11 @@ const Register = () => {
             </section>
             <section className="mb-6 flex">
               <input type="checkbox" />
-              <p>I hereby agree to Terms & Conditions {" "}
+              <p>
+                I hereby agree to Terms & Conditions{" "}
                 {/* <Link to="/terms" className="underline">Terms and Conditions</Link> */}
-                of Nepal Orthopedic Association for using Trauma Registry.</p>
+                of Nepal Orthopedic Association for using Trauma Registry.
+              </p>
             </section>
 
             <section className="mb-6">

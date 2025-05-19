@@ -3,7 +3,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 
-
 const Patients = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +55,9 @@ const Patients = () => {
                 {patients.map((patient, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border px-4 py-2">{index + 1}</td>
-                    <td className="border px-4 py-2">{patient.first_name} {patient.last_name}</td>
+                    <td className="border px-4 py-2">
+                      {patient.first_name} {patient.last_name}
+                    </td>
                     <td className="border px-4 py-2">{patient.age}</td>
                     <td className="border px-4 py-2">{patient.gender}</td>
                   </tr>

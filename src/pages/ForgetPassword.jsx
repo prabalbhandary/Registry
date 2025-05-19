@@ -6,21 +6,21 @@ import axios from "axios";
 import { URL } from "../components/URL";
 
 const ForgetPassword = () => {
-    const [email, setEmail] = useState("");
-    const navigate = useNavigate();
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await axios.post(`${URL}/send-otp`, {email});
-            if(res.status === 200){
-                toast.success(res.data.message);
-                localStorage.setItem("otpEmail", email);
-                navigate("/otp");
-            }
-        } catch (error) {
-            toast.error(error.response.data.message);
-        }
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${URL}/send-otp`, { email });
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        localStorage.setItem("otpEmail", email);
+        navigate("/otp");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
+  };
   return (
     <>
       <title>Forget Password - Trauma Registry</title>

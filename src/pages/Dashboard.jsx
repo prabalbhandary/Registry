@@ -25,7 +25,7 @@ const Dashboard = () => {
         console.log(error);
         toast.error(error.response?.data?.message || "Error fetching data");
       }
-    }
+    };
     const fetchPatientCount = async () => {
       try {
         const res = await axios.get(`${URL}/patient-count`, {
@@ -38,7 +38,7 @@ const Dashboard = () => {
         console.log(error);
         toast.error(error.response?.data?.message || "Error fetching data");
       }
-    }
+    };
     const fetchAssistantCount = async () => {
       try {
         const res = await axios.get(`${URL}/assistant-surgeon-count`, {
@@ -51,7 +51,7 @@ const Dashboard = () => {
         console.log(error);
         toast.error(error.response?.data?.message || "Error fetching data");
       }
-    }
+    };
     const fetchHospitalCount = async () => {
       try {
         const res = await axios.get(`${URL}/hospital-count`, {
@@ -64,12 +64,12 @@ const Dashboard = () => {
         console.log(error);
         toast.error(error.response?.data?.message || "Error fetching data");
       }
-    }
+    };
     fetchSugeryCount();
     fetchPatientCount();
     fetchAssistantCount();
     fetchHospitalCount();
-  }, [])
+  }, []);
   return (
     <div className="p-4 sm:p-6 md:p-8">
       {/* Live Stats Section */}
@@ -111,11 +111,18 @@ const Dashboard = () => {
               path: "/hospitals",
             },
           ].map((item, index) => (
-            <div key={index} className="flex shadow-lg rounded-lg overflow-hidden">
-              <div className={`${item.bg} text-white w-1/3 sm:w-1/4 h-24 flex items-center justify-center`}>
+            <div
+              key={index}
+              className="flex shadow-lg rounded-lg overflow-hidden"
+            >
+              <div
+                className={`${item.bg} text-white w-1/3 sm:w-1/4 h-24 flex items-center justify-center`}
+              >
                 <p className="text-lg font-bold">{item.short}</p>
               </div>
-              <div className={`text-center border ${item.border} border-l-0 w-2/3 sm:w-3/4 flex flex-col justify-center`}>
+              <div
+                className={`text-center border ${item.border} border-l-0 w-2/3 sm:w-3/4 flex flex-col justify-center`}
+              >
                 <Link
                   to={item.path}
                   className="text-black font-medium hover:text-gray-700 hover:underline"

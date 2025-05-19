@@ -41,19 +41,31 @@ const SecondNavbar = ({ completedIndex = 0 }) => {
       {/* Step 2 onwards need patientId */}
       {patientId && (
         <>
-          <Link to={`/add-surgerical-details/${patientId}`} className="flex items-center space-x-2">
+          <Link
+            to={`/add-surgerical-details/${patientId}`}
+            className="flex items-center space-x-2"
+          >
             <span className={getStepClass(1)}>2</span>
             <span>Add Surgical Details</span>
           </Link>
-          <Link to={`/patient-surgical-details/${patientId}`} className="flex items-center space-x-2">
+          <Link
+            to={`/patient-surgical-details/${patientId}`}
+            className="flex items-center space-x-2"
+          >
             <span className={getStepClass(2)}>3</span>
             <span>Patient Surgical Details</span>
           </Link>
-          <Link to={`/patient-injury-details/${patientId}`} className="flex items-center space-x-2">
+          <Link
+            to={`/patient-injury-details/${patientId}`}
+            className="flex items-center space-x-2"
+          >
             <span className={getStepClass(3)}>4</span>
             <span>Patient Injury Details</span>
           </Link>
-          <Link to={`/diagnosis/${patientId}`} className="flex items-center space-x-2">
+          <Link
+            to={`/diagnosis/${patientId}`}
+            className="flex items-center space-x-2"
+          >
             <span className={getStepClass(4)}>5</span>
             <span>Diagnosis</span>
           </Link>

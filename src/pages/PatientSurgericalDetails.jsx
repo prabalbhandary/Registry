@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import SecondNavbar from "../components/SecondNavbar";
 import skeleton from "../assets/skeleton.png";
 
 const SkeletonOverlay = ({ onPartClick }) => {
