@@ -72,7 +72,6 @@ const SelectPage = () => {
         navigate("/add-hospital");
         setName("");
         setAddress("");
-        window.location.reload();
       }
     } catch (err) {
       console.error("Add hospital error:", err);
@@ -100,7 +99,6 @@ const SelectPage = () => {
         navigate("/add-assistant");
         setName("");
         setHospitals_id("");
-        window.location.reload();
       }
     } catch (error) {
       console.error("Error response:", error.response?.data);
