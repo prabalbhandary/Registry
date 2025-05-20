@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { URL } from "../components/URL";
+import { PiToggleLeftFill, PiToggleRightFill } from "react-icons/pi";
 
 const AddHospital = () => {
   const [name, setName] = useState("");
@@ -169,9 +169,9 @@ const AddHospital = () => {
                         className="text-xl"
                       >
                         {hospital.is_active ? (
-                          <FaToggleOn size={24} className="text-green-500" />
+                          <PiToggleRightFill className="text-green-500 text-3xl cursor-pointer" />
                         ) : (
-                          <FaToggleOff size={24} className="text-gray-400" />
+                          <PiToggleLeftFill className="text-gray-400 text-3xl cursor-pointer" />
                         )}
                       </button>
                     </td>
