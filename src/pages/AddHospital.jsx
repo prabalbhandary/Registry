@@ -11,6 +11,10 @@ const AddHospital = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
 
+  const handleReset = () => {
+    setSearchTerm("");
+  };
+
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
@@ -138,11 +142,19 @@ const AddHospital = () => {
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
             <input
               type="text"
-              placeholder="Search Hospitals"
+              placeholder="Search by name or address"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <div className="flex justify-end mb-4">
+              <button
+                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                onClick={handleReset}
+              >
+                Reset
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto mt-6">

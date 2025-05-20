@@ -11,6 +11,11 @@ const AddAssistant = () => {
   const [hospitals, setHospitals] = useState([]);
   const [hospitals_id, setHospitals_id] = useState("");
 
+
+  const handleReset = () => {
+    setSearchTerm("");
+  };
+
   useEffect(() => {
     const fetchAssistantSurgeons = async () => {
       try {
@@ -154,13 +159,23 @@ const AddAssistant = () => {
           Toggle active/inactive status from here
         </p>
 
-        <input
-          type="text"
-          placeholder="Search assistant..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 p-3 border border-gray-300 rounded-md w-full md:w-1/2"
-        />
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="flex justify-end mb-4">
+              <button
+                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                onClick={handleReset}
+              >
+                Reset
+              </button>
+            </div>
+          </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border-collapse shadow-md rounded-lg text-sm md:text-base">
