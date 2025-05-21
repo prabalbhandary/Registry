@@ -156,10 +156,6 @@ const AddAssistant = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Assistant Surgeons
         </h2>
-        <p className="text-gray-600 mb-6 text-sm md:text-base">
-          Toggle active/inactive status from here
-        </p>
-
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <input
             type="text"
