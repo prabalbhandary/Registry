@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
+import { useNavigate } from "react-router-dom";
 
 const Surgeries = () => {
   const [surgeries, setSurgeries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check for screen size on mount and when resized
@@ -138,9 +140,9 @@ const Surgeries = () => {
           </thead>
           <tbody>
             {surgeries.map((surgery, index) => (
-              <tr key={surgery.id} className="hover:bg-gray-50">
+              <tr onClick={() => navigate(`/surgery`)} key={surgery.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border">
+                <td className="px-4 py-2 cursor-pointer border">
                   {surgery.patient_detail?.first_name}{" "}
                   {surgery.patient_detail?.last_name}
                 </td>
