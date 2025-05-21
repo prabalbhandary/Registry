@@ -174,7 +174,7 @@ const AddAssistant = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto mt-6">
           <table className="min-w-full bg-white border-collapse shadow-md rounded-lg text-sm md:text-base">
             <thead>
               <tr className="bg-gray-100">
