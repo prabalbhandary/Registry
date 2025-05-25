@@ -306,13 +306,22 @@ const Femur = () => {
             >
               {isLoading ? "Saving..." : "Save to Follow Up"}
             </button>
+          </div>
 
+          <div className="flex flex-col xs:flex-row gap-3">
             <button
-              className="px-4 py-2 rounded-lg font-medium text-white bg-red-500 hover:bg-red-600 transition-colors shadow-sm"
-              onClick={() => navigate("/surgery")}
+              className={`px-4 py-2 rounded-lg font-medium text-white ${
+                isLoading
+                  ? "bg-green-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+              } transition-colors shadow-sm`}
+              onClick={() => {
+                handleSave("surgery");
+                navigate("/surgeries");
+              }}
               disabled={isLoading}
             >
-              Proceed to Surgery
+              {isLoading ? "Proceeding..." : "Proceed to Surgery"}
             </button>
           </div>
 
