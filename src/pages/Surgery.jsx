@@ -31,6 +31,8 @@ const Surgery = () => {
   const [submittedData, setSubmittedData] = useState(null);
   const [otherFixtureType, setOtherFixtureType] = useState("");
   const [errors, setErrors] = useState({});
+  const [internalTypeOther, setInternalTypeOther] = useState("");
+  const [extramedullaryThickness, setExtramedullaryThickness] = useState("");
 
   const handleSurgeryChange = (e) => {
     const selectedType = e.target.value;
@@ -250,20 +252,28 @@ const Surgery = () => {
 
                 {showPlateFields && (
                   <>
-                    <input
-                      type="text"
-                      value={extramedullarySize}
-                      onChange={(e) => setExtramedullarySize(e.target.value)}
-                      placeholder="Plate Size (holes)"
-                      className="w-full mb-2 border px-4 py-2 rounded"
-                    /> mm
-                    <input
-                      type="text"
-                      value={extramedullaryScrews}
-                      onChange={(e) => setExtramedullaryScrews(e.target.value)}
-                      placeholder="Number of Screws"
-                      className="w-full mb-2 border px-4 py-2 rounded"
-                    /> cm
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={extramedullarySize}
+                        onChange={(e) => setExtramedullarySize(e.target.value)}
+                        placeholder="Plate Size (holes)"
+                        className="w-full mb-2 border px-4 py-2 rounded"
+                      />{" "}
+                      mm
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={extramedullaryThickness}
+                        onChange={(e) =>
+                          setExtramedullaryThickness(e.target.value)
+                        }
+                        placeholder="Thickness"
+                        className="w-full mb-2 border px-4 py-2 rounded"
+                      />{" "}
+                      mm
+                    </div>
                     <input
                       type="text"
                       value={extramedullaryElaboration}
@@ -316,20 +326,28 @@ const Surgery = () => {
 
                     {showNailFieldsAntigrade && (
                       <>
-                        <input
-                          type="text"
-                          value={antigradeSize}
-                          onChange={(e) => setAntigradeSize(e.target.value)}
-                          placeholder="Nail Length"
-                          className="w-full mb-2 border px-4 py-2 rounded"
-                        /> mm
-                        <input
-                          type="text"
-                          value={antigradeDiameter}
-                          onChange={(e) => setAntigradeDiameter(e.target.value)}
-                          placeholder="Nail Diameter"
-                          className="w-full mb-2 border px-4 py-2 rounded"
-                        /> cm
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={antigradeSize}
+                            onChange={(e) => setAntigradeSize(e.target.value)}
+                            placeholder="Nail Length"
+                            className="w-full mb-2 border px-4 py-2 rounded"
+                          />{" "}
+                          mm
+                        </div>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={antigradeThickness}
+                            onChange={(e) =>
+                              setAntigradeThickness(e.target.value)
+                            }
+                            placeholder="Thickness"
+                            className="w-full mb-2 border px-4 py-2 rounded"
+                          />{" "}
+                          cm
+                        </div>
                         <input
                           type="text"
                           value={antigradeElaboration}
@@ -362,22 +380,28 @@ const Surgery = () => {
 
                     {showNailFieldsRetrograde && (
                       <>
-                        <input
-                          type="text"
-                          value={retrogradeSize}
-                          onChange={(e) => setRetrogradeSize(e.target.value)}
-                          placeholder="Nail Length"
-                          className="w-full mb-2 border px-4 py-2 rounded"
-                        />cm
-                        <input
-                          type="text"
-                          value={retrogradeDiameter}
-                          onChange={(e) =>
-                            setRetrogradeDiameter(e.target.value)
-                          }
-                          placeholder="Nail Diameter"
-                          className="w-full mb-2 border px-4 py-2 rounded"
-                        />mm
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={retrogradeThickness}
+                            onChange={(e) =>
+                              setRetrogradeThickness(e.target.value)
+                            }
+                            placeholder="Thickness"
+                            className="w-full mb-2 border px-4 py-2 rounded"
+                          />{" "}
+                          cm
+                        </div>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={retrogradeSize}
+                            onChange={(e) => setRetrogradeSize(e.target.value)}
+                            placeholder="Nail Length"
+                            className="w-full mb-2 border px-4 py-2 rounded"
+                          />{" "}
+                          mm
+                        </div>
                         <input
                           type="text"
                           value={retrogradeElaboration}
