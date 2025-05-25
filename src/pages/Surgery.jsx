@@ -256,14 +256,14 @@ const Surgery = () => {
                       onChange={(e) => setExtramedullarySize(e.target.value)}
                       placeholder="Plate Size (holes)"
                       className="w-full mb-2 border px-4 py-2 rounded"
-                    />
+                    /> mm
                     <input
                       type="text"
                       value={extramedullaryScrews}
                       onChange={(e) => setExtramedullaryScrews(e.target.value)}
                       placeholder="Number of Screws"
                       className="w-full mb-2 border px-4 py-2 rounded"
-                    />
+                    /> cm
                     <input
                       type="text"
                       value={extramedullaryElaboration}
@@ -322,14 +322,14 @@ const Surgery = () => {
                           onChange={(e) => setAntigradeSize(e.target.value)}
                           placeholder="Nail Length"
                           className="w-full mb-2 border px-4 py-2 rounded"
-                        />
+                        /> mm
                         <input
                           type="text"
                           value={antigradeDiameter}
                           onChange={(e) => setAntigradeDiameter(e.target.value)}
                           placeholder="Nail Diameter"
                           className="w-full mb-2 border px-4 py-2 rounded"
-                        />
+                        /> cm
                         <input
                           type="text"
                           value={antigradeElaboration}
@@ -368,7 +368,7 @@ const Surgery = () => {
                           onChange={(e) => setRetrogradeSize(e.target.value)}
                           placeholder="Nail Length"
                           className="w-full mb-2 border px-4 py-2 rounded"
-                        />
+                        />cm
                         <input
                           type="text"
                           value={retrogradeDiameter}
@@ -377,7 +377,7 @@ const Surgery = () => {
                           }
                           placeholder="Nail Diameter"
                           className="w-full mb-2 border px-4 py-2 rounded"
-                        />
+                        />mm
                         <input
                           type="text"
                           value={retrogradeElaboration}
@@ -421,7 +421,6 @@ const Surgery = () => {
           <option value="">--Select Material--</option>
           <option value="stainless-steel">Stainless Steel</option>
           <option value="titanium">Titanium</option>
-          <option value="titanium alloy">Titanium Alloy</option>
         </select>
 
         {/* Description */}
