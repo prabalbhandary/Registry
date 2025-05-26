@@ -154,9 +154,9 @@ const Surgeries = () => {
                 <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
                 <td className="px-4 py-2 border">{surgery.size_of_plate}</td>
                 <td className="px-4 py-2 border">{surgery.number_of_screws}</td>
+                <td className="px-4 py-2 border">{surgery.elaboration}</td>
                 <td className="px-4 py-2 border">{surgery.material_used}</td>
                 <td className="px-4 py-2 border">{surgery.description}</td>
-                <td className="px-4 py-2 border">{surgery.elaboration}</td>
                 <td className="px-4 py-2 border">
                   {new Date(surgery.created_at).toLocaleDateString()}
                 </td>
