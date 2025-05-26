@@ -60,7 +60,7 @@ const Patients = () => {
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td
-                      onClick={() => navigate(`/surgery`)}
+                      onClick={() => {navigate(`/surgery`); localStorage.setItem("patientId", patient.id)}}
                       className="border px-4 py-2 cursor-pointer"
                     >
                       {patient.first_name} {patient.last_name}
