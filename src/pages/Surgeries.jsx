@@ -172,7 +172,6 @@ const Surgeries = () => {
     <>
       <title>Patients - Trauma Registry</title>
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Follow Up</h2>
 
         {loading ? (
           <div className="flex justify-center items-center h-full w-full">
