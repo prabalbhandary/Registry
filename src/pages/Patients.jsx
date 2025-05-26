@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
+import { useNavigate } from "react-router-dom";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -55,7 +57,7 @@ const Patients = () => {
                 {patients.map((patient, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border px-4 py-2">{index + 1}</td>
-                    <td className="border px-4 py-2">
+                    <td onClick={() => navigate(`/surgery`)} className="border px-4 py-2 cursor-pointer">
                       {patient.first_name} {patient.last_name}
                     </td>
                     <td className="border px-4 py-2">{patient.age}</td>

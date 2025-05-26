@@ -140,9 +140,9 @@ const Surgeries = () => {
           </thead>
           <tbody>
             {surgeries.map((surgery, index) => (
-              <tr onClick={() => navigate(`/surgery`)} key={surgery.id} className="hover:bg-gray-50">
+              <tr key={surgery.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 cursor-pointer border">
+                <td className="px-4 py-2 border">
                   {surgery.patient_detail?.first_name}{" "}
                   {surgery.patient_detail?.last_name}
                 </td>
@@ -172,15 +172,15 @@ const Surgeries = () => {
     <>
       <title>Surgeries - Trauma Registry</title>
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Surgeries</h2>
+        <h2 className="text-xl font-bold mb-4">Follow Up</h2>
 
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <p className="text-gray-500">Loading surgeries...</p>
+            <p className="text-gray-500">Loading followup...</p>
           </div>
         ) : surgeries.length === 0 ? (
           <div className="bg-gray-50 border border-gray-200 rounded p-6 text-center">
-            <p className="text-gray-500">No surgeries found.</p>
+            <p className="text-gray-500">No followup found.</p>
           </div>
         ) : isSmallScreen ? (
           renderCards()

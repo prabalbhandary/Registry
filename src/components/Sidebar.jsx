@@ -162,7 +162,7 @@ const Sidebar = () => {
             }
           >
             <FaBars className="text-xl" />
-            <span>Surgeries</span>
+            <span>Follow Up</span>
           </NavLink>
 
           <NavLink
@@ -175,7 +175,7 @@ const Sidebar = () => {
             }
           >
             <CiClock1 className="text-xl" />
-            <span>Follow Up</span>
+            <span>Surgery</span>
           </NavLink>
 
           {role && (<NavLink
