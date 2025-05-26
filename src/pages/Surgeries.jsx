@@ -2,27 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
-import { useNavigate } from "react-router-dom";
 
 const Surgeries = () => {
   const [surgeries, setSurgeries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const navigate = useNavigate();
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
-    // Check for screen size on mount and when resized
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 1024);
     };
-
-    // Set initial value
-    checkScreenSize();
-
-    // Add event listener
     window.addEventListener("resize", checkScreenSize);
-
-    // Cleanup
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
@@ -34,9 +24,8 @@ const Surgeries = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setSurgeries(res.data.data);
+        setSurgeries(res.data.data || []);
       } catch (error) {
-        console.log(error);
         toast.error(
           error.response?.data?.message || "Error fetching surgeries"
         );
@@ -44,13 +33,11 @@ const Surgeries = () => {
         setLoading(false);
       }
     };
-
     fetchSurgeries();
   }, []);
 
-  // Card view for mobile/small screens
-  const renderCards = () => {
-    return surgeries.map((surgery, index) => (
+  const renderCards = () =>
+    surgeries.map((surgery, index) => (
       <div
         key={surgery.id}
         className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200"
@@ -70,32 +57,26 @@ const Surgeries = () => {
             <p className="font-medium">Age:</p>
             <p>{surgery.patient_detail?.age}</p>
           </div>
-
           <div>
             <p className="font-medium">Fixture:</p>
             <p>{surgery.fixture}</p>
           </div>
-
           <div>
             <p className="font-medium">Type:</p>
             <p>{surgery.fixture_type}</p>
           </div>
-
           <div>
             <p className="font-medium">Sub Type:</p>
             <p>{surgery.fixture_sub_type}</p>
           </div>
-
           <div>
             <p className="font-medium">Plate Size:</p>
             <p>{surgery.size_of_plate}</p>
           </div>
-
           <div>
             <p className="font-medium">Screws:</p>
             <p>{surgery.number_of_screws}</p>
           </div>
-
           <div>
             <p className="font-medium">Material:</p>
             <p>{surgery.material_used}</p>
@@ -115,71 +96,66 @@ const Surgeries = () => {
         )}
       </div>
     ));
-  };
 
-  // Table view for larger screens
-  const renderTable = () => {
-    return (
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="px-4 py-2 border">#</th>
-              <th className="px-4 py-2 border">Patient Name</th>
-              <th className="px-4 py-2 border">Age</th>
-              <th className="px-4 py-2 border">Fixation</th>
-              <th className="px-4 py-2 border">Type</th>
-              <th className="px-4 py-2 border">Sub Type</th>
-              <th className="px-4 py-2 border">Plate Size</th>
-              <th className="px-4 py-2 border">Screws</th>
-              <th className="px-4 py-2 border">Elaboration</th>
-              <th className="px-4 py-2 border">Material Used</th>
-              <th className="px-4 py-2 border">Description</th>
-              <th className="px-4 py-2 border">Created At</th>
+  const renderTable = () => (
+    <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-300 text-sm">
+        <thead className="bg-gray-100 text-left">
+          <tr>
+            <th className="px-4 py-2 border">#</th>
+            <th className="px-4 py-2 border">Patient Name</th>
+            <th className="px-4 py-2 border">Age</th>
+            <th className="px-4 py-2 border">Fixation</th>
+            <th className="px-4 py-2 border">Type</th>
+            <th className="px-4 py-2 border">Sub Type</th>
+            <th className="px-4 py-2 border">Plate Size</th>
+            <th className="px-4 py-2 border">Screws</th>
+            <th className="px-4 py-2 border">Elaboration</th>
+            <th className="px-4 py-2 border">Material Used</th>
+            <th className="px-4 py-2 border">Description</th>
+            <th className="px-4 py-2 border">Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {surgeries.map((surgery, index) => (
+            <tr key={surgery.id} className="hover:bg-gray-50">
+              <td className="px-4 py-2 border">{index + 1}</td>
+              <td className="px-4 py-2 border">
+                {surgery.patient_detail?.first_name}{" "}
+                {surgery.patient_detail?.last_name}
+              </td>
+              <td className="px-4 py-2 border">
+                {surgery.patient_detail?.age}
+              </td>
+              <td className="px-4 py-2 border">{surgery.fixture}</td>
+              <td className="px-4 py-2 border">{surgery.fixture_type}</td>
+              <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
+              <td className="px-4 py-2 border">{surgery.size_of_plate}</td>
+              <td className="px-4 py-2 border">{surgery.number_of_screws}</td>
+              <td className="px-4 py-2 border">{surgery.elaboration}</td>
+              <td className="px-4 py-2 border">{surgery.material_used}</td>
+              <td className="px-4 py-2 border">{surgery.description}</td>
+              <td className="px-4 py-2 border">
+                {new Date(surgery.created_at).toLocaleDateString()}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {surgeries.map((surgery, index) => (
-              <tr key={surgery.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border">
-                  {surgery.patient_detail?.first_name}{" "}
-                  {surgery.patient_detail?.last_name}
-                </td>
-                <td className="px-4 py-2 border">
-                  {surgery.patient_detail?.age}
-                </td>
-                <td className="px-4 py-2 border">{surgery.fixture}</td>
-                <td className="px-4 py-2 border">{surgery.fixture_type}</td>
-                <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
-                <td className="px-4 py-2 border">{surgery.size_of_plate}</td>
-                <td className="px-4 py-2 border">{surgery.number_of_screws}</td>
-                <td className="px-4 py-2 border">{surgery.elaboration}</td>
-                <td className="px-4 py-2 border">{surgery.material_used}</td>
-                <td className="px-4 py-2 border">{surgery.description}</td>
-                <td className="px-4 py-2 border">
-                  {new Date(surgery.created_at).toLocaleDateString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 
   return (
     <>
-      <title>Patients - Trauma Registry</title>
-      <div className="p-4">
-
+      {/* <title> tag doesn't work here properly; use Helmet for SEO */}
+      <div className="p-4 min-h-[300px]">
         {loading ? (
           <div className="flex justify-center items-center h-full w-full">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
           </div>
         ) : surgeries.length === 0 ? (
           <div className="bg-gray-50 border border-gray-200 rounded p-6 text-center">
-            <p className="text-gray-500">No followup found.</p>
+            <p className="text-gray-500">No surgeries found.</p>
           </div>
         ) : isSmallScreen ? (
           renderCards()
