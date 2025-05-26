@@ -202,7 +202,9 @@ const Users = () => {
 
       {loading ? (
         <div className="flex justify-center items-center h-40">
-          <p className="text-lg">Loading...</p>
+          <div className="flex justify-center items-center h-full w-full">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          </div>
         </div>
       ) : error ? (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded m-4">
