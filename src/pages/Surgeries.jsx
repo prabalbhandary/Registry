@@ -170,13 +170,13 @@ const Surgeries = () => {
 
   return (
     <>
-      <title>Surgeries - Trauma Registry</title>
+      <title>Patients - Trauma Registry</title>
       <div className="p-4">
         <h2 className="text-xl font-bold mb-4">Follow Up</h2>
 
         {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <p className="text-gray-500">Loading followup...</p>
+          <div className="flex justify-center items-center h-full w-full">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
           </div>
         ) : surgeries.length === 0 ? (
           <div className="bg-gray-50 border border-gray-200 rounded p-6 text-center">

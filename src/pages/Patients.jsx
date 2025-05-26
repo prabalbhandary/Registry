@@ -36,10 +36,12 @@ const Patients = () => {
 
   return (
     <>
-      <title>Patients - Trauma Registry</title>
+      <title>Surgeries - Trauma Registry</title>
       <div className="p-4">
         {loading ? (
-          <p>Loading...</p>
+          <div className="flex justify-center items-center h-full w-full">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          </div>
         ) : patients.length === 0 ? (
           <p>No patients found.</p>
         ) : (
@@ -57,7 +59,10 @@ const Patients = () => {
                 {patients.map((patient, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border px-4 py-2">{index + 1}</td>
-                    <td onClick={() => navigate(`/surgery`)} className="border px-4 py-2 cursor-pointer">
+                    <td
+                      onClick={() => navigate(`/surgery`)}
+                      className="border px-4 py-2 cursor-pointer"
+                    >
                       {patient.first_name} {patient.last_name}
                     </td>
                     <td className="border px-4 py-2">{patient.age}</td>
