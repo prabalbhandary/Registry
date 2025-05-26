@@ -127,7 +127,7 @@ const Surgeries = () => {
               <th className="px-4 py-2 border">#</th>
               <th className="px-4 py-2 border">Patient Name</th>
               <th className="px-4 py-2 border">Age</th>
-              <th className="px-4 py-2 border">Fixture</th>
+              <th className="px-4 py-2 border">Fixation</th>
               <th className="px-4 py-2 border">Type</th>
               <th className="px-4 py-2 border">Sub Type</th>
               <th className="px-4 py-2 border">Plate Size</th>
