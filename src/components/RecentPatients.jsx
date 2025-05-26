@@ -5,7 +5,6 @@ import { URL } from "./URL";
 
 const RecentPatients = () => {
   const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -25,8 +24,6 @@ const RecentPatients = () => {
       } catch (error) {
         console.log(error);
         toast.error(error.response?.data?.message || "Error fetching patients");
-      } finally {
-        setLoading(false);
       }
     };
 

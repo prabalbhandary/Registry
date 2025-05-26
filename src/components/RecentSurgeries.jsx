@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 const RecentSurgeries = () => {
   const [surgeries, setSurgeries] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSurgeries = async () => {
@@ -21,8 +20,6 @@ const RecentSurgeries = () => {
         toast.error(
           error.response?.data?.message || "Failed to fetch surgeries"
         );
-      } finally {
-        setLoading(false);
       }
     };
 
