@@ -132,9 +132,9 @@ const Surgeries = () => {
               <th className="px-4 py-2 border">Sub Type</th>
               <th className="px-4 py-2 border">Plate Size</th>
               <th className="px-4 py-2 border">Screws</th>
-              <th className="px-4 py-2 border">Material</th>
-              <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Elaboration</th>
+              <th className="px-4 py-2 border">Material Used</th>
+              <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Created At</th>
             </tr>
           </thead>
