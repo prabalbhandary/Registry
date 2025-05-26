@@ -132,7 +132,7 @@ const CreateSurgery = () => {
     }
     if (!mechanism_of_injury) {
       formValid = false;
-      newErrors.MoI = "Mechanism of Injury is required.";
+      newErrors.mechanism_of_injury = "Mechanism of Injury is required.";
     }
     if (!type_of_injury && mechanism_of_injury !== "others") {
       formValid = false;
@@ -615,8 +615,10 @@ const CreateSurgery = () => {
                 <option value="sports injury">Sports Injury</option>
                 <option value="others">Others</option>
               </select>
-              {fieldErrors.MoI && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.MoI}</p>
+              {fieldErrors.mechanism_of_injury && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.mechanism_of_injury}
+                </p>
               )}
             </div>
             {mechanism_of_injury === "RTA injury" && (
@@ -642,9 +644,9 @@ const CreateSurgery = () => {
                   </option>
                   <option value="Pedestrian">Pedestrian</option>
                 </select>
-                {fieldErrors.subMoI && (
+                {fieldErrors.type_of_injury && (
                   <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors.subMoI}
+                    {fieldErrors.type_of_injury}
                   </p>
                 )}
               </div>
@@ -658,7 +660,7 @@ const CreateSurgery = () => {
                   Fall Injury
                 </label>
                 <select
-                  name="subMoi"
+                  name="type_of_injury"
                   value={type_of_injury}
                   onChange={handleSubMoIChange}
                   id="subMoi"
@@ -670,9 +672,9 @@ const CreateSurgery = () => {
                     From Standing height
                   </option>
                 </select>
-                {fieldErrors.subMoI && (
+                {fieldErrors.type_of_injury && (
                   <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors.subMoI}
+                    {fieldErrors.type_of_injury}
                   </p>
                 )}
               </div>
@@ -699,6 +701,14 @@ const CreateSurgery = () => {
                   <option value="Volleyball">Volleyball</option>
                   <option value="others">Others</option>
                 </select>
+
+                {/* Show error if subtype not selected */}
+                {fieldErrors.type_of_injury && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.type_of_injury}
+                  </p>
+                )}
+
                 {type_of_injury === "others" && (
                   <div className="flex flex-col mt-2">
                     <label
