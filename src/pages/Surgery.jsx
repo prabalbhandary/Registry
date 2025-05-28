@@ -34,6 +34,7 @@ const Surgery = () => {
   const [internalTypeOther, setInternalTypeOther] = useState("");
   const [extramedullaryThickness, setExtramedullaryThickness] = useState("");
   const [antigradeThickness, setAntigradeThickness] = useState("");
+  const [retrogradeThickness, setRetrogradeThickness] = useState("");
 
   const handleSurgeryChange = (e) => {
     const selectedType = e.target.value;
