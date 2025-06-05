@@ -256,7 +256,7 @@ const Surgery = () => {
                   <>
                     <div className="flex gap-2">
                       <input
-                        type="text"
+                        type="number"
                         value={extramedullarySize}
                         onChange={(e) => setExtramedullarySize(e.target.value)}
                         placeholder="Plate Size (holes)"
@@ -266,7 +266,7 @@ const Surgery = () => {
                     </div>
                     <div className="flex gap-2">
                       <input
-                        type="text"
+                        type="number"
                         value={extramedullaryThickness}
                         onChange={(e) =>
                           setExtramedullaryThickness(e.target.value)
@@ -330,7 +330,7 @@ const Surgery = () => {
                       <>
                         <div className="flex gap-2">
                           <input
-                            type="text"
+                            type="number"
                             value={antigradeSize}
                             onChange={(e) => setAntigradeSize(e.target.value)}
                             placeholder="Nail Length"
@@ -340,7 +340,7 @@ const Surgery = () => {
                         </div>
                         <div className="flex gap-2">
                           <input
-                            type="text"
+                            type="number"
                             value={antigradeThickness}
                             onChange={(e) =>
                               setAntigradeThickness(e.target.value)
@@ -348,7 +348,7 @@ const Surgery = () => {
                             placeholder="Thickness"
                             className="w-full mb-2 border px-4 py-2 rounded"
                           />{" "}
-                          cm
+                          mm
                         </div>
                         <input
                           type="text"
@@ -384,7 +384,7 @@ const Surgery = () => {
                       <>
                         <div className="flex gap-2">
                           <input
-                            type="text"
+                            type="number"
                             value={retrogradeThickness}
                             onChange={(e) =>
                               setRetrogradeThickness(e.target.value)
@@ -392,11 +392,11 @@ const Surgery = () => {
                             placeholder="Thickness"
                             className="w-full mb-2 border px-4 py-2 rounded"
                           />{" "}
-                          cm
+                          mm
                         </div>
                         <div className="flex gap-2">
                           <input
-                            type="text"
+                            type="number"
                             value={retrogradeSize}
                             onChange={(e) => setRetrogradeSize(e.target.value)}
                             placeholder="Nail Length"
