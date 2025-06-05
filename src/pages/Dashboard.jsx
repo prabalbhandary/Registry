@@ -102,7 +102,7 @@ const Dashboard = () => {
                 bg: "bg-yellow-500",
                 border: "border-yellow-500",
                 short: "Sur",
-                path: "/surgeries",
+                path: "/patients",
               },
               {
                 label: "Patients",
@@ -110,7 +110,7 @@ const Dashboard = () => {
                 bg: "bg-gray-500",
                 border: "border-gray-500",
                 short: "Pat",
-                path: "/patients",
+                path: "/surgeries",
               },
               {
                 label: "Assistant Surgeons",
