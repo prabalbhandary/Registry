@@ -49,7 +49,11 @@ const Hospitals = () => {
     <>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Hospitals</h1>
-        {loading && <p>Loading...</p>}
+        {loading && (
+          <div className="flex justify-center items-center h-full w-full">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          </div>
+        )}
         {error && <p className="text-red-500">Error: {error.message}</p>}
         {!loading && !error && hospitals.length > 0 && (
           <div className="overflow-x-auto">

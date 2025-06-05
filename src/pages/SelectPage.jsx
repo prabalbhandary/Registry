@@ -11,7 +11,9 @@ const SelectPage = () => {
   const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [selectedAssistants, setSelectedAssistants] = useState([]);
-  const [primarySurgeon] = useState(JSON.parse(localStorage.getItem("user").name));
+  const [primarySurgeon] = useState(
+    JSON.parse(localStorage.getItem("user").name)
+  );
 
   const [hospitalName, setHospitalName] = useState("");
   const [hospitalAddress, setHospitalAddress] = useState("");

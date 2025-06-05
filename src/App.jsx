@@ -137,7 +137,11 @@ const AppContent = () => {
             <Route
               path="/users"
               element={
-               role && isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+                role && isAuthenticated ? (
+                  <DashboardLayout />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
             <Route
