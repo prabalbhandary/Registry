@@ -29,7 +29,6 @@ const Assistants = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(res.data);
         setAssistants(res.data.data);
         setSelectedAssistant(res.data.data[0]);
       } catch (error) {
