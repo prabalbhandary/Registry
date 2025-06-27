@@ -294,8 +294,8 @@ const Femur = () => {
       {/* Action Buttons */}
       {formValid && (
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
-          <div className="flex flex-col xs:flex-row gap-3">
-            <button
+          <div className="flex gap-3 items-center">
+            {/* <button
               className={`px-4 py-2 rounded-lg font-medium text-white ${
                 isLoading
                   ? "bg-green-400 cursor-not-allowed"
@@ -305,11 +305,13 @@ const Femur = () => {
               disabled={isLoading}
             >
               {isLoading ? "Saving..." : "Save to Follow Up"}
-            </button>
+            </button> */}
+            <input type="radio" name="treatment_status" id="followup" value="0" />
+            <label htmlFor="followup" onClick={() => handleSave("followup")}>Save to Follow Up</label>
           </div>
 
-          <div className="flex flex-col xs:flex-row gap-3">
-            <button
+          <div className="flex gap-3 items-center">
+            {/* <button
               className={`px-4 py-2 rounded-lg font-medium text-white ${
                 isLoading
                   ? "bg-green-400 cursor-not-allowed"
@@ -322,7 +324,9 @@ const Femur = () => {
               disabled={isLoading}
             >
               {isLoading ? "Proceeding..." : "Proceed to Surgery"}
-            </button>
+            </button> */}
+            <input type="radio" name="treatment_status" id="surgery_radio" value="1" />
+            <label htmlFor="surgery_radio" onClick={() => handleSave("surgery")}>Proceed to Surgery</label>
           </div>
 
           <button

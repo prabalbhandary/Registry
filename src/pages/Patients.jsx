@@ -11,23 +11,30 @@ const Patients = () => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      try {
-        const res = await axios.get(`${URL}/patient-detail`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        setPatients(res.data.data || []);
-      } catch (error) {
-        toast.error("Error fetching patients");
-      }
-      setLoading(false);
-    };
+  try {
+    const res = await axios.get(`${URL}/patient-detail`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
+    // Filter all patients with femur_fracture.treatment_status === "followup"
+    const filteredPatients = res.data.data.filter(
+      (patient) =>
+        patient.femur_fracture?.treatment_status === "followup"
+    );
+
+    setPatients(filteredPatients);
+  } catch (error) {
+    toast.error("Error fetching patients");
+  }
+  setLoading(false);
+};
 
     fetchPatients();
   }, []);
 
   return (
     <>
-      <title>Patients - Trauma Registry</title>
+      <title>Surgeries - Trauma Registry</title>
       <div className="p-4">
         {loading ? (
           <div className="flex justify-center items-center h-full w-full">

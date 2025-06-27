@@ -147,6 +147,7 @@ const Surgeries = () => {
 
   return (
     <>
+    <title>Patients - Trauma Registry</title>
       {/* <title> tag doesn't work here properly; use Helmet for SEO */}
       <div className="p-4 min-h-[300px]">
         {loading ? (
