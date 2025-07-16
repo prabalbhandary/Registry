@@ -23,8 +23,8 @@ const Femur = () => {
 
   const closedMainClassifications = ["31A", "31B"];
   const closedSubClassifications = {
-    "31A": ["31A1", "31A2", "31A3"],
-    "31B": ["31B1", "31B2", "31B3"],
+    "31A": ["31A1 - Simple pertrochanteric", "31A2 - Multifragmentary pertrochanteric, lateral wall incompetent (≤ 20.5 mm)", "31A3 - Intertrochanteric (reverse obliquity)"],
+    "31B": ["31B1 - Subcapital", "31B2 - Transcervical", "31B3 - Basicervical"],
   };
 
   const openClassifications = ["GA I", "GA II", "GA IIIA", "GA IIIB", "GA IIIC"];
