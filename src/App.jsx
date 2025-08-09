@@ -283,6 +283,9 @@ const AppContent = () => {
               }
             />
             {/* <Route path="/terms" element={isAuthenticated ? <Terms /> : <Navigate to="/dashboard" />} /> */}
+            <Route path="/followup/:id" element={
+                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+              } />
           </Routes>
         </div>
       </div>

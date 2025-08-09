@@ -29,6 +29,7 @@ import Patella from "./skeletonpart/lowerlimb/Patella";
 import Foot from "./skeletonpart/lowerlimb/Foot";
 import SelectPage from "../pages/SelectPage";
 import Surgery from "../pages/Surgery";
+import FollowUp from "../pages/FollowUp";
 
 const DashboardLayout = () => {
   const location = useLocation();
@@ -89,6 +90,8 @@ const DashboardLayout = () => {
           ? "Foot - Trauma Registry"
           : location.pathname === "/select"
           ? "Select Hospital and Assistant Surgeon - Trauma Registry"
+          : location.pathname === "/followup/:id"
+          ? "Follow up - Trauma Registry"
           : "Trauma Registry"}
       </title>
 
@@ -132,6 +135,7 @@ const DashboardLayout = () => {
             {location.pathname === "/foot" && <Foot />}
             {location.pathname === "/select" && <SelectPage />}
             {location.pathname === "/surgery" && <Surgery />}
+            {location.pathname === "/followup/:id" && <FollowUp />}
           </div>
         </div>
       </div>

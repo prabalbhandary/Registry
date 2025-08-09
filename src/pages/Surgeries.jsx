@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
+import { Link } from "react-router-dom";
 
 const Surgeries = () => {
   const [surgeries, setSurgeries] = useState([]);
@@ -121,8 +122,10 @@ const Surgeries = () => {
             <tr key={surgery.id} className="hover:bg-gray-50">
               <td className="px-4 py-2 border">{index + 1}</td>
               <td className="px-4 py-2 border">
-                {surgery.patient_detail?.first_name}{" "}
-                {surgery.patient_detail?.last_name}
+                <Link to={`/followup/${surgery.id}`}>
+                  {surgery.patient_detail?.first_name}{" "}
+                  {surgery.patient_detail?.last_name}
+                </Link>
               </td>
               <td className="px-4 py-2 border">
                 {surgery.patient_detail?.age}
