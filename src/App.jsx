@@ -1,296 +1,90 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import DashboardLayout from "./components/DashboardLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
-import Surgeries from "./pages/Surgeries";
-import Patients from "./pages/Patients";
-import Users from "./pages/Users";
-import CreateSurgery from "./pages/CreateSurgery";
-import CreatePatient from "./pages/CreatePatient";
-import CreateUser from "./pages/CreateUser";
-import AddHospital from "./pages/AddHospital";
-import AddAssistant from "./pages/AddAssistant";
-import Profile from "./pages/Profile";
-import Assistants from "./pages/Assistants";
-import Hospitals from "./pages/Hospitals";
 import ResetPassword from "./pages/ResetPassword";
 import OTP from "./pages/OTP";
 import OTPResend from "./pages/OTPResend";
-import AddSurgericalDetails from "./pages/AddSurgericalDetails";
-import PatientSurgericalDetails from "./pages/PatientSurgericalDetails";
-import PatientInjuryDetails from "./pages/PatientInjuryDetails";
-import Diagnosis from "./pages/Diagnosis";
-import Clavicle from "./components/skeletonpart/upperlimb/Clavicle";
-import Scapula from "./components/skeletonpart/upperlimb/Scapula";
-import Humerus from "./components/skeletonpart/upperlimb/Humerus";
-import RadiusAndUlna from "./components/skeletonpart/upperlimb/RadiusAndUlna";
-import Hand from "./components/skeletonpart/upperlimb/Hand";
-import Femur from "./components/skeletonpart/lowerlimb/Femur";
-import TibiaAndFibula from "./components/skeletonpart/lowerlimb/TibiaAndFibula";
-import Patella from "./components/skeletonpart/lowerlimb/Patella";
-import Foot from "./components/skeletonpart/lowerlimb/Foot";
-import DashboardLayout from "./components/DashboardLayout";
 import Terms from "./pages/Terms";
 
-const App = () => {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("token");
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-const AppContent = () => {
-  const location = useLocation();
+const AdminRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("token");
+  const isAdmin = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
+  return isAuthenticated && isAdmin ? children : <Navigate to="/login" replace />;
+};
 
-  const role = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
+const authPages = [
+  { path: "/dashboard", element: <DashboardLayout /> },
+  { path: "/surgeries", element: <DashboardLayout /> },
+  { path: "/patients", element: <DashboardLayout /> },
+  { path: "/create-surgery", element: <DashboardLayout /> },
+  { path: "/add-surgerical-details", element: <DashboardLayout /> },
+  { path: "/patient/:id/patient-surgical-details", element: <DashboardLayout /> },
+  { path: "/patient-injury-details", element: <DashboardLayout /> },
+  { path: "/diagnosis", element: <DashboardLayout /> },
+  { path: "/create-patient", element: <DashboardLayout /> },
+  { path: "/create-user", element: <DashboardLayout /> },
+  { path: "/add-hospital", element: <DashboardLayout /> },
+  { path: "/add-assistant", element: <DashboardLayout /> },
+  { path: "/profile", element: <DashboardLayout /> },
+  { path: "/assistants", element: <DashboardLayout /> },
+  { path: "/hospitals", element: <DashboardLayout /> },
+  { path: "/clavicle", element: <DashboardLayout /> },
+  { path: "/scapula", element: <DashboardLayout /> },
+  { path: "/humerus", element: <DashboardLayout /> },
+  { path: "/radius_and_ulna", element: <DashboardLayout /> },
+  { path: "/hand", element: <DashboardLayout /> },
+  { path: "/femur", element: <DashboardLayout /> },
+  { path: "/tibia_and_fibula", element: <DashboardLayout /> },
+  { path: "/patella", element: <DashboardLayout /> },
+  { path: "/foot", element: <DashboardLayout /> },
+  { path: "/select", element: <DashboardLayout /> },
+  { path: "/surgery", element: <DashboardLayout /> },
+  { path: "/followup/:id", element: <DashboardLayout /> },
+];
 
-  return (
-    <div className="flex">
-      {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
-        <div>
-          <Sidebar />
-        </div>
-      )} */}
+const adminPages = [
+  { path: "/users", element: <DashboardLayout /> },
+];
 
-      <div className="flex-1 flex flex-col">
-        {/* {location.pathname !== "/" && location.pathname !== "/register" && location.pathname !== "/login" && location.pathname !== "/forget-password" && location.pathname !== "/reset-password" && location.pathname !== "/otp" && location.pathname !== "/otp-resend" && (
-          <div className="p-4">
-            <Navbar />
-          </div>
-        )} */}
+const App = () => (
+  <Router>
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<LoginRedirect><Login /></LoginRedirect>} />
+      <Route path="/register" element={<LoginRedirect><Register /></LoginRedirect>} />
+      <Route path="/forget-password" element={<LoginRedirect><ForgetPassword /></LoginRedirect>} />
+      <Route path="/reset-password" element={<LoginRedirect><ResetPassword /></LoginRedirect>} />
+      <Route path="/otp" element={<LoginRedirect><OTP /></LoginRedirect>} />
+      <Route path="/otp-resend" element={<LoginRedirect><OTPResend /></LoginRedirect>} />
+      <Route path="/terms" element={<Terms />} />
 
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <Register />
-              }
-            />
-            <Route
-              path="/forget-password"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/dashboard" />
-                ) : (
-                  <ForgetPassword />
-                )
-              }
-            />
-            <Route
-              path="/reset-password"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/dashboard" />
-                ) : (
-                  <ResetPassword />
-                )
-              }
-            />
-            <Route
-              path="/otp"
-              element={isAuthenticated ? <Navigate to="/dashboard" /> : <OTP />}
-            />
-            <Route
-              path="/otp-resend"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <OTPResend />
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/surgeries"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/patients"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/users"
-              element={
-                role && isAuthenticated ? (
-                  <DashboardLayout />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/create-surgery"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/add-surgerical-details"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/patient/:id/patient-surgical-details"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/patient-injury-details"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/diagnosis"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/create-patient"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/create-user"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/add-hospital"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/add-assistant"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/assistants"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/hospitals"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/clavicle"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/scapula"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/humerus"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/radius_and_ulna"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/hand"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/femur"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/tibia_and_fibula"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/patella"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/foot"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/select"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/surgery"
-              element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              }
-            />
-            {/* <Route path="/terms" element={isAuthenticated ? <Terms /> : <Navigate to="/dashboard" />} /> */}
-            <Route path="/followup/:id" element={
-                isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-              } />
-          </Routes>
-        </div>
-      </div>
-    </div>
-  );
+      {/* Private Routes */}
+      {authPages.map(({ path, element }) => (
+        <Route key={path} path={path} element={<PrivateRoute>{element}</PrivateRoute>} />
+      ))}
+
+      {/* Admin Routes */}
+      {adminPages.map(({ path, element }) => (
+        <Route key={path} path={path} element={<AdminRoute>{element}</AdminRoute>} />
+      ))}
+    </Routes>
+  </Router>
+);
+
+// Redirect logged-in users away from login/register
+const LoginRedirect = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("token");
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
 };
 
 export default App;
