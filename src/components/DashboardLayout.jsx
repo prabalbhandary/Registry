@@ -1,7 +1,9 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+
+// Pages
 import Dashboard from "../pages/Dashboard";
 import Surgeries from "../pages/Surgeries";
 import Patients from "../pages/Patients";
@@ -32,114 +34,46 @@ import Surgery from "../pages/Surgery";
 import FollowUp from "../pages/FollowUp";
 
 const DashboardLayout = () => {
-  const location = useLocation();
   return (
-    <>
-      <title>
-        {location.pathname === "/dashboard"
-          ? "Dashboard - Trauma Registry"
-          : location.pathname === "/surgery"
-          ? "Surgery - Trauma Registry"
-          : location.pathname === "/surgeries"
-          ? "Surgeries - Trauma Registry"
-          : location.pathname === "/patients"
-          ? "Patients - Trauma Registry"
-          : location.pathname === "/users"
-          ? "Users - Trauma Registry"
-          : location.pathname === "/create-surgery"
-          ? "Create Surgery - Trauma Registry"
-          : location.pathname === "/add-surgerical-details"
-          ? "Select a part to Proceed - Trauma Registry"
-          : location.pathname === "/patient/:id/patient-surgical-details"
-          ? "Create Patient Surgical Details - Trauma Registry"
-          : location.pathname === "/patient-injury-detail"
-          ? "Patient Injury Details - Trauma Registry"
-          : location.pathname === "/diagnosis"
-          ? "Diagnosis - Trauma Registry"
-          : location.pathname === "/create-patient"
-          ? "Create Patient - Trauma Registry"
-          : location.pathname === "/create-user"
-          ? "Create User - Trauma Registry"
-          : location.pathname === "/add-hospital"
-          ? "Add Hospital - Trauma Registry"
-          : location.pathname === "/add-assistant"
-          ? "Add Assistant - Trauma Registry"
-          : location.pathname === "/profile"
-          ? "Profile - Trauma Registry"
-          : location.pathname === "/assistants"
-          ? "Assistants - Trauma Registry"
-          : location.pathname === "/hospitals"
-          ? "Hospitals - Trauma Registry"
-          : location.pathname === "/clavicle"
-          ? "Clavicle - Trauma Registry"
-          : location.pathname === "/scapula"
-          ? "Scapula - Trauma Registry"
-          : location.pathname === "/humerus"
-          ? "Humerus - Trauma Registry"
-          : location.pathname === "/radius_and_ulna"
-          ? "Radius & Ulna - Trauma Registry"
-          : location.pathname === "/hand"
-          ? "Hand - Trauma Registry"
-          : location.pathname === "/femur"
-          ? "Femur - Trauma Registry"
-          : location.pathname === "/tibia_and_fibula"
-          ? "Tibia & Fibula - Trauma Registry"
-          : location.pathname === "/patella"
-          ? "Patella - Trauma Registry"
-          : location.pathname === "/foot"
-          ? "Foot - Trauma Registry"
-          : location.pathname === "/select"
-          ? "Select Hospital and Assistant Surgeon - Trauma Registry"
-          : location.pathname === "/followup/:id"
-          ? "Follow up - Trauma Registry"
-          : "Trauma Registry"}
-      </title>
-
-      <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/5 fixed md:relative top-0 left-0 h-full z-10">
-          <Sidebar />
-        </div>
-        <div className="w-full md:w-4/5 p-6 mt-8 md:mt-0 overflow-y-auto">
-          <Navbar />
-          <div>
-            {location.pathname === "/dashboard" && <Dashboard />}
-            {location.pathname === "/surgeries" && <Surgeries />}
-            {location.pathname === "/patients" && <Patients />}
-            {location.pathname === "/users" && <Users />}
-            {location.pathname === "/profile" && <Profile />}
-            {location.pathname === "/diagnosis" && <Diagnosis />}
-            {location.pathname === "/add-hospital" && <AddHospital />}
-            {location.pathname === "/add-assistant" && <AddAssistant />}
-            {location.pathname === "/create-surgery" && <CreateSurgery />}
-            {location.pathname === "/create-patient" && <CreatePatient />}
-            {location.pathname === "/create-user" && <CreateUser />}
-            {location.pathname === "/patient/:id/patient-surgical-details" && (
-              <PatientSurgicalDetails />
-            )}
-            {location.pathname === "/patient-injury-detail" && (
-              <PatientInjuryDetails />
-            )}
-            {location.pathname === "/add-surgerical-details" && (
-              <AddSurgicalDetails />
-            )}
-            {location.pathname === "/assistants" && <Assistants />}
-            {location.pathname === "/hospitals" && <Hospitals />}
-            {location.pathname === "/clavicle" && <Clavicle />}
-            {location.pathname === "/scapula" && <Scapula />}
-            {location.pathname === "/humerus" && <Humerus />}
-            {location.pathname === "/radius_and_ulna" && <RadiusAndUlna />}
-            {location.pathname === "/hand" && <Hand />}
-            {location.pathname === "/femur" && <Femur />}
-            {location.pathname === "/tibia_and_fibula" && <TibiaAndFibula />}
-            {location.pathname === "/patella" && <Patella />}
-            {location.pathname === "/foot" && <Foot />}
-            {location.pathname === "/select" && <SelectPage />}
-            {location.pathname === "/surgery" && <Surgery />}
-            {location.pathname === "/followup/:id" && <FollowUp />}
-          </div>
-        </div>
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/5 fixed md:relative top-0 left-0 h-full z-10">
+        <Sidebar />
       </div>
-    </>
+      <div className="w-full md:w-4/5 p-6 mt-8 md:mt-0 overflow-y-auto">
+        <Navbar />
+        <Routes>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="surgeries" element={<Surgeries />} />
+          <Route path="patients" element={<Patients />} />
+          <Route path="users" element={<Users />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="diagnosis" element={<Diagnosis />} />
+          <Route path="add-hospital" element={<AddHospital />} />
+          <Route path="add-assistant" element={<AddAssistant />} />
+          <Route path="create-surgery" element={<CreateSurgery />} />
+          <Route path="create-patient" element={<CreatePatient />} />
+          <Route path="create-user" element={<CreateUser />} />
+          <Route path="patient/:id/patient-surgical-details" element={<PatientSurgicalDetails />} />
+          <Route path="patient-injury-detail" element={<PatientInjuryDetails />} />
+          <Route path="add-surgerical-details" element={<AddSurgicalDetails />} />
+          <Route path="assistants" element={<Assistants />} />
+          <Route path="hospitals" element={<Hospitals />} />
+          <Route path="clavicle" element={<Clavicle />} />
+          <Route path="scapula" element={<Scapula />} />
+          <Route path="humerus" element={<Humerus />} />
+          <Route path="radius_and_ulna" element={<RadiusAndUlna />} />
+          <Route path="hand" element={<Hand />} />
+          <Route path="femur" element={<Femur />} />
+          <Route path="tibia_and_fibula" element={<TibiaAndFibula />} />
+          <Route path="patella" element={<Patella />} />
+          <Route path="foot" element={<Foot />} />
+          <Route path="select" element={<SelectPage />} />
+          <Route path="surgery" element={<Surgery />} />
+          <Route path="followup/:id" element={<FollowUp />} />
+        </Routes>
+        <Outlet />
+      </div>
+    </div>
   );
 };
 
