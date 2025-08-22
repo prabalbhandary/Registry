@@ -37,11 +37,20 @@ const Surgeries = () => {
     fetchSurgeries();
   }, []);
 
+  // Updated: accept patient_detail_id and set in localStorage
+  const handleClick = (patient_detail_id) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (patient_detail_id) {
+      localStorage.setItem("patient_detail_id", patient_detail_id);
+    }
+  };
+
   const renderCards = () =>
-    surgeries.map((surgery, index) => (
+    surgeries.map((surgery) => (
       <div
         key={surgery.id}
-        className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200"
+        onClick={() => handleClick(surgery.patient_detail?.id)}
+        className="cursor-pointer bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200"
       >
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-medium">
@@ -122,14 +131,15 @@ const Surgeries = () => {
             <tr key={surgery.id} className="hover:bg-gray-50">
               <td className="px-4 py-2 border">{index + 1}</td>
               <td className="px-4 py-2 border">
-                <Link to={`/followup/${surgery.id}`}>
+                <Link
+                  to={`/followup/${surgery.id}`}
+                  onClick={() => handleClick(surgery.patient_detail?.id)}
+                >
                   {surgery.patient_detail?.first_name}{" "}
                   {surgery.patient_detail?.last_name}
                 </Link>
               </td>
-              <td className="px-4 py-2 border">
-                {surgery.patient_detail?.age}
-              </td>
+              <td className="px-4 py-2 border">{surgery.patient_detail?.age}</td>
               <td className="px-4 py-2 border">{surgery.fixture}</td>
               <td className="px-4 py-2 border">{surgery.fixture_type}</td>
               <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
@@ -150,7 +160,7 @@ const Surgeries = () => {
 
   return (
     <>
-    <title>Patients - Trauma Registry</title>
+      <title>Patients - Trauma Registry</title>
       {/* <title> tag doesn't work here properly; use Helmet for SEO */}
       <div className="p-4 min-h-[300px]">
         {loading ? (
