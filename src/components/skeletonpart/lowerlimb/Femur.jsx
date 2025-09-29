@@ -23,11 +23,21 @@ const Femur = () => {
 
   const closedMainClassifications = ["31A", "31B"];
   const closedSubClassifications = {
-    "31A": ["31A1 - Simple pertrochanteric", "31A2 - Multifragmentary pertrochanteric, lateral wall incompetent (≤ 20.5 mm)", "31A3 - Intertrochanteric (reverse obliquity)"],
+    "31A": [
+      "31A1 - Simple pertrochanteric",
+      "31A2 - Multifragmentary pertrochanteric, lateral wall incompetent (≤ 20.5 mm)",
+      "31A3 - Intertrochanteric (reverse obliquity)",
+    ],
     "31B": ["31B1 - Subcapital", "31B2 - Transcervical", "31B3 - Basicervical"],
   };
 
-  const openClassifications = ["GA I", "GA II", "GA IIIA", "GA IIIB", "GA IIIC"];
+  const openClassifications = [
+    "GA I",
+    "GA II",
+    "GA IIIA",
+    "GA IIIB",
+    "GA IIIC",
+  ];
   const subclassifications = {
     "GA I": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
     "GA II": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
@@ -81,7 +91,13 @@ const Femur = () => {
     setSavedMessage("");
   };
 
-  const renderSelect = (value, setter, options, placeholder, dependencyField) => (
+  const renderSelect = (
+    value,
+    setter,
+    options,
+    placeholder,
+    dependencyField
+  ) => (
     <div className="w-full">
       <select
         className="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
@@ -121,13 +137,23 @@ const Femur = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* Fracture Type */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fracture Type</label>
-          {renderSelect(fractureType, setFractureType, fractureOptions, "Select Fracture Type", "fractureType")}
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Fracture Type
+          </label>
+          {renderSelect(
+            fractureType,
+            setFractureType,
+            fractureOptions,
+            "Select Fracture Type",
+            "fractureType"
+          )}
         </div>
 
         {/* Side */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Side</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Side
+          </label>
           {fractureType ? (
             renderSelect(side, setSide, sideOptions, "Select Side", "side")
           ) : (
@@ -142,9 +168,17 @@ const Femur = () => {
 
         {/* Location */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Location
+          </label>
           {side ? (
-            renderSelect(location, setLocation, locationOptions, "Select Location", "location")
+            renderSelect(
+              location,
+              setLocation,
+              locationOptions,
+              "Select Location",
+              "location"
+            )
           ) : (
             <select
               className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed"
@@ -158,7 +192,9 @@ const Femur = () => {
         {/* Other Location */}
         {location === "Other" && (
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Specify Location</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Specify Location
+            </label>
             <input
               type="text"
               className="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -174,12 +210,17 @@ const Femur = () => {
 
         {/* Classification */}
         <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Classification</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Classification
+          </label>
           {location && (location !== "Other" || otherLocation) ? (
             fractureType === "Closed" ? (
               <div className="space-y-4">
                 {closedMainClassifications.map((mainType) => (
-                  <div key={mainType} className="border p-3 rounded-lg bg-gray-50">
+                  <div
+                    key={mainType}
+                    className="border p-3 rounded-lg bg-gray-50"
+                  >
                     <label className="block font-semibold text-gray-800 mb-2">
                       <input
                         type="radio"
@@ -196,37 +237,45 @@ const Femur = () => {
                     </label>
 
                     {classification === mainType && (
-                      <div className="space-y-4 pl-4">
-                        {closedSubClassifications[mainType].map((sub) => (
-                          <div
-                            key={sub}
-                            className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 bg-white border rounded p-3"
-                          >
-                            <input
-                              type="radio"
-                              name="subClassification"
-                              value={sub}
-                              checked={subClassification === sub}
-                              onChange={() => setSubClassification(sub)}
-                              className="mt-2"
-                            />
-                            <div>
-                              <label className="font-medium text-gray-800">{sub}</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                        {closedSubClassifications[mainType].map((sub) => {
+                          const code = sub.split(" ")[0];
+                          const isSelected = subClassification === sub;
+
+                          return (
+                            <div
+                              key={sub}
+                              onClick={() => setSubClassification(sub)}
+                              className={`cursor-pointer border-2 rounded-lg p-2 transition-all duration-200 ${
+                                isSelected
+                                  ? "border-blue-600"
+                                  : "border-gray-300"
+                              }`}
+                            >
                               <img
-                                src={`/images/classification/${sub}.png`}
-                                alt={`${sub} classification`}
-                                className="mt-2 max-w-xs w-full border rounded"
+                                src={`/images/classification/${code}.png`}
+                                alt={sub}
+                                className="w-full h-auto object-contain"
                               />
+                              <p className="mt-2 text-sm text-center font-medium text-gray-700">
+                                {sub}
+                              </p>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
-              renderSelect(classification, setClassification, openClassifications, "Select Classification", "classification")
+              renderSelect(
+                classification,
+                setClassification,
+                openClassifications,
+                "Select Classification",
+                "classification"
+              )
             )
           ) : (
             <select
@@ -241,7 +290,9 @@ const Femur = () => {
         {/* SubClassification for Open */}
         {fractureType === "Open" && classification && (
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sub-Classification</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Sub-Classification
+            </label>
             {renderSelect(
               subClassification,
               setSubClassification,
@@ -255,7 +306,9 @@ const Femur = () => {
       {/* Treatment Plan */}
       {formValid && (
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Plan</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Treatment Plan
+          </label>
           <textarea
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]"
             placeholder="Describe your treatment plan here..."
@@ -268,7 +321,9 @@ const Femur = () => {
       {/* Summary Section */}
       {formValid && (
         <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Femur Fracture Summary</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Femur Fracture Summary
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <span className="font-medium">Fracture Type:</span> {fractureType}
@@ -294,15 +349,28 @@ const Femur = () => {
       {formValid && (
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="flex gap-3 items-center">
-            <input type="radio" name="treatment_status" id="followup" value="0" />
+            <input
+              type="radio"
+              name="treatment_status"
+              id="followup"
+              value="0"
+            />
             <label htmlFor="followup" onClick={() => handleSave("followup")}>
               Save to Follow Up
             </label>
           </div>
 
           <div className="flex gap-3 items-center">
-            <input type="radio" name="treatment_status" id="surgery_radio" value="1" />
-            <label htmlFor="surgery_radio" onClick={() => handleSave("surgery")}>
+            <input
+              type="radio"
+              name="treatment_status"
+              id="surgery_radio"
+              value="1"
+            />
+            <label
+              htmlFor="surgery_radio"
+              onClick={() => handleSave("surgery")}
+            >
               Proceed to Surgery
             </label>
           </div>
