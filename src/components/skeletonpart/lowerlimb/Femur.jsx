@@ -16,6 +16,7 @@ const Femur = () => {
   const [plan, setPlan] = useState("");
   const [savedMessage, setSavedMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [diagnosis, setDiagnosis] = useState("");
 
   const fractureOptions = ["Closed", "Open"];
   const sideOptions = ["Right", "Left"];
@@ -302,6 +303,21 @@ const Femur = () => {
           </div>
         )}
       </div>
+
+      {/* Diagnosis */}
+      {formValid && (
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Diagnosis
+          </label>
+          <textarea
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
+            placeholder="Enter your diagnosis..."
+            value={diagnosis}
+            onChange={(e) => setDiagnosis(e.target.value)}
+          />
+        </div>
+      )}
 
       {/* Treatment Plan */}
       {formValid && (
