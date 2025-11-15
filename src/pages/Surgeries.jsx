@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Surgeries = () => {
   const [surgeries, setSurgeries] = useState([]);
@@ -37,7 +38,6 @@ const Surgeries = () => {
     fetchSurgeries();
   }, []);
 
-  // Updated: accept patient_detail_id and set in localStorage
   const handleClick = (patient_detail_id) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (patient_detail_id) {
@@ -50,11 +50,12 @@ const Surgeries = () => {
       <div
         key={surgery.id}
         onClick={() => handleClick(surgery.patient_detail?.id)}
-        className="cursor-pointer bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200"
+        className="cursor-pointer bg-white rounded-xl shadow-md p-5 mb-5 border border-gray-100 hover:shadow-lg transition-all duration-200"
       >
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-medium">
-            Patient: {surgery.patient_detail?.first_name}{" "}
+        {/* Header */}
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="font-semibold text-lg text-gray-800">
+            {surgery.patient_detail?.first_name}{" "}
             {surgery.patient_detail?.last_name}
           </h3>
           <span className="text-xs text-gray-500">
@@ -62,93 +63,80 @@ const Surgeries = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div>
-            <p className="font-medium">Age:</p>
-            <p>{surgery.patient_detail?.age}</p>
-          </div>
-          <div>
-            <p className="font-medium">Fixture:</p>
-            <p>{surgery.fixture}</p>
-          </div>
-          <div>
-            <p className="font-medium">Type:</p>
-            <p>{surgery.fixture_type}</p>
-          </div>
-          <div>
-            <p className="font-medium">Sub Type:</p>
-            <p>{surgery.fixture_sub_type}</p>
-          </div>
-          <div>
-            <p className="font-medium">Plate Size:</p>
-            <p>{surgery.size_of_plate}</p>
-          </div>
-          <div>
-            <p className="font-medium">Screws:</p>
-            <p>{surgery.number_of_screws}</p>
-          </div>
-          <div>
-            <p className="font-medium">Material:</p>
-            <p>{surgery.material_used}</p>
-          </div>
+        {/* Details */}
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <CardItem label="Age" value={surgery.patient_detail?.age} />
+          <CardItem label="Fixture" value={surgery.fixture} />
+          <CardItem label="Type" value={surgery.fixture_type} />
+          <CardItem label="Sub Type" value={surgery.fixture_sub_type} />
+          <CardItem label="Plate Size" value={surgery.size_of_plate} />
+          <CardItem label="Screws" value={surgery.number_of_screws} />
+          <CardItem label="Material" value={surgery.material_used} />
         </div>
 
-        <div className="mt-2">
-          <p className="font-medium">Description:</p>
-          <p className="text-sm">{surgery.description}</p>
-        </div>
+        {/* Description */}
+        <CardText label="Description" value={surgery.description} />
 
+        {/* Elaboration */}
         {surgery.elaboration && (
-          <div className="mt-2">
-            <p className="font-medium">Elaboration:</p>
-            <p className="text-sm">{surgery.elaboration}</p>
-          </div>
+          <CardText label="Elaboration" value={surgery.elaboration} />
         )}
       </div>
     ));
 
   const renderTable = () => (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border border-gray-300 text-sm">
-        <thead className="bg-gray-100 text-left">
-          <tr>
-            <th className="px-4 py-2 border">#</th>
-            <th className="px-4 py-2 border">Patient Name</th>
-            <th className="px-4 py-2 border">Age</th>
-            <th className="px-4 py-2 border">Fixation</th>
-            <th className="px-4 py-2 border">Type</th>
-            <th className="px-4 py-2 border">Sub Type</th>
-            <th className="px-4 py-2 border">Plate Size</th>
-            <th className="px-4 py-2 border">Screws</th>
-            <th className="px-4 py-2 border">Elaboration</th>
-            <th className="px-4 py-2 border">Material Used</th>
-            <th className="px-4 py-2 border">Description</th>
-            <th className="px-4 py-2 border">Created At</th>
+    <div className="overflow-auto rounded-lg shadow-sm border border-gray-200">
+      <table className="min-w-full text-sm text-gray-800">
+        <thead className="bg-gray-50 sticky top-0 z-10">
+          <tr className="text-left">
+            {[
+              "#",
+              "Patient Name",
+              "Age",
+              "Fixation",
+              "Type",
+              "Sub Type",
+              "Plate Size",
+              "Screws",
+              "Elaboration",
+              "Material Used",
+              "Description",
+              "Created At",
+            ].map((head, idx) => (
+              <th key={idx} className="px-4 py-3 border-b font-medium">
+                {head}
+              </th>
+            ))}
           </tr>
         </thead>
+
         <tbody>
           {surgeries.map((surgery, index) => (
-            <tr key={surgery.id} className="hover:bg-gray-50">
-              <td className="px-4 py-2 border">{index + 1}</td>
-              <td className="px-4 py-2 border">
+            <tr
+              key={surgery.id}
+              className="hover:bg-gray-50 transition-colors"
+            >
+              <td className="px-4 py-3 border-b">{index + 1}</td>
+              <td className="px-4 py-3 border-b">
                 <Link
                   to={`/followup/${surgery.id}`}
                   onClick={() => handleClick(surgery.patient_detail?.id)}
+                  className="text-blue-600 hover:underline"
                 >
                   {surgery.patient_detail?.first_name}{" "}
                   {surgery.patient_detail?.last_name}
                 </Link>
               </td>
-              <td className="px-4 py-2 border">{surgery.patient_detail?.age}</td>
-              <td className="px-4 py-2 border">{surgery.fixture}</td>
-              <td className="px-4 py-2 border">{surgery.fixture_type}</td>
-              <td className="px-4 py-2 border">{surgery.fixture_sub_type}</td>
-              <td className="px-4 py-2 border">{surgery.size_of_plate}</td>
-              <td className="px-4 py-2 border">{surgery.number_of_screws}</td>
-              <td className="px-4 py-2 border">{surgery.elaboration}</td>
-              <td className="px-4 py-2 border">{surgery.material_used}</td>
-              <td className="px-4 py-2 border">{surgery.description}</td>
-              <td className="px-4 py-2 border">
+              <td className="px-4 py-3 border-b">{surgery.patient_detail?.age}</td>
+              <td className="px-4 py-3 border-b">{surgery.fixture}</td>
+              <td className="px-4 py-3 border-b">{surgery.fixture_type}</td>
+              <td className="px-4 py-3 border-b">{surgery.fixture_sub_type}</td>
+              <td className="px-4 py-3 border-b">{surgery.size_of_plate}</td>
+              <td className="px-4 py-3 border-b">{surgery.number_of_screws}</td>
+              <td className="px-4 py-3 border-b">{surgery.elaboration}</td>
+              <td className="px-4 py-3 border-b">{surgery.material_used}</td>
+              <td className="px-4 py-3 border-b">{surgery.description}</td>
+              <td className="px-4 py-3 border-b">
                 {new Date(surgery.created_at).toLocaleDateString()}
               </td>
             </tr>
@@ -161,15 +149,13 @@ const Surgeries = () => {
   return (
     <>
       <title>Patients - Trauma Registry</title>
-      {/* <title> tag doesn't work here properly; use Helmet for SEO */}
-      <div className="p-4 min-h-[300px]">
+
+      <div className="p-6 min-h-[300px]">
         {loading ? (
-          <div className="flex justify-center items-center h-full w-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-          </div>
+         <Loader />
         ) : surgeries.length === 0 ? (
-          <div className="bg-gray-50 border border-gray-200 rounded p-6 text-center">
-            <p className="text-gray-500">No surgeries found.</p>
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 text-center text-gray-500">
+            No surgeries found.
           </div>
         ) : isSmallScreen ? (
           renderCards()
@@ -182,3 +168,18 @@ const Surgeries = () => {
 };
 
 export default Surgeries;
+
+// Reusable UI components
+const CardItem = ({ label, value }) => (
+  <div>
+    <p className="font-medium text-gray-700">{label}:</p>
+    <p className="text-gray-600">{value}</p>
+  </div>
+);
+
+const CardText = ({ label, value }) => (
+  <div className="mt-3">
+    <p className="font-medium text-gray-700">{label}:</p>
+    <p className="text-sm text-gray-600">{value}</p>
+  </div>
+);

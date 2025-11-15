@@ -80,6 +80,7 @@ const FollowUp = () => {
           }
         );
         const data = res.data.data[0];
+        if(res.data.message === "Unauthenticated") return navigate("/");
         setFormData((prev) => ({
           ...prev,
           patient_name: [data.first_name, data.last_name].join(" "),

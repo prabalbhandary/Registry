@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { URL } from "../components/URL";
+import Loader from "../components/Loader";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -55,9 +56,7 @@ const Profile = () => {
           </div>
 
           {loading ? (
-            <div className="flex justify-center items-center h-full w-full">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-            </div>
+            <Loader />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
               <div className="flex items-center">

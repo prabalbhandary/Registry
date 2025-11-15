@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
@@ -11,23 +12,22 @@ const Patients = () => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-  try {
-    const res = await axios.get(`${URL}/patient-detail`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+      try {
+        const res = await axios.get(`${URL}/patient-detail`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
 
-    // Filter all patients with femur_fracture.treatment_status === "followup"
-    const filteredPatients = res.data.data.filter(
-      (patient) =>
-        patient.femur_fracture?.treatment_status === "followup"
-    );
+        const filteredPatients = res.data.data.filter(
+          (patient) =>
+            patient.femur_fracture?.treatment_status === "followup"
+        );
 
-    setPatients(filteredPatients);
-  } catch (error) {
-    toast.error("Error fetching patients");
-  }
-  setLoading(false);
-};
+        setPatients(filteredPatients);
+      } catch (error) {
+        toast.error("Error fetching patients");
+      }
+      setLoading(false);
+    };
 
     fetchPatients();
   }, []);
@@ -35,48 +35,53 @@ const Patients = () => {
   return (
     <>
       <title>Surgeries - Trauma Registry</title>
-      <div className="p-4">
+
+      <div className="p-6 min-h-[300px]">
         {loading ? (
-          <div className="flex justify-center items-center h-full w-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-          </div>
+          <Loader />
         ) : patients.length === 0 ? (
-          <p>No patients found.</p>
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 text-center text-gray-500">
+            No patients found.
+          </div>
         ) : (
-          <table className="min-w-full border border-gray-300">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border px-4 py-2">#</th>
-                <th className="border px-4 py-2">Name</th>
-                <th className="border px-4 py-2">Hospital Number</th>
-                <th className="border px-4 py-2">Contact Number</th>
-                <th className="border px-4 py-2">Mechanism of Injury</th>
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient, index) => (
-                <tr key={patient.id} className="hover:bg-gray-100">
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td
-                    className="border px-4 py-2 cursor-pointer text-blue-600 underline"
-                    onClick={() => {
-                      localStorage.setItem("patientId", patient.id);
-                      navigate("/surgery");
-                    }}
-                  >
-                    {patient.first_name} {patient.last_name}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {patient.hospital_number}
-                  </td>
-                  <td className="border px-4 py-2">{patient.phone_number}</td>
-                  <td className="border px-4 py-2">
-                    {patient.mechanism_of_injury}
-                  </td>
+          <div className="overflow-auto rounded-lg shadow-sm border border-gray-200">
+            <table className="min-w-full text-sm text-gray-800">
+              <thead className="bg-gray-50 sticky top-0 z-10">
+                <tr>
+                  <TableHead>#</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Hospital Number</TableHead>
+                  <TableHead>Contact Number</TableHead>
+                  <TableHead>Mechanism of Injury</TableHead>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {patients.map((patient, index) => (
+                  <tr
+                    key={patient.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <TableCell>{index + 1}</TableCell>
+
+                    <td
+                      className="px-4 py-3 border-b text-blue-600 font-medium cursor-pointer hover:underline"
+                      onClick={() => {
+                        localStorage.setItem("patientId", patient.id);
+                        navigate("/surgery");
+                      }}
+                    >
+                      {patient.first_name} {patient.last_name}
+                    </td>
+
+                    <TableCell>{patient.hospital_number}</TableCell>
+                    <TableCell>{patient.phone_number}</TableCell>
+                    <TableCell>{patient.mechanism_of_injury}</TableCell>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </>
@@ -84,3 +89,12 @@ const Patients = () => {
 };
 
 export default Patients;
+
+// Reusable UI components
+const TableHead = ({ children }) => (
+  <th className="px-4 py-3 border-b font-semibold text-left">{children}</th>
+);
+
+const TableCell = ({ children }) => (
+  <td className="px-4 py-3 border-b">{children}</td>
+);
