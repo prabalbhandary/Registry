@@ -43,8 +43,8 @@ const DashboardLayout = () => {
         <Navbar />
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="surgeries" element={<Surgeries />} />
-          <Route path="patients" element={<Patients />} />
+          <Route path="patients/surgeries" element={<Surgeries />} />
+          <Route path="patients/follow-up" element={<Patients />} />
           <Route path="users" element={<Users />} />
           <Route path="profile" element={<Profile />} />
           <Route path="diagnosis" element={<Diagnosis />} />

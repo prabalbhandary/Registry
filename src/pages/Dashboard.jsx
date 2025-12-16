@@ -27,7 +27,7 @@ const Dashboard = () => {
 
       setCounts((prev) => ({
         ...prev,
-        [key]: res.data.count || 0,
+        [key]: res.data.data || 0,
       }));
     } catch (error) {
       toast.error(error.response?.data?.message || "Error fetching data");

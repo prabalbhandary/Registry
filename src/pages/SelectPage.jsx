@@ -56,8 +56,8 @@ const SelectPage = () => {
       console.error("Submit error:", error);
       toast.error(
         error?.response?.data?.message ||
-          error.message ||
-          "Something went wrong."
+        error.message ||
+        "Something went wrong."
       );
     }
   };
@@ -80,8 +80,8 @@ const SelectPage = () => {
         setHospitals((prev) => [
           ...prev,
           {
-            value: res.data.hospital.id,
-            label: res.data.hospital.name,
+            value: res.data.data.id,
+            label: res.data.data.name,
           },
         ]);
         setHospitalName("");
@@ -92,8 +92,8 @@ const SelectPage = () => {
       console.error("Add hospital error:", error);
       toast.error(
         error?.response?.data?.message ||
-          error.message ||
-          "Error adding hospital"
+        error.message ||
+        "Error adding hospital"
       );
     }
   };
@@ -126,8 +126,8 @@ const SelectPage = () => {
       console.error("Add assistant surgeon error:", error);
       toast.error(
         error?.response?.data?.message ||
-          error.message ||
-          "Failed to add assistant surgeon"
+        error.message ||
+        "Failed to add assistant surgeon"
       );
     }
   };

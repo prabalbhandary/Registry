@@ -121,7 +121,7 @@ const Surgery = () => {
         },
       });
       toast.success(res?.data?.message || "Form submitted successfully!");
-      navigate("/surgeries");
+      navigate("/patients/surgeries");
       setSubmittedData(res.data);
     } catch (error) {
       console.error("Error submitting form:", error);

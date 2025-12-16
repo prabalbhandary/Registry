@@ -21,10 +21,10 @@ const Navbar = () => {
           <hr />
         </>
       )}
-      {location.pathname === "/surgeries" && (
+      {location.pathname === "/patients/surgeries" && (
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Follow Up</h2>
+            <h2 className="text-2xl font-bold">Surgeries</h2>
             {/* <Link
               to="/create-surgery"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
@@ -35,10 +35,10 @@ const Navbar = () => {
           <hr />
         </>
       )}
-      {location.pathname === "/patients" && (
+      {location.pathname === "/patients/follow-up" && (
         <>
           <div className="bg-white text-black p-4 flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Surgeries</h2>
+            <h2 className="text-2xl font-bold">Follow Up</h2>
             {/* <Link
               to="/create-patient"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"

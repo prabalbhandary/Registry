@@ -153,7 +153,7 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
-            to="/surgeries"
+            to="/patients/follow-up"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
               isActive
@@ -166,7 +166,7 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
-            to="/patients"
+            to="/patients/surgeries"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
               isActive
