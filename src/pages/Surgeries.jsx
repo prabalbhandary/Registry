@@ -11,9 +11,9 @@ const Patients = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchPatientsWithStatus = async () => {
       try {
-        const res = await axios.get(`${URL}/patient-detail`, {
+        const res = await axios.get(`${URL}/patient-detail?treatment_status=surgery`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
@@ -29,7 +29,7 @@ const Patients = () => {
       setLoading(false);
     };
 
-    fetchPatients();
+    fetchPatientsWithStatus();
   }, []);
 
   return (

@@ -17,39 +17,34 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const fetchCount = useCallback(async (endpoint, key) => {
-    try {
-      const res = await axios.get(`${URL}/${endpoint}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      setCounts((prev) => ({
-        ...prev,
-        [key]: res.data.data || 0,
-      }));
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Error fetching data");
-    }
-  }, []);
-
   useEffect(() => {
-    const loadAllCounts = async () => {
-      setLoading(true);
+    const loadCounts = async () => {
+      try {
+        setLoading(true);
 
-      await Promise.all([
-        fetchCount("surgery-count", "surgeries"),
-        fetchCount("patient-count", "patients"),
-        fetchCount("assistant-surgeon-count", "assistants"),
-        fetchCount("hospital-count", "hospitals"),
-      ]);
+        const res = await axios.get(`${URL}/dashboard-count`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-      setLoading(false);
+        const data = res.data.data;
+
+        setCounts({
+          surgeries: data.surgery || 0,
+          patients: data.patient || 0,
+          assistants: data.assistent_surgeon || 0,
+          hospitals: data.hospital || 0,
+        });
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadAllCounts();
-  }, [fetchCount]);
+    loadCounts();
+  }, []);
 
   // Small stat card component
   const StatCard = ({ label, count, bg, border, short, path }) => (
@@ -89,7 +84,7 @@ const Dashboard = () => {
             bg="bg-yellow-500"
             border="border-yellow-500"
             short="Sur"
-            path="/patients"
+            path="/patients/surgeries"
           />
 
           <StatCard
@@ -98,7 +93,7 @@ const Dashboard = () => {
             bg="bg-gray-500"
             border="border-gray-500"
             short="Pat"
-            path="/surgeries"
+            path="/patients/follow-up"
           />
 
           <StatCard

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SecondNavbar from "../components/SecondNavbar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "../components/URL";
+import Select from "react-select";
 
 const CreateSurgery = () => {
   const navigate = useNavigate();
@@ -11,9 +12,13 @@ const CreateSurgery = () => {
   const [last_name, setLast_name] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [country_id, setCountryId] = useState("");
+  const [province_id, setProvinceId] = useState("");
+  const [district_id, setDistrictId] = useState("");
+  const [address, setAddress] = useState("");
   const [hospital_number, setHospital_number] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -30,14 +35,59 @@ const CreateSurgery = () => {
   const [antibiotic, setAntibiotic] = useState("");
   const [whatTreatment, setWhatTreatment] = useState("");
 
+  const BASE_URL = URL;
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/countries`)
+      .then(res => setCountries(res.data.data))
+      .catch(() => toast.error("Failed to load countries"));
+  }, []);
+
+  useEffect(() => {
+    if (!country_id) return;
+
+    // Check if selected country is Nepal
+    const selectedCountry = countries.find(c => c.id === country_id);
+    const isNepal = selectedCountry?.name?.toLowerCase() === 'nepal';
+
+    if (isNepal) {
+      axios.get(`${BASE_URL}/provinces?country_id=${country_id}`)
+        .then(res => {
+          setProvinces(res.data.data);
+          setProvinceId("");
+          setDistrictId("");
+          setDistricts([]);
+        })
+        .catch(() => toast.error("Failed to load provinces"));
+    } else {
+      // Clear province/district data for non-Nepal countries
+      setProvinces([]);
+      setProvinceId("");
+      setDistricts([]);
+      setDistrictId("");
+    }
+  }, [country_id, countries]);
+
+  useEffect(() => {
+    if (!province_id) return;
+
+    axios.get(`${BASE_URL}/districts?province_id=${province_id}`)
+      .then(res => {
+        setDistricts(res.data.data);
+        setDistrictId("");
+      })
+      .catch(() => toast.error("Failed to load districts"));
+  }, [province_id]);
+
   const [fieldErrors, setFieldErrors] = useState({
     first_name: "",
     last_name: "",
     age: "",
     gender: "",
-    nationality: "",
-    province: "",
-    district: "",
+    country_id: "",
+    province_id: "",
+    district_id: "",
+    address: "",
     hospital_number: "",
     phone_number: "",
     occupation: "",
@@ -48,7 +98,18 @@ const CreateSurgery = () => {
     primaryTreatment: "",
   });
 
-  const [districts, setDistricts] = useState([]);
+  // Convert countries to react-select format
+  const countryOptions = countries.map(country => ({
+    value: country.id,
+    label: country.name
+  }));
+
+  // Get selected country for react-select
+  const selectedCountry = countryOptions.find(option => option.value === country_id) || null;
+
+  // Check if selected country is Nepal
+  const selectedCountryData = countries.find(c => c.id === country_id);
+  const isNepal = selectedCountryData?.name?.toLowerCase() === 'nepal';
 
   const calculatePresentationDelay = () => {
     if (!incidentDate || !incidentTime) return "";
@@ -66,6 +127,14 @@ const CreateSurgery = () => {
     return `${hours}h ${minutes}m`;
   };
 
+  const handleCountryChange = (selectedOption) => {
+    setCountryId(selectedOption ? selectedOption.value : "");
+    // Clear address, province, and district when country changes
+    setAddress("");
+    setProvinceId("");
+    setDistrictId("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,9 +143,10 @@ const CreateSurgery = () => {
       last_name: "",
       age: "",
       gender: "",
-      nationality: "",
-      province: "",
-      district: "",
+      country_id: "",
+      province_id: "",
+      district_id: "",
+      address: "",
       hospital_number: "",
       phone_number: "",
       occupation: "",
@@ -106,18 +176,28 @@ const CreateSurgery = () => {
       formValid = false;
       newErrors.gender = "Gender is required.";
     }
-    if (!nationality) {
+    if (!country_id) {
       formValid = false;
-      newErrors.nationality = "Nationality is required.";
+      newErrors.country_id = "Country is required.";
     }
-    if (!province) {
-      formValid = false;
-      newErrors.province = "Province is required.";
+
+    // Conditional validation based on country
+    if (isNepal) {
+      if (!province_id) {
+        formValid = false;
+        newErrors.province_id = "Province is required.";
+      }
+      if (!district_id) {
+        formValid = false;
+        newErrors.district_id = "District is required.";
+      }
+    } else {
+      if (!address) {
+        formValid = false;
+        newErrors.address = "Address is required.";
+      }
     }
-    if (!district) {
-      formValid = false;
-      newErrors.district = "District is required.";
-    }
+
     if (!hospital_number) {
       formValid = false;
       newErrors.hospital_number = "Hospital number is required.";
@@ -163,9 +243,10 @@ const CreateSurgery = () => {
         last_name,
         age,
         gender,
-        nationality,
-        province,
-        district,
+        countries_id: country_id,
+        provinces_id: isNepal ? province_id : null,
+        districts_id: isNepal ? district_id : null,
+        address: !isNepal ? address : null,
         hospital_number,
         phone_number,
         occupation,
@@ -199,122 +280,6 @@ const CreateSurgery = () => {
     }
   };
 
-  const handleProvinceChange = (e) => {
-    const selectedProvince = e.target.value;
-    setProvince(selectedProvince);
-
-    switch (selectedProvince) {
-      case "koshi province":
-        setDistricts([
-          "Jhapa",
-          "Illam",
-          "Paachthar",
-          "Taplejung",
-          "Sankhuwasawa",
-          "Therathum",
-          "Bhojpur",
-          "Dhankuta",
-          "Khotang",
-          "Sunsari",
-          "Morong",
-          "Solukhumbu",
-          "Okhaldhunga",
-          "Udaypur",
-        ]);
-        break;
-      case "madesh province":
-        setDistricts([
-          "Parsa",
-          "Bara",
-          "Rautahat",
-          "Sarlahi",
-          "Siraha",
-          "Dhanusha",
-          "Saptari",
-          "Mahottari",
-        ]);
-        break;
-      case "bagmati province":
-        setDistricts([
-          "Kathmandu",
-          "Makwanpur",
-          "Lalitpur",
-          "Bhaktapur",
-          "Nuwakot",
-          "Rasuwa",
-          "Dhading",
-          "Kavrepalanchok",
-          "Sindhupalchok",
-          "Sindhuli",
-          "Dolakha",
-          "Ramechhap",
-          "Chitwan",
-        ]);
-        break;
-      case "gandaki province":
-        setDistricts([
-          "Gorkha",
-          "Tanahu",
-          "Syanja",
-          "Lamjung",
-          "Kaski",
-          "Nawalparashi East",
-          "Manang",
-          "Mustang",
-          "Parbat",
-          "Baglung",
-          "Myagdi",
-        ]);
-        break;
-      case "lumbini province":
-        setDistricts([
-          "Kapilvastu",
-          "Gulmi",
-          "Rupandehi",
-          "Banke",
-          "Argakhachi",
-          "Bardiya",
-          "Dang",
-          "Rukum East",
-          "Pyuthan",
-          "Nawalparashi West",
-          "Palpa",
-          "Rolpa",
-        ]);
-        break;
-      case "karnali province":
-        setDistricts([
-          "Rukum West",
-          "Salyan",
-          "Dolpa",
-          "Jumla",
-          "Mugu",
-          "Humla",
-          "Kalikot",
-          "Jajarkot",
-          "Dailekh",
-          "Surkhet",
-        ]);
-        break;
-      case "sudurpaschim province":
-        setDistricts([
-          "Darchula",
-          "Baitadi",
-          "Dadeldhura",
-          "Kanchanpur",
-          "Bajhang",
-          "Bajura",
-          "Doti",
-          "Achham",
-          "Kailali",
-        ]);
-        break;
-      default:
-        setDistricts([]);
-        break;
-    }
-  };
-
   const handleMoIChange = (e) => {
     setMechanism_of_injury(e.target.value);
     setType_of_Injury("");
@@ -324,6 +289,34 @@ const CreateSurgery = () => {
 
   const handleSubMoIChange = (e) => {
     setType_of_Injury(e.target.value);
+  };
+
+  // Custom styles for react-select to match your design
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      minHeight: '56px',
+      borderColor: state.isFocused ? '#6366f1' : '#d1d5db',
+      boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.5)' : 'none',
+      '&:hover': {
+        borderColor: state.isFocused ? '#6366f1' : '#d1d5db',
+      },
+      borderRadius: '0.5rem',
+      padding: '0.5rem',
+    }),
+    input: (base) => ({
+      ...base,
+      margin: 0,
+      padding: 0,
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      padding: '0 0.5rem',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#9ca3af',
+    }),
   };
 
   return (
@@ -405,93 +398,123 @@ const CreateSurgery = () => {
               )}
             </div>
 
-            {/* Nationality */}
+            {/* Country - Searchable */}
             <div className="flex flex-col">
               <label
-                htmlFor="nationality"
-                className="text-lg font-medium text-gray-700"
+                htmlFor="country"
+                className="text-lg font-medium text-gray-700 mb-2"
               >
-                Nationality
+                Country
               </label>
-              <select
-                id="nationality"
-                name="nationality"
-                value={nationality}
-                onChange={(e) => setNationality(e.target.value)}
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="">Select Nationality</option>
-                <option value="nepali">Nepali</option>
-                <option value="non-nepali">Non-Nepali</option>
-              </select>
-              {fieldErrors.nationality && (
+              <Select
+                id="country"
+                name="country"
+                value={selectedCountry}
+                onChange={handleCountryChange}
+                options={countryOptions}
+                styles={customSelectStyles}
+                placeholder="Search or select country..."
+                isClearable
+                isSearchable
+                noOptionsMessage={() => "No country found"}
+              />
+              {fieldErrors.country_id && (
                 <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.nationality}
+                  {fieldErrors.country_id}
                 </p>
               )}
             </div>
 
-            {/* Province */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="province"
-                className="text-lg font-medium text-gray-700"
-              >
-                Province
-              </label>
-              <select
-                id="province"
-                name="province"
-                value={province}
-                onChange={handleProvinceChange}
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="">Select Province</option>
-                <option value="koshi province">Koshi Province</option>
-                <option value="madesh province">Madesh Province</option>
-                <option value="bagmati province">Bagmati Province</option>
-                <option value="gandaki province">Gandaki Province</option>
-                <option value="lumbini province">Lumbini Province</option>
-                <option value="karnali province">Karnali Province</option>
-                <option value="sudurpaschim province">
-                  Sudurpaschim Province
-                </option>
-              </select>
-              {fieldErrors.province && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.province}
-                </p>
-              )}
-            </div>
+            {/* Conditional Province/District for Nepal OR Address for other countries */}
+            {isNepal ? (
+              <>
+                {/* Province */}
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="province"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    Province
+                  </label>
+                  <select
+                    id="province"
+                    name="province"
+                    value={province_id}
+                    onChange={(e) => setProvinceId(e.target.value)}
+                    disabled={!country_id}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Select Province</option>
+                    {provinces.map((prov) => (
+                      <option key={prov.id} value={prov.id}>
+                        {prov.name}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldErrors.province_id && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.province_id}
+                    </p>
+                  )}
+                </div>
 
-            {/* District */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="district"
-                className="text-lg font-medium text-gray-700"
-              >
-                District
-              </label>
-              <select
-                id="district"
-                name="district"
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="">Select District</option>
-                {districts.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-              {fieldErrors.district && (
-                <p className="text-red-500 text-sm mt-1">
-                  {fieldErrors.district}
-                </p>
-              )}
-            </div>
+                {/* District */}
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="district"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    District
+                  </label>
+                  <select
+                    id="district"
+                    name="district"
+                    value={district_id}
+                    onChange={(e) => setDistrictId(e.target.value)}
+                    disabled={!province_id}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Select District</option>
+                    {districts.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldErrors.district_id && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.district_id}
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              country_id && (
+                /* Address field for non-Nepal countries */
+                <div className="flex flex-col md:col-span-2">
+                  <label
+                    htmlFor="address"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    Address
+                  </label>
+                  <textarea
+                    id="address"
+                    name="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    rows="3"
+                    placeholder="Enter full address"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  {fieldErrors.address && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.address}
+                    </p>
+                  )}
+                </div>
+              )
+            )}
 
             {/* Hospital Number */}
             <div className="flex flex-col">

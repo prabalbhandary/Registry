@@ -153,6 +153,19 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
+            to="/all-patients"
+            onClick={() => setMenuOpen(false)}
+            className={({ isActive }) =>
+              isActive
+                ? "flex items-center space-x-4 p-3 rounded-lg bg-gray-500 text-white"
+                : "flex items-center space-x-4 p-3 rounded-lg text-gray-800 hover:bg-gray-400 hover:text-black"
+            }
+          >
+            <CiUser className="text-xl" />
+            <span>Patients</span>
+          </NavLink>
+
+          <NavLink
             to="/patients/follow-up"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>

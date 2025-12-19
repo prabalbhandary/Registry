@@ -6,104 +6,103 @@ import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 
 const Surgeries = () => {
-  const [surgeries, setSurgeries] = useState([]);
+  const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
-    const checkScreenSize = () => {
+    const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 1024);
     };
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    const fetchSurgeries = async () => {
+    const fetchPatients = async () => {
       try {
-        const res = await axios.get(`${URL}/create-surgery`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setSurgeries(res.data.data || []);
+        const res = await axios.get(
+          `${URL}/patient-detail?treatment_status=follow_up`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        setPatients(res.data?.data || []);
       } catch (error) {
         toast.error(
-          error.response?.data?.message || "Error fetching surgeries"
+          error.response?.data?.message || "Error fetching patients"
         );
       } finally {
         setLoading(false);
       }
     };
-    fetchSurgeries();
+
+    fetchPatients();
   }, []);
 
-  const handleClick = (patient_detail_id) => {
+  const handleClick = (patientId) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (patient_detail_id) {
-      localStorage.setItem("patient_detail_id", patient_detail_id);
+    if (patientId) {
+      localStorage.setItem("patient_detail_id", patientId);
     }
   };
 
+  /* -------------------- MOBILE CARDS -------------------- */
   const renderCards = () =>
-    surgeries.map((surgery) => (
+    patients.map((patient) => (
       <div
-        key={surgery.id}
-        onClick={() => handleClick(surgery.patient_detail?.id)}
-        className="cursor-pointer bg-white rounded-xl shadow-md p-5 mb-5 border border-gray-100 hover:shadow-lg transition-all duration-200"
+        key={patient.id}
+        onClick={() => handleClick(patient.id)}
+        className="cursor-pointer bg-white rounded-xl shadow-md p-5 mb-5 border hover:shadow-lg transition"
       >
-        {/* Header */}
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between mb-2">
           <h3 className="font-semibold text-lg text-gray-800">
-            {surgery.patient_detail?.first_name}{" "}
-            {surgery.patient_detail?.last_name}
+            {patient.first_name} {patient.last_name}
           </h3>
           <span className="text-xs text-gray-500">
-            {new Date(surgery.created_at).toLocaleDateString()}
+            {new Date(patient.created_at).toLocaleDateString()}
           </span>
         </div>
 
-        {/* Details */}
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <CardItem label="Age" value={surgery.patient_detail?.age} />
-          <CardItem label="Fixture" value={surgery.fixture} />
-          <CardItem label="Type" value={surgery.fixture_type} />
-          <CardItem label="Sub Type" value={surgery.fixture_sub_type} />
-          <CardItem label="Plate Size" value={surgery.size_of_plate} />
-          <CardItem label="Screws" value={surgery.number_of_screws} />
-          <CardItem label="Material" value={surgery.material_used} />
+          <CardItem label="Age" value={patient.age} />
+          <CardItem label="Gender" value={patient.gender} />
+          <CardItem label="Hospital No." value={patient.hospital_number} />
+          <CardItem
+            label="Injury Type"
+            value={patient.type_of_injury}
+          />
         </div>
 
-        {/* Description */}
-        <CardText label="Description" value={surgery.description} />
-
-        {/* Elaboration */}
-        {surgery.elaboration && (
-          <CardText label="Elaboration" value={surgery.elaboration} />
+        {patient.femur_fracture && (
+          <CardText
+            label="Femur Fracture Diagnosis"
+            value={patient.femur_fracture.diagonis}
+          />
         )}
       </div>
     ));
 
+  /* -------------------- DESKTOP TABLE -------------------- */
   const renderTable = () => (
-    <div className="overflow-auto rounded-lg shadow-sm border border-gray-200">
+    <div className="overflow-auto rounded-lg border shadow-sm">
       <table className="min-w-full text-sm text-gray-800">
-        <thead className="bg-gray-50 sticky top-0 z-10">
-          <tr className="text-left">
+        <thead className="bg-gray-50">
+          <tr>
             {[
               "#",
               "Patient Name",
               "Age",
-              "Fixation",
-              "Type",
-              "Sub Type",
-              "Plate Size",
-              "Screws",
-              "Elaboration",
-              "Material Used",
-              "Description",
+              "Gender",
+              "Hospital No.",
+              "Injury Type",
+              "Follow-up Status",
               "Created At",
-            ].map((head, idx) => (
-              <th key={idx} className="px-4 py-3 border-b font-medium">
+            ].map((head, i) => (
+              <th key={i} className="px-4 py-3 border-b text-left font-medium">
                 {head}
               </th>
             ))}
@@ -111,33 +110,36 @@ const Surgeries = () => {
         </thead>
 
         <tbody>
-          {surgeries.map((surgery, index) => (
+          {patients.map((patient, index) => (
             <tr
-              key={surgery.id}
-              className="hover:bg-gray-50 transition-colors"
+              key={patient.id}
+              className="hover:bg-gray-50 transition"
             >
               <td className="px-4 py-3 border-b">{index + 1}</td>
+
               <td className="px-4 py-3 border-b">
                 <Link
-                  to={`/followup/${surgery.id}`}
-                  onClick={() => handleClick(surgery.patient_detail?.id)}
+                  to={`/followup/${patient.id}`}
+                  onClick={() => handleClick(patient.id)}
                   className="text-blue-600 hover:underline"
                 >
-                  {surgery.patient_detail?.first_name}{" "}
-                  {surgery.patient_detail?.last_name}
+                  {patient.first_name} {patient.last_name}
                 </Link>
               </td>
-              <td className="px-4 py-3 border-b">{surgery.patient_detail?.age}</td>
-              <td className="px-4 py-3 border-b">{surgery.fixture}</td>
-              <td className="px-4 py-3 border-b">{surgery.fixture_type}</td>
-              <td className="px-4 py-3 border-b">{surgery.fixture_sub_type}</td>
-              <td className="px-4 py-3 border-b">{surgery.size_of_plate}</td>
-              <td className="px-4 py-3 border-b">{surgery.number_of_screws}</td>
-              <td className="px-4 py-3 border-b">{surgery.elaboration}</td>
-              <td className="px-4 py-3 border-b">{surgery.material_used}</td>
-              <td className="px-4 py-3 border-b">{surgery.description}</td>
+
+              <td className="px-4 py-3 border-b">{patient.age}</td>
+              <td className="px-4 py-3 border-b">{patient.gender}</td>
               <td className="px-4 py-3 border-b">
-                {new Date(surgery.created_at).toLocaleDateString()}
+                {patient.hospital_number}
+              </td>
+              <td className="px-4 py-3 border-b">
+                {patient.type_of_injury}
+              </td>
+              <td className="px-4 py-3 border-b capitalize">
+                {patient.femur_fracture?.treatment_status || "—"}
+              </td>
+              <td className="px-4 py-3 border-b">
+                {new Date(patient.created_at).toLocaleDateString()}
               </td>
             </tr>
           ))}
@@ -147,39 +149,36 @@ const Surgeries = () => {
   );
 
   return (
-    <>
-      <title>Patients - Trauma Registry</title>
-
-      <div className="p-6 min-h-[300px]">
-        {loading ? (
-         <Loader />
-        ) : surgeries.length === 0 ? (
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 text-center text-gray-500">
-            No surgeries found.
-          </div>
-        ) : isSmallScreen ? (
-          renderCards()
-        ) : (
-          renderTable()
-        )}
-      </div>
-    </>
+    <div className="p-6 min-h-[300px]">
+      {loading ? (
+        <Loader />
+      ) : patients.length === 0 ? (
+        <div className="bg-white border rounded-lg p-8 text-center text-gray-500">
+          No follow-up patients found.
+        </div>
+      ) : isSmallScreen ? (
+        renderCards()
+      ) : (
+        renderTable()
+      )}
+    </div>
   );
 };
 
 export default Surgeries;
 
-// Reusable UI components
+/* -------------------- UI HELPERS -------------------- */
+
 const CardItem = ({ label, value }) => (
   <div>
-    <p className="font-medium text-gray-700">{label}:</p>
-    <p className="text-gray-600">{value}</p>
+    <p className="font-medium text-gray-700">{label}</p>
+    <p className="text-gray-600">{value || "—"}</p>
   </div>
 );
 
 const CardText = ({ label, value }) => (
   <div className="mt-3">
-    <p className="font-medium text-gray-700">{label}:</p>
-    <p className="text-sm text-gray-600">{value}</p>
+    <p className="font-medium text-gray-700">{label}</p>
+    <p className="text-sm text-gray-600">{value || "—"}</p>
   </div>
 );

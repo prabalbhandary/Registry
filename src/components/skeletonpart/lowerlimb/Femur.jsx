@@ -62,7 +62,7 @@ const Femur = () => {
         treatment_status: type,
       });
       toast.success(res.data.message);
-      navigate("/patients");
+      navigate(type === "followup" ? "/patients/followup" : "/patients/surgeries");
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {

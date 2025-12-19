@@ -32,6 +32,7 @@ import Foot from "./skeletonpart/lowerlimb/Foot";
 import SelectPage from "../pages/SelectPage";
 import Surgery from "../pages/Surgery";
 import FollowUp from "../pages/FollowUp";
+import AllPatients from "../pages/AllPatients";
 
 const DashboardLayout = () => {
   return (
@@ -43,6 +44,7 @@ const DashboardLayout = () => {
         <Navbar />
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="/all-patients" element={<AllPatients />} />
           <Route path="patients/surgeries" element={<Surgeries />} />
           <Route path="patients/follow-up" element={<Patients />} />
           <Route path="users" element={<Users />} />
