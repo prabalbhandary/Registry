@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { URL } from "../../URL";
 
-const Femur = () => {
+const Humerus = () => {
   const patientId = localStorage.getItem("patientId");
   const navigate = useNavigate();
   const [fractureType, setFractureType] = useState("");
@@ -137,7 +137,7 @@ const Femur = () => {
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-md">
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-        Femur Fracture Assessment
+        Humerus Fracture Assessment
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -252,11 +252,10 @@ const Femur = () => {
                             <div
                               key={sub}
                               onClick={() => setSubClassification(sub)}
-                              className={`cursor-pointer border-2 rounded-lg p-2 transition-all duration-200 ${
-                                isSelected
+                              className={`cursor-pointer border-2 rounded-lg p-2 transition-all duration-200 ${isSelected
                                   ? "border-blue-600"
                                   : "border-gray-300"
-                              }`}
+                                }`}
                             >
                               <img
                                 src={`/images/classification/${code}.png`}
@@ -370,33 +369,35 @@ const Femur = () => {
       {formValid && (
         <>
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
-          <div className="flex gap-3 items-center">
-            <input
-              type="radio"
-              name="treatment_status"
-              id="followup"
-              value="followup"
-            />
-            <label htmlFor="followup">
-              Save to Follow Up
-            </label>
-          </div>
+            <div className="flex gap-3 items-center">
+              <input
+                type="radio"
+                name="treatment_status"
+                id="followup"
+                value="followup"
+                onChange={(e) => setTreatmentStatus(e.target.value)}
+              />
+              <label htmlFor="followup">
+                Save to Follow Up
+              </label>
+            </div>
 
-          <div className="flex gap-3 items-center">
-            <input
-              type="radio"
-              name="treatment_status"
-              id="surgery_radio"
-              value="surgery"
-            />
-            <label
-              htmlFor="surgery_radio"
-            >
-              Proceed to Surgery
-            </label>
-          </div>
+            <div className="flex gap-3 items-center">
+              <input
+                type="radio"
+                name="treatment_status"
+                id="surgery_radio"
+                value="surgery"
+                onChange={(e) => setTreatmentStatus(e.target.value)}
+              />
+              <label
+                htmlFor="surgery_radio"
+              >
+                Proceed to Surgery
+              </label>
+            </div>
 
-        </div>
+          </div>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
             onClick={handleSaveAnother}
@@ -424,4 +425,4 @@ const Femur = () => {
   );
 };
 
-export default Femur;
+export default Humerus;
