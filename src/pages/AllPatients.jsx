@@ -53,7 +53,7 @@ const AllPatients = () => {
                 <th className="px-4 py-3 text-left">Phone</th>
                 <th className="px-4 py-3 text-left">Injury Type</th>
                 <th className="px-4 py-3 text-left">Arrival Date</th>
-                <th className="px-4 py-3 text-left">Status</th>
+                {/* <th className="px-4 py-3 text-left">Status</th> */}
               </tr>
             </thead>
 
@@ -87,7 +87,7 @@ const AllPatients = () => {
                     {new Date(patient.arrival_date).toLocaleDateString()}
                   </td>
 
-                  <td className="px-4 py-2">
+                  {/* <td className="px-4 py-2">
                     {patient.is_completed ? (
                       <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
                         Completed
@@ -97,7 +97,7 @@ const AllPatients = () => {
                         Pending
                       </span>
                     )}
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

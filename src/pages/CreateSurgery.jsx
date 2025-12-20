@@ -243,9 +243,9 @@ const CreateSurgery = () => {
         last_name,
         age,
         gender,
-        countries_id: country_id,
-        provinces_id: isNepal ? province_id : null,
-        districts_id: isNepal ? district_id : null,
+        country_id,
+        province_id: isNepal ? province_id : null,
+        district_id: isNepal ? district_id : null,
         address: !isNepal ? address : null,
         hospital_number,
         phone_number,
@@ -899,7 +899,7 @@ const CreateSurgery = () => {
                     rows="4"
                     value={whatTreatment}
                     onChange={(e) => setWhatTreatment(e.target.value)}
-                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 col-span-2"
                   />
                 </div>
               </>
@@ -923,6 +923,7 @@ const CreateSurgery = () => {
               Cancel
             </button>
             <button
+              onClick={handleSubmit}
               type="submit"
               className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
             >

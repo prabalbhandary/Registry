@@ -17,6 +17,7 @@ const Femur = () => {
   const [savedMessage, setSavedMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosis, setDiagnosis] = useState("");
+  const [treatmentStatus, setTreatmentStatus] = useState("");
 
   const fractureOptions = ["Closed", "Open"];
   const sideOptions = ["Right", "Left"];
@@ -47,10 +48,9 @@ const Femur = () => {
     "GA IIIC": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
   };
 
-  const handleSave = async (type) => {
+  const handleSave = async () => {
     try {
       setIsLoading(true);
-      setSavedMessage("✅ Saved to Follow Up!");
       const res = await axios.post(`${URL}/femur-fracture`, {
         patient_detail_id: patientId,
         fracture_type: fractureType,
@@ -59,10 +59,10 @@ const Femur = () => {
         fracture_classification: classification,
         fracture_sub_classification: subClassification,
         plan,
-        treatment_status: type,
+        treatment_status: treatmentStatus,
       });
       toast.success(res.data.message);
-      navigate(type === "followup" ? "/patients/followup" : "/patients/surgeries");
+      navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {
@@ -363,7 +363,8 @@ const Femur = () => {
 
       {/* Action Buttons */}
       {formValid && (
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
+        <>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="flex gap-3 items-center">
             <input
               type="radio"
@@ -371,7 +372,7 @@ const Femur = () => {
               id="followup"
               value="0"
             />
-            <label htmlFor="followup" onClick={() => handleSave("followup")}>
+            <label htmlFor="followup">
               Save to Follow Up
             </label>
           </div>
@@ -385,20 +386,27 @@ const Femur = () => {
             />
             <label
               htmlFor="surgery_radio"
-              onClick={() => handleSave("surgery")}
             >
               Proceed to Surgery
             </label>
           </div>
 
+        </div>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
             onClick={() => navigate("/add-surgerical-details")}
             disabled={isLoading}
           >
-            Add Another Injury
+            Add Another Fracture
           </button>
-        </div>
+          <button
+            className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
+            onClick={() => handleSave()}
+            disabled={isLoading}
+          >
+            Submit
+          </button>
+        </>
       )}
 
       {/* Save message */}
