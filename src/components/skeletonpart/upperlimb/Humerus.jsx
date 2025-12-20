@@ -48,7 +48,7 @@ const Humerus = () => {
     "GA IIIC": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
   };
 
-  const handleSave = async () => {
+  const handleSave = async (buttonType) => {
     try {
       setIsLoading(true);
       const res = await axios.post(`${URL}/humerus-fracture`, {
@@ -62,17 +62,16 @@ const Humerus = () => {
         treatment_status: treatmentStatus,
       });
       toast.success(res.data.message);
-      navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
+      if(buttonType === "save"){
+        navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
+      } else{
+        navigate("/add-surgerical-details")
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSaveAnother = () => {
-    // setTreatmentStatus(treatmentStatus)
-    handleSave();
   };
 
   const resetForm = (field) => {
@@ -400,14 +399,14 @@ const Humerus = () => {
           </div>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
-            onClick={handleSaveAnother}
+            onClick={() => handleSave("saveAnother")}
             disabled={isLoading}
           >
             Add Another Fracture
           </button>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
-            onClick={() => handleSave()}
+            onClick={() => handleSave("save")}
             disabled={isLoading}
           >
             Submit

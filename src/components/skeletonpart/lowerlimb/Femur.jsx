@@ -48,7 +48,7 @@ const Femur = () => {
     "GA IIIC": ["AO32A (Simple)", "AO32B (Wedge)", "AO32C (Complex)"],
   };
 
-  const handleSave = async () => {
+  const handleSave = async (buttonType) => {
     try {
       setIsLoading(true);
       const res = await axios.post(`${URL}/femur-fracture`, {
@@ -62,7 +62,11 @@ const Femur = () => {
         treatment_status: treatmentStatus,
       });
       toast.success(res.data.message);
-      navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
+      if(buttonType === "save"){
+        navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
+      } else{
+        navigate("/add-surgerical-details")
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {
@@ -247,11 +251,10 @@ const Femur = () => {
                             <div
                               key={sub}
                               onClick={() => setSubClassification(sub)}
-                              className={`cursor-pointer border-2 rounded-lg p-2 transition-all duration-200 ${
-                                isSelected
+                              className={`cursor-pointer border-2 rounded-lg p-2 transition-all duration-200 ${isSelected
                                   ? "border-blue-600"
                                   : "border-gray-300"
-                              }`}
+                                }`}
                             >
                               <img
                                 src={`/images/classification/${code}.png`}
@@ -365,43 +368,45 @@ const Femur = () => {
       {formValid && (
         <>
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-between">
-          <div className="flex gap-3 items-center">
-            <input
-              type="radio"
-              name="treatment_status"
-              id="followup"
-              value="0"
-            />
-            <label htmlFor="followup">
-              Save to Follow Up
-            </label>
-          </div>
+            <div className="flex gap-3 items-center">
+              <input
+                type="radio"
+                name="treatment_status"
+                id="followup"
+                value="followup"
+                onChange={(e) => setTreatmentStatus(e.target.value)}
+              />
+              <label htmlFor="followup">
+                Save to Follow Up
+              </label>
+            </div>
 
-          <div className="flex gap-3 items-center">
-            <input
-              type="radio"
-              name="treatment_status"
-              id="surgery_radio"
-              value="1"
-            />
-            <label
-              htmlFor="surgery_radio"
-            >
-              Proceed to Surgery
-            </label>
-          </div>
+            <div className="flex gap-3 items-center">
+              <input
+                type="radio"
+                name="treatment_status"
+                id="surgery_radio"
+                value="surgery"
+                onChange={(e) => setTreatmentStatus(e.target.value)}
+              />
+              <label
+                htmlFor="surgery_radio"
+              >
+                Proceed to Surgery
+              </label>
+            </div>
 
-        </div>
+          </div>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
-            onClick={() => navigate("/add-surgerical-details")}
+            onClick={() => handleSave("saveAnother")}
             disabled={isLoading}
           >
             Add Another Fracture
           </button>
           <button
             className="px-4 py-2 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-sm"
-            onClick={() => handleSave()}
+            onClick={() => handleSave("save")}
             disabled={isLoading}
           >
             Submit
