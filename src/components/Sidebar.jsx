@@ -46,7 +46,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile menu toggle button */}
-      <div className="md:hidden p-4 flex justify-between items-center bg-gray-300">
+      <div className="md:hidden p-4 flex justify-between items-center bg-gray-300 z-99">
         <h1
           onClick={() => navigate("/")}
           className="text-xl font-bold text-gray-800"
