@@ -35,6 +35,11 @@ const CreateSurgery = () => {
   const [antibiotic, setAntibiotic] = useState("");
   const [whatTreatment, setWhatTreatment] = useState("");
 
+  const selectPortalStyles = {
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    menu: (base) => ({ ...base, zIndex: 9999 }),
+  };
+
   const BASE_URL = URL;
 
   useEffect(() => {
@@ -291,25 +296,23 @@ const CreateSurgery = () => {
     setType_of_Injury(e.target.value);
   };
 
-  // Custom styles for react-select to match your design and be mobile-friendly
+  // Custom styles for react-select to match your design
   const customSelectStyles = {
     control: (base, state) => ({
       ...base,
-      minHeight: '48px',
+      minHeight: '56px',
       borderColor: state.isFocused ? '#6366f1' : '#d1d5db',
       boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.5)' : 'none',
       '&:hover': {
         borderColor: state.isFocused ? '#6366f1' : '#d1d5db',
       },
       borderRadius: '0.5rem',
-      padding: '0.25rem',
-      fontSize: '16px', // Prevents zoom on iOS
+      padding: '0.5rem',
     }),
     input: (base) => ({
       ...base,
       margin: 0,
       padding: 0,
-      fontSize: '16px', // Prevents zoom on iOS
     }),
     valueContainer: (base) => ({
       ...base,
@@ -318,15 +321,6 @@ const CreateSurgery = () => {
     placeholder: (base) => ({
       ...base,
       color: '#9ca3af',
-      fontSize: '16px', // Prevents zoom on iOS
-    }),
-    menu: (base) => ({
-      ...base,
-      zIndex: 9999,
-    }),
-    option: (base) => ({
-      ...base,
-      fontSize: '16px', // Prevents zoom on iOS
     }),
   };
 
@@ -334,646 +328,615 @@ const CreateSurgery = () => {
     <>
       <title>Create Surgery - Trauma Registry</title>
       <SecondNavbar completedIndex={completedIndex} />
-      <div className="min-h-screen bg-gray-50 pb-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 md:pt-8">
-          <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 md:p-8">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 sm:mb-6 md:mb-8">
-              Add Patient Information
-            </h1>
+      <div className="relative z-10 max-w-4xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-lg rounded-lg mt-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-6 sm:mb-8">
+          Add Patient Information
+        </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              {/* Responsive Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                {/* First Name */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Responsive Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* First Name */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="firstName"
+                className="text-lg font-medium text-gray-700"
+              >
+                First Name
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="first_name"
+                value={first_name}
+                onChange={(e) => setFirst_name(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.first_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.first_name}
+                </p>
+              )}
+            </div>
+
+            {/* Last Name */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="lastName"
+                className="text-lg font-medium text-gray-700"
+              >
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="last_name"
+                value={last_name}
+                onChange={(e) => setLast_name(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.last_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.last_name}
+                </p>
+              )}
+            </div>
+
+            {/* Age */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="age"
+                className="text-lg font-medium text-gray-700"
+              >
+                Age
+              </label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.age && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.age}</p>
+              )}
+            </div>
+
+            {/* Country - Searchable */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="country"
+                className="text-lg font-medium text-gray-700 mb-2"
+              >
+                Country
+              </label>
+              <Select
+                id="country"
+                name="country"
+                value={selectedCountry}
+                onChange={handleCountryChange}
+                options={countryOptions}
+                styles={{ ...customSelectStyles, ...selectPortalStyles }}
+                menuPortalTarget={document.body}
+                placeholder="Search or select country..."
+                isClearable
+                isSearchable
+                noOptionsMessage={() => "No country found"}
+              />
+              {fieldErrors.country_id && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.country_id}
+                </p>
+              )}
+            </div>
+
+            {/* Conditional Province/District for Nepal OR Address for other countries */}
+            {isNepal ? (
+              <>
+                {/* Province */}
                 <div className="flex flex-col">
                   <label
-                    htmlFor="firstName"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
+                    htmlFor="province"
+                    className="text-lg font-medium text-gray-700"
                   >
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="first_name"
-                    value={first_name}
-                    onChange={(e) => setFirst_name(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.first_name && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.first_name}
-                    </p>
-                  )}
-                </div>
-
-                {/* Last Name */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="lastName"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="last_name"
-                    value={last_name}
-                    onChange={(e) => setLast_name(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.last_name && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.last_name}
-                    </p>
-                  )}
-                </div>
-
-                {/* Age */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="age"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Age
-                  </label>
-                  <input
-                    type="number"
-                    id="age"
-                    name="age"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.age && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">{fieldErrors.age}</p>
-                  )}
-                </div>
-
-                {/* Gender */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="gender"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Gender
+                    Province
                   </label>
                   <select
-                    id="gender"
-                    name="gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
+                    id="province"
+                    name="province"
+                    value={province_id}
+                    onChange={(e) => setProvinceId(e.target.value)}
+                    disabled={!country_id}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {fieldErrors.gender && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.gender}
-                    </p>
-                  )}
-                </div>
-
-                {/* Country - Searchable */}
-                <div className="flex flex-col md:col-span-2">
-                  <label
-                    htmlFor="country"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Country
-                  </label>
-                  <Select
-                    id="country"
-                    name="country"
-                    value={selectedCountry}
-                    onChange={handleCountryChange}
-                    options={countryOptions}
-                    styles={customSelectStyles}
-                    placeholder="Search or select country..."
-                    isClearable
-                    isSearchable
-                    noOptionsMessage={() => "No country found"}
-                    menuPortalTarget={document.body}
-                    menuPosition="fixed"
-                  />
-                  {fieldErrors.country_id && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.country_id}
-                    </p>
-                  )}
-                </div>
-
-                {/* Conditional Province/District for Nepal OR Address for other countries */}
-                {isNepal ? (
-                  <>
-                    {/* Province */}
-                    <div className="flex flex-col">
-                      <label
-                        htmlFor="province"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        Province
-                      </label>
-                      <select
-                        id="province"
-                        name="province"
-                        value={province_id}
-                        onChange={(e) => setProvinceId(e.target.value)}
-                        disabled={!country_id}
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed text-base"
-                        style={{ fontSize: '16px' }}
-                      >
-                        <option value="">Select Province</option>
-                        {provinces.map((prov) => (
-                          <option key={prov.id} value={prov.id}>
-                            {prov.name}
-                          </option>
-                        ))}
-                      </select>
-                      {fieldErrors.province_id && (
-                        <p className="text-red-500 text-xs sm:text-sm mt-1">
-                          {fieldErrors.province_id}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* District */}
-                    <div className="flex flex-col">
-                      <label
-                        htmlFor="district"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        District
-                      </label>
-                      <select
-                        id="district"
-                        name="district"
-                        value={district_id}
-                        onChange={(e) => setDistrictId(e.target.value)}
-                        disabled={!province_id}
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed text-base"
-                        style={{ fontSize: '16px' }}
-                      >
-                        <option value="">Select District</option>
-                        {districts.map((d) => (
-                          <option key={d.id} value={d.id}>
-                            {d.name}
-                          </option>
-                        ))}
-                      </select>
-                      {fieldErrors.district_id && (
-                        <p className="text-red-500 text-xs sm:text-sm mt-1">
-                          {fieldErrors.district_id}
-                        </p>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  country_id && (
-                    /* Address field for non-Nepal countries */
-                    <div className="flex flex-col md:col-span-2">
-                      <label
-                        htmlFor="address"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        Address
-                      </label>
-                      <textarea
-                        id="address"
-                        name="address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        rows="3"
-                        placeholder="Enter full address"
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        style={{ fontSize: '16px' }}
-                      />
-                      {fieldErrors.address && (
-                        <p className="text-red-500 text-xs sm:text-sm mt-1">
-                          {fieldErrors.address}
-                        </p>
-                      )}
-                    </div>
-                  )
-                )}
-
-                {/* Hospital Number */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="hospital_number"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Hospital Number
-                  </label>
-                  <input
-                    type="text"
-                    id="hospital_number"
-                    name="hospital_number"
-                    value={hospital_number}
-                    onChange={(e) => setHospital_number(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.hospital_number && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.hospital_number}
-                    </p>
-                  )}
-                </div>
-
-                {/* Phone Number */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="contact_number"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Contact Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="contact_number"
-                    name="phone_number"
-                    value={phone_number}
-                    onChange={(e) => setPhone_number(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.phone_number && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.phone_number}
-                    </p>
-                  )}
-                </div>
-
-                {/* Occupation */}
-                <div className="flex flex-col md:col-span-2">
-                  <label
-                    htmlFor="occupation"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Occupation
-                  </label>
-                  <select
-                    id="occupation"
-                    name="occupation"
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  >
-                    <option value="">Select Occupation</option>
-                    <option value="student">Student</option>
-                    <option value="professional">Professional</option>
-                    <option value="self-employed">Self-employed</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {fieldErrors.occupation && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.occupation}
-                    </p>
-                  )}
-                </div>
-
-                {/* MoI & Conditional Fields */}
-                <div className="flex flex-col md:col-span-2">
-                  <label
-                    htmlFor="moi"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Mechanism of Injury
-                  </label>
-                  <select
-                    name="mechanism_of_injury"
-                    value={mechanism_of_injury}
-                    onChange={handleMoIChange}
-                    id="moi"
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  >
-                    <option value="">Select Mechanism of Injury</option>
-                    <option value="RTA injury">RTA Injury</option>
-                    <option value="fall injury">Fall Injury</option>
-                    <option value="sports injury">Sports Injury</option>
-                    <option value="others">Others</option>
-                  </select>
-                  {fieldErrors.mechanism_of_injury && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.mechanism_of_injury}
-                    </p>
-                  )}
-                </div>
-
-                {mechanism_of_injury === "RTA injury" && (
-                  <div className="flex flex-col md:col-span-2">
-                    <label
-                      htmlFor="subMoi"
-                      className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                    >
-                      RTA Injury Type
-                    </label>
-                    <select
-                      name="type_of_injury"
-                      value={type_of_injury}
-                      onChange={handleSubMoIChange}
-                      id="subMoi"
-                      className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                      style={{ fontSize: '16px' }}
-                    >
-                      <option value="">Select Injury</option>
-                      <option value="4 Wheeler occupant">4 Wheeler occupant</option>
-                      <option value="2 Wheeler rider">2 Wheeler rider</option>
-                      <option value="2 Wheeler Pillion rider">
-                        2 Wheeler Pillion rider
+                    <option value="">Select Province</option>
+                    {provinces.map((prov) => (
+                      <option key={prov.id} value={prov.id}>
+                        {prov.name}
                       </option>
-                      <option value="Pedestrian">Pedestrian</option>
-                    </select>
-                    {fieldErrors.type_of_injury && (
-                      <p className="text-red-500 text-xs sm:text-sm mt-1">
-                        {fieldErrors.type_of_injury}
-                      </p>
-                    )}
-                  </div>
-                )}
+                    ))}
+                  </select>
+                  {fieldErrors.province_id && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.province_id}
+                    </p>
+                  )}
+                </div>
 
-                {mechanism_of_injury === "fall injury" && (
-                  <div className="flex flex-col md:col-span-2">
-                    <label
-                      htmlFor="subMoi"
-                      className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                    >
-                      Fall Injury Type
-                    </label>
-                    <select
-                      name="type_of_injury"
-                      value={type_of_injury}
-                      onChange={handleSubMoIChange}
-                      id="subMoi"
-                      className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                      style={{ fontSize: '16px' }}
-                    >
-                      <option value="">Select Fall Injury</option>
-                      <option value="From height">From height</option>
-                      <option value="From Standing height">
-                        From Standing height
+                {/* District */}
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="district"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    District
+                  </label>
+                  <select
+                    id="district"
+                    name="district"
+                    value={district_id}
+                    onChange={(e) => setDistrictId(e.target.value)}
+                    disabled={!province_id}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Select District</option>
+                    {districts.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
                       </option>
-                    </select>
-                    {fieldErrors.type_of_injury && (
-                      <p className="text-red-500 text-xs sm:text-sm mt-1">
-                        {fieldErrors.type_of_injury}
-                      </p>
-                    )}
-                  </div>
+                    ))}
+                  </select>
+                  {fieldErrors.district_id && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.district_id}
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              country_id && (
+                /* Address field for non-Nepal countries */
+                <div className="flex flex-col md:col-span-2">
+                  <label
+                    htmlFor="address"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    Address
+                  </label>
+                  <textarea
+                    id="address"
+                    name="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    rows="3"
+                    placeholder="Enter full address"
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  {fieldErrors.address && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.address}
+                    </p>
+                  )}
+                </div>
+              )
+            )}
+
+            {/* Hospital Number */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="hospital_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Hospital Number
+              </label>
+              <input
+                type="text"
+                id="hospital_number"
+                name="hospital_number"
+                value={hospital_number}
+                onChange={(e) => setHospital_number(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.hospital_number && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.hospital_number}
+                </p>
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="contact_number"
+                className="text-lg font-medium text-gray-700"
+              >
+                Contact Number
+              </label>
+              <input
+                type="text"
+                id="contact_number"
+                name="phone_number"
+                value={phone_number}
+                onChange={(e) => setPhone_number(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.phone_number && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.phone_number}
+                </p>
+              )}
+            </div>
+
+            {/* Gender */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="gender"
+                className="text-lg font-medium text-gray-700"
+              >
+                Gender
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+              {fieldErrors.gender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.gender}
+                </p>
+              )}
+            </div>
+
+            {/* Occupation */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="occupation"
+                className="text-lg font-medium text-gray-700"
+              >
+                Occupation
+              </label>
+              <select
+                id="occupation"
+                name="occupation"
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Occupation</option>
+                <option value="student">Student</option>
+                <option value="professional">Professional</option>
+                <option value="self-employed">Self-employed</option>
+                <option value="other">Other</option>
+              </select>
+              {fieldErrors.occupation && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.occupation}
+                </p>
+              )}
+            </div>
+
+            {/* MoI & Conditional Fields */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="moi"
+                className="text-lg font-medium text-gray-700"
+              >
+                Mechanism of Injury
+              </label>
+              <select
+                name="mechanism_of_injury"
+                value={mechanism_of_injury}
+                onChange={handleMoIChange}
+                id="moi"
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Mechanism of Injury</option>
+                <option value="RTA injury">RTA Injury</option>
+                <option value="fall injury">Fall Injury</option>
+                <option value="sports injury">Sports Injury</option>
+                <option value="others">Others</option>
+              </select>
+              {fieldErrors.mechanism_of_injury && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.mechanism_of_injury}
+                </p>
+              )}
+            </div>
+            {mechanism_of_injury === "RTA injury" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  RTA Injury
+                </label>
+                <select
+                  name="type_of_injury"
+                  value={type_of_injury}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Injury</option>
+                  <option value="4 Wheeler occupant">4 Wheeler occupant</option>
+                  <option value="2 Wheeler rider">2 Wheeler rider</option>
+                  <option value="2 Wheeler Pillion rider">
+                    2 Wheeler Pillion rider
+                  </option>
+                  <option value="Pedestrian">Pedestrian</option>
+                </select>
+                {fieldErrors.type_of_injury && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.type_of_injury}
+                  </p>
+                )}
+              </div>
+            )}
+            {mechanism_of_injury === "fall injury" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Fall Injury
+                </label>
+                <select
+                  name="type_of_injury"
+                  value={type_of_injury}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Fall Injury</option>
+                  <option value="From height">From height</option>
+                  <option value="From Standing height">
+                    From Standing height
+                  </option>
+                </select>
+                {fieldErrors.type_of_injury && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.type_of_injury}
+                  </p>
+                )}
+              </div>
+            )}
+            {mechanism_of_injury === "sports injury" && (
+              <div className="flex flex-col">
+                <label
+                  htmlFor="subMoi"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Sports Injury
+                </label>
+                <select
+                  name="subMoi"
+                  value={type_of_injury}
+                  onChange={handleSubMoIChange}
+                  id="subMoi"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select Sports Injury</option>
+                  <option value="Football">Football</option>
+                  <option value="Cricket">Cricket</option>
+                  <option value="Basketball">Basketball</option>
+                  <option value="Volleyball">Volleyball</option>
+                  <option value="others">Others</option>
+                </select>
+
+                {/* Show error if subtype not selected */}
+                {fieldErrors.type_of_injury && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.type_of_injury}
+                  </p>
                 )}
 
-                {mechanism_of_injury === "sports injury" && (
-                  <div className="flex flex-col md:col-span-2">
+                {type_of_injury === "others" && (
+                  <div className="flex flex-col mt-2">
                     <label
-                      htmlFor="subMoi"
-                      className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
+                      htmlFor="sportsOther"
+                      className="text-lg font-medium text-gray-700"
                     >
-                      Sports Injury Type
-                    </label>
-                    <select
-                      name="subMoi"
-                      value={type_of_injury}
-                      onChange={handleSubMoIChange}
-                      id="subMoi"
-                      className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                      style={{ fontSize: '16px' }}
-                    >
-                      <option value="">Select Sports Injury</option>
-                      <option value="Football">Football</option>
-                      <option value="Cricket">Cricket</option>
-                      <option value="Basketball">Basketball</option>
-                      <option value="Volleyball">Volleyball</option>
-                      <option value="others">Others</option>
-                    </select>
-
-                    {fieldErrors.type_of_injury && (
-                      <p className="text-red-500 text-xs sm:text-sm mt-1">
-                        {fieldErrors.type_of_injury}
-                      </p>
-                    )}
-
-                    {type_of_injury === "others" && (
-                      <div className="flex flex-col mt-4">
-                        <label
-                          htmlFor="sportsOther"
-                          className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                        >
-                          Please Specify Sports
-                        </label>
-                        <input
-                          type="text"
-                          value={sportsOther}
-                          onChange={(e) => setSportsOther(e.target.value)}
-                          id="sportsOther"
-                          name="sportsOther"
-                          className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                          style={{ fontSize: '16px' }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {mechanism_of_injury === "others" && (
-                  <div className="flex flex-col md:col-span-2">
-                    <label
-                      htmlFor="MoIOther"
-                      className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                    >
-                      Please Specify Mechanism of Injury
+                      Please Specify Sports
                     </label>
                     <input
                       type="text"
-                      value={MoIOther}
-                      onChange={(e) => setMoIOther(e.target.value)}
-                      id="MoIOther"
-                      name="MoIOther"
-                      className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                      style={{ fontSize: '16px' }}
+                      value={sportsOther}
+                      onChange={(e) => setSportsOther(e.target.value)}
+                      id="sportsOther"
+                      name="sportsOther"
+                      className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 )}
-
-                {/* Incident Date */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="incidentDate"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Date of Incident
-                  </label>
-                  <input
-                    type="date"
-                    id="incidentDate"
-                    name="incident_datetime"
-                    value={incidentDate}
-                    onChange={(e) => setIncidentDate(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.incidentDate && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.incidentDate}
-                    </p>
-                  )}
-                </div>
-
-                {/* Incident Time */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="incidentTime"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Time of Incident
-                  </label>
-                  <input
-                    type="time"
-                    id="incidentTime"
-                    name="incident_datetime"
-                    value={incidentTime}
-                    onChange={(e) => setIncidentTime(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  />
-                  {fieldErrors.incidentTime && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.incidentTime}
-                    </p>
-                  )}
-                </div>
-
-                {/* Presentation Delay */}
-                {incidentDate && incidentTime && (
-                  <div className="flex flex-col md:col-span-2">
-                    <label className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
-                      Presentation Delay
-                    </label>
-                    <p className="p-3 sm:p-4 border border-gray-200 rounded-lg bg-gray-50 text-gray-900 text-base">
-                      {calculatePresentationDelay()}
-                    </p>
-                  </div>
-                )}
-
-                {/* Primary Treatment */}
-                <div className="flex flex-col md:col-span-2">
-                  <label
-                    htmlFor="primaryTreatment"
-                    className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                  >
-                    Primary Treatment Received
-                  </label>
-                  <select
-                    id="primaryTreatment"
-                    name="primary_treatment_received"
-                    value={primaryTreatment}
-                    onChange={(e) => setPrimaryTreatment(e.target.value)}
-                    className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    style={{ fontSize: '16px' }}
-                  >
-                    <option value="">Select Treatment</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                  </select>
-                  {fieldErrors.primaryTreatment && (
-                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                      {fieldErrors.primaryTreatment}
-                    </p>
-                  )}
-                </div>
-
-                {/* Treatment Details (conditional) */}
-                {primaryTreatment === "1" && (
-                  <>
-                    <div className="flex flex-col md:col-span-2">
-                      <label
-                        htmlFor="treatmentWhere"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        Where
-                      </label>
-                      <input
-                        type="text"
-                        id="treatmentWhere"
-                        value={treatmentWhere}
-                        onChange={(e) => setTreatmentWhere(e.target.value)}
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        style={{ fontSize: '16px' }}
-                      />
-                    </div>
-                    <div className="flex flex-col md:col-span-2">
-                      <label
-                        htmlFor="antibiotic"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        Antibiotic
-                      </label>
-                      <input
-                        type="text"
-                        id="antibiotic"
-                        value={antibiotic}
-                        onChange={(e) => setAntibiotic(e.target.value)}
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        style={{ fontSize: '16px' }}
-                      />
-                    </div>
-                    <div className="flex flex-col md:col-span-2">
-                      <label
-                        htmlFor="whatTreatment"
-                        className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2"
-                      >
-                        What Treatment
-                      </label>
-                      <textarea
-                        id="whatTreatment"
-                        rows="4"
-                        value={whatTreatment}
-                        onChange={(e) => setWhatTreatment(e.target.value)}
-                        className="p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        style={{ fontSize: '16px' }}
-                      />
-                    </div>
-                  </>
-                )}
               </div>
+            )}
+            {mechanism_of_injury === "others" && (
+              <div className="flex flex-col mt-2">
+                <label
+                  htmlFor="MoIOther"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Please Specify Mechanism of Injury
+                </label>
+                <input
+                  type="text"
+                  value={MoIOther}
+                  onChange={(e) => setMoIOther(e.target.value)}
+                  id="MoIOther"
+                  name="MoIOther"
+                  className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            )}
 
-              {/* Error message */}
-              {error && (
-                <div className="bg-red-100 rounded-lg py-3 sm:py-4 px-4 sm:px-5 text-red-700 text-xs sm:text-sm">
-                  {error}
-                </div>
+            {/* Incident Date */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="incidentDate"
+                className="text-lg font-medium text-gray-700"
+              >
+                Date of Incident
+              </label>
+              <input
+                type="date"
+                id="incidentDate"
+                name="incident_datetime"
+                value={incidentDate}
+                onChange={(e) => setIncidentDate(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.incidentDate && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.incidentDate}
+                </p>
               )}
+            </div>
 
-              {/* Responsive Buttons */}
-              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-6 pt-4 border-t border-gray-200">
-                <button
-                  type="button"
-                  onClick={() => navigate("/dashboard")}
-                  className="w-full sm:w-auto px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300 text-sm sm:text-base font-medium"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  type="submit"
-                  className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 text-sm sm:text-base font-medium"
-                >
-                  Save and Next
-                </button>
+            {/* Incident Time */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="incidentTime"
+                className="text-lg font-medium text-gray-700"
+              >
+                Time of Incident
+              </label>
+              <input
+                type="time"
+                id="incidentTime"
+                name="incident_datetime"
+                value={incidentTime}
+                onChange={(e) => setIncidentTime(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {fieldErrors.incidentTime && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.incidentTime}
+                </p>
+              )}
+            </div>
+            {/* Presentation Delay */}
+            {incidentDate && incidentTime && (
+              <div className="flex flex-col">
+                <label className="text-lg font-medium text-gray-700">
+                  Presentation Delay
+                </label>
+                <p className="mt-2 p-4 border border-gray-200 rounded-lg bg-gray-50 text-gray-900">
+                  {calculatePresentationDelay()}
+                </p>
               </div>
-            </form>
+            )}
+
+            {/* Primary Treatment */}
+            <div className="flex flex-col">
+              <label
+                htmlFor="primaryTreatment"
+                className="text-lg font-medium text-gray-700"
+              >
+                Primary Treatment
+              </label>
+              <select
+                id="primaryTreatment"
+                name="primary_treatment_received"
+                value={primaryTreatment}
+                onChange={(e) => setPrimaryTreatment(e.target.value)}
+                className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select Treatment</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+              {fieldErrors.primaryTreatment && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fieldErrors.primaryTreatment}
+                </p>
+              )}
+            </div>
+
+            {/* Treatment Details (conditional) */}
+            {primaryTreatment === "1" && (
+              <>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="treatmentWhere"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    Where
+                  </label>
+                  <input
+                    type="text"
+                    id="treatmentWhere"
+                    value={treatmentWhere}
+                    onChange={(e) => setTreatmentWhere(e.target.value)}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="antibiotic"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    Antibiotic
+                  </label>
+                  <input
+                    type="text"
+                    id="antibiotic"
+                    value={antibiotic}
+                    onChange={(e) => setAntibiotic(e.target.value)}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="whatTreatment"
+                    className="text-lg font-medium text-gray-700"
+                  >
+                    What Treatment
+                  </label>
+                  <textarea
+                    id="whatTreatment"
+                    rows="4"
+                    value={whatTreatment}
+                    onChange={(e) => setWhatTreatment(e.target.value)}
+                    className="mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 col-span-2"
+                  />
+                </div>
+              </>
+            )}
           </div>
-        </div>
+
+          {/* Error message */}
+          {error && (
+            <div className="bg-red-100 rounded-lg py-4 px-5 text-red-700 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Responsive Buttons */}
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard")}
+              className="w-full sm:w-auto px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+            >
+              Save and Next
+            </button>
+          </div>
+        </form>
       </div>
     </>
   );
