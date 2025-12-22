@@ -137,7 +137,7 @@ const Dashboard = () => {
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-xl text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Welcome back {user.name}! 👋</h2>
+            <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name}! 👋</h2>
             <p className="text-blue-100">Here's what's happening with your trauma registry today.</p>
           </div>
           <div className="hidden lg:block">
