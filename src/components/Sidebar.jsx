@@ -149,7 +149,7 @@ const Sidebar = () => {
           {/* Dropdown Menu */}
           {dropDownOpened && (
             <div className="mt-2 bg-slate-800/50 backdrop-blur-sm rounded-xl p-2 space-y-1 border border-slate-700/50 animate-fadeIn">
-              <NavLink
+              {role && (<NavLink
                 to="/add-hospital"
                 onClick={() => {
                   setMenuOpen(false);
@@ -159,8 +159,8 @@ const Sidebar = () => {
               >
                 <FaHospital className="text-blue-400" />
                 <span>Add Hospital</span>
-              </NavLink>
-              <NavLink
+              </NavLink>)}
+              {role &&(<NavLink
                 to="/add-assistant"
                 onClick={() => {
                   setMenuOpen(false);
@@ -170,7 +170,7 @@ const Sidebar = () => {
               >
                 <FaUserMd className="text-blue-400" />
                 <span>Add Assistant</span>
-              </NavLink>
+              </NavLink>)}
               <NavLink
                 to="/profile"
                 onClick={() => {
