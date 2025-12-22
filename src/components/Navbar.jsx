@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const Header = ({ title, button }) => (
     <>
-      <div className="bg-white text-black p-4 flex justify-between items-center relative z-50">
+      <div className="bg-white text-black p-4 flex justify-between items-center relative mt-3">
         <h2 className="text-2xl font-bold">{title}</h2>
         {button}
       </div>
@@ -25,7 +25,7 @@ const Navbar = () => {
           button={
             <Link
               to="/select"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none relative z-50"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none relative"
             >
               Create Patient
             </Link>
