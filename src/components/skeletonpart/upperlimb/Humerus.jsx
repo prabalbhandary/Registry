@@ -63,7 +63,7 @@ const Humerus = () => {
       });
       toast.success(res.data.message);
       if(buttonType === "save"){
-        navigate(treatmentStatus === "followup" ? "/patients/followup" : "/patients/surgeries");
+        navigate(treatmentStatus === "followup" ? "/patients/follow-up" : "/patients/surgeries");
       } else{
         navigate("/add-surgerical-details")
       }
