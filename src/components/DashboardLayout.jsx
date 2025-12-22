@@ -73,8 +73,8 @@ const DashboardLayout = () => {
           <Route path="surgery" element={<Surgery />} />
           <Route path="followup/:id" element={<FollowUp />} />
         </Routes>
-      </div>
         <Outlet />
+      </div>
     </div>
   );
 };
