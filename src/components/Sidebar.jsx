@@ -217,7 +217,8 @@ const Sidebar = () => {
             <span className="font-medium">Dashboard</span>
           </NavLink>
 
-          {role && <NavLink
+          {role && 
+            (<NavLink
             to="/all-patients"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
@@ -228,7 +229,7 @@ const Sidebar = () => {
           >
             <HiUsers className="text-xl" />
             <span className="font-medium">All Patients</span>
-          </NavLink>}
+          </NavLink>)}
 
           <NavLink
             to="/patients/follow-up"
