@@ -147,7 +147,7 @@ const AddHospital = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end">
               <button
                 className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
                 onClick={handleReset}
@@ -157,7 +157,8 @@ const AddHospital = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto mt-6">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto mt-6">
             <table className="min-w-full text-sm sm:text-base border-collapse">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
@@ -191,6 +192,58 @@ const AddHospital = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4 mt-6">
+            {filteredHospitals.map((hospital, index) => (
+              <div
+                key={hospital.id}
+                className="bg-white rounded-lg border shadow-sm p-4"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg text-gray-800">
+                      {hospital.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {hospital.address}
+                    </p>
+                  </div>
+                  <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded ml-2">
+                    #{index + 1}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pt-3 border-t">
+                  <span className="text-sm text-gray-600 font-medium">
+                    Status:
+                  </span>
+                  <button
+                    onClick={() =>
+                      toggleActiveStatus(hospital.id, hospital.is_active)
+                    }
+                    className="flex items-center gap-2"
+                  >
+                    {hospital.is_active ? (
+                      <>
+                        <PiToggleRightFill className="text-green-500 text-3xl cursor-pointer" />
+                        <span className="text-sm font-medium text-green-600">
+                          Active
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <PiToggleLeftFill className="text-gray-400 text-3xl cursor-pointer" />
+                        <span className="text-sm font-medium text-gray-500">
+                          Inactive
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {error && (

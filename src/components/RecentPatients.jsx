@@ -37,10 +37,6 @@ const RecentPatients = () => {
 
   return (
     <div className="bg-white rounded-lg">
-      <p className="text-xl font-semibold text-gray-800 mb-4">
-        Recent Patients
-      </p>
-
       {loading ? (
         <Loader />
       ) : displayData.length === 0 ? (
