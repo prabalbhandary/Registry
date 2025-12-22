@@ -111,6 +111,7 @@ const Sidebar = () => {
               onClick={() => {
                 navigate("/");
                 setMenuOpen(false);
+                scrollTo(0, 0);
               }}
               className="text-xl font-bold cursor-pointer hover:text-blue-400 transition-colors"
             >
@@ -154,6 +155,7 @@ const Sidebar = () => {
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
@@ -165,6 +167,7 @@ const Sidebar = () => {
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
@@ -176,6 +179,7 @@ const Sidebar = () => {
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
@@ -188,6 +192,7 @@ const Sidebar = () => {
                   handleLogout();
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-lg transition-all w-full"
               >
@@ -206,7 +211,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/dashboard"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false);scrollTo(0, 0);}}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -220,7 +225,7 @@ const Sidebar = () => {
           {role && 
             (<NavLink
             to="/all-patients"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -233,7 +238,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/patients/follow-up"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -246,7 +251,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/patients/surgeries"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -260,7 +265,7 @@ const Sidebar = () => {
           {role && (
             <NavLink
               to="/users"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
