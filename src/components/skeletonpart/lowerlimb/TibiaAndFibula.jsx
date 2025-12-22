@@ -134,7 +134,7 @@ const TibiaAndFibula = () => {
   const formValid = showSummary;
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-md">
+    <div className="relative z-10 w-full max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-md">
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
         Tibia and Fibula Fracture Assessment
       </h1>
