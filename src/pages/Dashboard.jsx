@@ -65,7 +65,7 @@ const Dashboard = () => {
     path,
     trend = null 
   }) => (
-    <Link to={path} className="group">
+    <Link to={path} onClick={() => {scrollTo(0, 0);} className="group">
       <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgGradient} p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1`}>
         {/* Background Pattern */}
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 rounded-full bg-white/5"></div>
