@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "./URL";
 
-// Create context for sidebar state
 export const SidebarContext = createContext();
 
 export const useSidebar = () => {
@@ -37,7 +36,6 @@ const Sidebar = () => {
   const location = useLocation();
   const role = JSON.parse(localStorage.getItem("user"))?.is_admin === 1;
 
-  // Close menu when route changes
   useEffect(() => {
     setMenuOpen(false);
     setDropDownOpened(false);
@@ -68,7 +66,6 @@ const Sidebar = () => {
 
   return (
     <SidebarContext.Provider value={{ menuOpen, setMenuOpen }}>
-      {/* Full Screen Overlay - Covers everything including content */}
       {menuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 z-50 md:hidden backdrop-blur-sm transition-opacity duration-300"
@@ -76,7 +73,6 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Mobile Header */}
       <div className="md:hidden px-4 py-3 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg z-[60] fixed top-0 left-0 w-full">
         <div className="flex items-center space-x-3">
           <MdLocalHospital className="text-white text-3xl" />
@@ -95,13 +91,11 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Sidebar */}
       <div
         className={`${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed top-0 left-0 h-screen w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-[55] transition-transform duration-300 overflow-y-auto shadow-2xl mt-14 md:mt-0`}
       >
-        {/* Desktop Logo */}
         <div className="hidden md:flex items-center space-x-3 p-6 border-b border-slate-700/50">
           <div className="bg-blue-500 p-2 rounded-lg">
             <MdLocalHospital className="text-white text-3xl" />
@@ -120,7 +114,6 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* User Profile Section */}
         <div className="p-4">
           <div
             onClick={() => setDropDownOpened(!dropDownOpened)}
@@ -147,33 +140,36 @@ const Sidebar = () => {
             </div>
           </div>
 
-          {/* Dropdown Menu */}
           {dropDownOpened && (
             <div className="mt-2 bg-slate-800/50 backdrop-blur-sm rounded-xl p-2 space-y-1 border border-slate-700/50 animate-fadeIn">
-              {role && (<NavLink
-                to="/add-hospital"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setDropDownOpened(false);
-                  scrollTo(0, 0);
-                }}
-                className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
-              >
-                <FaHospital className="text-blue-400" />
-                <span>Add Hospital</span>
-              </NavLink>)}
-              {role &&(<NavLink
-                to="/add-assistant"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setDropDownOpened(false);
-                  scrollTo(0, 0);
-                }}
-                className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
-              >
-                <FaUserMd className="text-blue-400" />
-                <span>Add Assistant</span>
-              </NavLink>)}
+              {role && (
+                <NavLink
+                  to="/add-hospital"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setDropDownOpened(false);
+                    scrollTo(0, 0);
+                  }}
+                  className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
+                >
+                  <FaHospital className="text-blue-400" />
+                  <span>Add Hospital</span>
+                </NavLink>
+              )}
+              {role && (
+                <NavLink
+                  to="/add-assistant"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setDropDownOpened(false);
+                    scrollTo(0, 0);
+                  }}
+                  className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
+                >
+                  <FaUserMd className="text-blue-400" />
+                  <span>Add Assistant</span>
+                </NavLink>
+              )}
               <NavLink
                 to="/profile"
                 onClick={() => {
@@ -203,7 +199,6 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* Navigation Links */}
         <nav className="px-4 py-2 space-y-1">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
             Main Menu
@@ -211,7 +206,10 @@ const Sidebar = () => {
 
           <NavLink
             to="/dashboard"
-            onClick={() => {setMenuOpen(false);scrollTo(0, 0);}}
+            onClick={() => {
+              setMenuOpen(false);
+              scrollTo(0, 0);
+            }}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -222,23 +220,30 @@ const Sidebar = () => {
             <span className="font-medium">Dashboard</span>
           </NavLink>
 
-          {role && 
-            (<NavLink
-            to="/all-patients"
-            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}}
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
-                : "flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-700/50 hover:text-white transition-all"
-            }
-          >
-            <HiUsers className="text-xl" />
-            <span className="font-medium">All Patients</span>
-          </NavLink>)}
+          {role && (
+            <NavLink
+              to="/all-patients"
+              onClick={() => {
+                setMenuOpen(false);
+                scrollTo(0, 0);
+              }}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
+                  : "flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-700/50 hover:text-white transition-all"
+              }
+            >
+              <HiUsers className="text-xl" />
+              <span className="font-medium">All Patients</span>
+            </NavLink>
+          )}
 
           <NavLink
             to="/patients/follow-up"
-            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
+            onClick={() => {
+              setMenuOpen(false);
+              scrollTo(0, 0);
+            }}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -251,7 +256,10 @@ const Sidebar = () => {
 
           <NavLink
             to="/patients/surgeries"
-            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
+            onClick={() => {
+              setMenuOpen(false);
+              scrollTo(0, 0);
+            }}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -265,7 +273,10 @@ const Sidebar = () => {
           {role && (
             <NavLink
               to="/users"
-              onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
+              onClick={() => {
+                setMenuOpen(false);
+                scrollTo(0, 0);
+              }}
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -278,7 +289,6 @@ const Sidebar = () => {
           )}
         </nav>
 
-        {/* Bottom Info */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 bg-slate-900/50">
           <div className="text-center">
             <p className="text-xs text-slate-500">Version 1.0.0</p>

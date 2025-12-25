@@ -18,7 +18,7 @@ const Navbar = () => {
 
         {/* Right: Search and Actions */}
         <div className="flex items-center space-x-3">
-          {showSearch && (
+          {/* {showSearch && (
             <div className="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2 w-64">
               <FaSearch className="text-gray-400 mr-2" />
               <input
@@ -27,13 +27,13 @@ const Navbar = () => {
                 className="bg-transparent outline-none text-sm text-gray-700 w-full"
               />
             </div>
-          )}
+          )} */}
 
           {/* Notifications */}
-          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+          {/* <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
             <FaBell className="text-xl" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+          </button> */}
 
           {/* Action Button */}
           {button}

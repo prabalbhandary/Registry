@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 const AllPatients = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -28,16 +29,40 @@ const AllPatients = () => {
     fetchPatients();
   }, []);
 
+  // Filter patients based on search term
+  const filteredPatients = patients.filter((patient) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      patient.hospital_number?.toLowerCase().includes(searchLower) ||
+      patient.first_name?.toLowerCase().includes(searchLower) ||
+      patient.last_name?.toLowerCase().includes(searchLower) ||
+      patient.phone_number?.toLowerCase().includes(searchLower) ||
+      patient.type_of_injury?.toLowerCase().includes(searchLower)
+    );
+  });
+
   if (loading) {
     return <Loader />;
   }
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">All Patients</h1>
+      <div className="flex items-center justify-end mb-4">
+        <input
+          type="text"
+          name="search"
+          id="search"
+          placeholder="Search by name, hospital no, phone..."
+          className="px-4 py-2 border border-gray-300 rounded-lg w-1/2"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
-      {patients.length === 0 ? (
+      {filteredPatients.length === 0 && patients.length === 0 ? (
         <p className="text-gray-500">No patients found</p>
+      ) : filteredPatients.length === 0 ? (
+        <p className="text-gray-500">No matching patients found</p>
       ) : (
         <>
           {/* Desktop Table View */}
@@ -57,7 +82,7 @@ const AllPatients = () => {
               </thead>
 
               <tbody>
-                {patients.map((patient, index) => (
+                {filteredPatients.map((patient, index) => (
                   <tr
                     key={patient.id}
                     className="border-t hover:bg-gray-50 transition"
@@ -84,7 +109,7 @@ const AllPatients = () => {
 
           {/* Mobile Card View */}
           <div className="md:hidden space-y-4">
-            {patients.map((patient, index) => (
+            {filteredPatients.map((patient, index) => (
               <div
                 key={patient.id}
                 className="bg-white rounded-lg border p-4 shadow-sm"

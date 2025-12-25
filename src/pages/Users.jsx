@@ -22,6 +22,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // =============================
   // Delete User
@@ -136,6 +137,15 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  // Filter users based on search term
+  const filteredUsers = users.filter((user) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      user.name?.toLowerCase().includes(searchLower) ||
+      user.email?.toLowerCase().includes(searchLower)
+    );
+  });
+
   const UserCard = ({ user, index }) => (
     <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
       <div className="flex justify-between items-center">
@@ -187,6 +197,7 @@ const Users = () => {
       </div>
     </div>
   );
+
   return (
     <>
       <title>Users - Trauma Registry</title>
@@ -198,109 +209,133 @@ const Users = () => {
         </div>
       ) : (
         <>
-          {/* Mobile View */}
-          <div className="md:hidden px-4 py-2">
-            {users.map((u, i) => (
-              <UserCard key={u.id} user={u} index={i} />
-            ))}
+          {/* Search Bar */}
+          <div className="p-4 flex items-center justify-end">
+            <input
+              type="text"
+              placeholder="Search by name or email..."
+              className="px-4 py-2 border border-gray-300 rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
+
+          {/* Empty State */}
+          {filteredUsers.length === 0 && (
+            <div className="p-4 m-4 bg-gray-100 border border-gray-300 text-gray-700 rounded text-center">
+              {users.length === 0
+                ? "No users found."
+                : "No matching users found."}
+            </div>
+          )}
+
+          {/* Mobile View */}
+          {filteredUsers.length > 0 && (
+            <div className="md:hidden px-4 py-2">
+              {filteredUsers.map((u, i) => (
+                <UserCard key={u.id} user={u} index={i} />
+              ))}
+            </div>
+          )}
 
           {/* Desktop Table */}
-          <div className="hidden md:block overflow-x-auto p-4">
-            <table className="min-w-full bg-white border rounded shadow-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  {["#", "Username", "Email", "Admin", "Approved", "Actions"].map(
-                    (h) => (
-                      <th
-                        key={h}
-                        className="py-3 px-4 font-semibold text-left border-b"
-                      >
-                        {h}
-                      </th>
-                    )
-                  )}
-                </tr>
-              </thead>
-
-              <tbody>
-                {users.map((user, index) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-gray-50 border-b transition"
-                  >
-                    <td className="px-4 py-3">{index + 1}</td>
-                    <td className="px-4 py-3">{user.name}</td>
-                    <td className="px-4 py-3">{user.email}</td>
-
-                    {/* Admin Toggle */}
-                    <td className="px-4 py-3">
-                      <div className="flex items-center space-x-2">
-                        {user.is_admin ? (
-                          <PiToggleRightFill
-                            className="text-green-500 text-4xl cursor-pointer"
-                            onClick={() =>
-                              handleChangeRole(user.id, user.is_admin)
-                            }
-                          />
-                        ) : (
-                          <PiToggleLeftFill
-                            className="text-gray-400 text-4xl cursor-pointer"
-                            onClick={() =>
-                              handleChangeRole(user.id, user.is_admin)
-                            }
-                          />
-                        )}
-                        {user.is_admin ? (
-                          <FaUserShield className="text-blue-600" />
-                        ) : (
-                          <FaUser className="text-gray-500" />
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Approved Toggle */}
-                    <td className="px-4 py-3">
-                      <div className="flex items-center space-x-2">
-                        {user.is_approved ? (
-                          <PiToggleRightFill
-                            className="text-green-500 text-4xl cursor-pointer"
-                            onClick={() =>
-                              handleToggle(user.id, user.is_approved)
-                            }
-                          />
-                        ) : (
-                          <PiToggleLeftFill
-                            className="text-gray-400 text-4xl cursor-pointer"
-                            onClick={() =>
-                              handleToggle(user.id, user.is_approved)
-                            }
-                          />
-                        )}
-
-                        {user.is_approved ? (
-                          <FaCheckCircle className="text-green-600" />
-                        ) : (
-                          <FaTimesCircle className="text-red-500" />
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Delete */}
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded flex items-center"
-                      >
-                        <PiTrashFill />
-                        <span className="ml-2 hidden lg:inline">Delete</span>
-                      </button>
-                    </td>
+          {filteredUsers.length > 0 && (
+            <div className="hidden md:block overflow-x-auto p-4">
+              <table className="min-w-full bg-white border rounded shadow-sm">
+                <thead className="bg-gray-100">
+                  <tr>
+                    {["#", "Username", "Email", "Admin", "Approved", "Actions"].map(
+                      (h) => (
+                        <th
+                          key={h}
+                          className="py-3 px-4 font-semibold text-left border-b"
+                        >
+                          {h}
+                        </th>
+                      )
+                    )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+
+                <tbody>
+                  {filteredUsers.map((user, index) => (
+                    <tr
+                      key={user.id}
+                      className="hover:bg-gray-50 border-b transition"
+                    >
+                      <td className="px-4 py-3">{index + 1}</td>
+                      <td className="px-4 py-3">{user.name}</td>
+                      <td className="px-4 py-3">{user.email}</td>
+
+                      {/* Admin Toggle */}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center space-x-2">
+                          {user.is_admin ? (
+                            <PiToggleRightFill
+                              className="text-green-500 text-4xl cursor-pointer"
+                              onClick={() =>
+                                handleChangeRole(user.id, user.is_admin)
+                              }
+                            />
+                          ) : (
+                            <PiToggleLeftFill
+                              className="text-gray-400 text-4xl cursor-pointer"
+                              onClick={() =>
+                                handleChangeRole(user.id, user.is_admin)
+                              }
+                            />
+                          )}
+                          {user.is_admin ? (
+                            <FaUserShield className="text-blue-600" />
+                          ) : (
+                            <FaUser className="text-gray-500" />
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Approved Toggle */}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center space-x-2">
+                          {user.is_approved ? (
+                            <PiToggleRightFill
+                              className="text-green-500 text-4xl cursor-pointer"
+                              onClick={() =>
+                                handleToggle(user.id, user.is_approved)
+                              }
+                            />
+                          ) : (
+                            <PiToggleLeftFill
+                              className="text-gray-400 text-4xl cursor-pointer"
+                              onClick={() =>
+                                handleToggle(user.id, user.is_approved)
+                              }
+                            />
+                          )}
+
+                          {user.is_approved ? (
+                            <FaCheckCircle className="text-green-600" />
+                          ) : (
+                            <FaTimesCircle className="text-red-500" />
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Delete */}
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded flex items-center"
+                        >
+                          <PiTrashFill />
+                          <span className="ml-2 hidden lg:inline">Delete</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </>
       )}
     </>

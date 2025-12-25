@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 const Surgeries = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
@@ -43,6 +44,19 @@ const Surgeries = () => {
     fetchPatients();
   }, []);
 
+  // Filter patients based on search term
+  const filteredPatients = patients.filter((patient) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      patient.first_name?.toLowerCase().includes(searchLower) ||
+      patient.last_name?.toLowerCase().includes(searchLower) ||
+      patient.hospital_number?.toLowerCase().includes(searchLower) ||
+      patient.type_of_injury?.toLowerCase().includes(searchLower) ||
+      patient.femur_fracture?.diagonis?.toLowerCase().includes(searchLower) ||
+      patient.femur_fracture?.treatment_status?.toLowerCase().includes(searchLower)
+    );
+  });
+
   const handleClick = (patientId) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (patientId) {
@@ -52,7 +66,7 @@ const Surgeries = () => {
 
   /* -------------------- MOBILE CARDS -------------------- */
   const renderCards = () =>
-    patients.map((patient) => (
+    filteredPatients.map((patient) => (
       <div
         key={patient.id}
         onClick={() => handleClick(patient.id)}
@@ -110,7 +124,7 @@ const Surgeries = () => {
         </thead>
 
         <tbody>
-          {patients.map((patient, index) => (
+          {filteredPatients.map((patient, index) => (
             <tr
               key={patient.id}
               className="hover:bg-gray-50 transition"
@@ -152,14 +166,32 @@ const Surgeries = () => {
     <div className="p-6 min-h-[300px]">
       {loading ? (
         <Loader />
-      ) : patients.length === 0 ? (
-        <div className="bg-white border rounded-lg p-8 text-center text-gray-500">
-          No follow-up patients found.
-        </div>
-      ) : isSmallScreen ? (
-        renderCards()
       ) : (
-        renderTable()
+        <>
+          {/* Search Bar */}
+          <div className="mb-6 flex items-center justify-end">
+            <input
+              type="text"
+              placeholder="Search by name, hospital no, injury type..."
+              className="px-4 py-2 border border-gray-300 rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Results */}
+          {filteredPatients.length === 0 ? (
+            <div className="bg-white border rounded-lg p-8 text-center text-gray-500">
+              {patients.length === 0
+                ? "No follow-up patients found."
+                : "No matching patients found."}
+            </div>
+          ) : isSmallScreen ? (
+            renderCards()
+          ) : (
+            renderTable()
+          )}
+        </>
       )}
     </div>
   );

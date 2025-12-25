@@ -55,7 +55,6 @@ const Dashboard = () => {
     loadCounts();
   }, []);
 
-  // Modern Stat Card Component
   const StatCard = ({ 
     label, 
     count, 
@@ -65,25 +64,21 @@ const Dashboard = () => {
     path,
     trend = null 
   }) => (
-    <Link to={path} onClick={() => {scrollTo(0, 0);} className="group">
+    <Link to={path} onClick={() => {scrollTo(0, 0);}} className="group">
       <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgGradient} p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1`}>
-        {/* Background Pattern */}
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 rounded-full bg-white/5"></div>
         <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-40 h-40 rounded-full bg-white/5"></div>
         
         <div className="relative z-10">
-          {/* Icon */}
           <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm mb-4`}>
             <Icon className={`text-3xl ${iconColor}`} />
           </div>
 
-          {/* Count */}
           <div className="mb-2">
             <h3 className="text-4xl font-bold text-white mb-1">{count}</h3>
             <p className="text-white/80 text-sm font-medium">{label}</p>
           </div>
 
-          {/* Trend */}
           {trend && (
             <div className="flex items-center space-x-1 text-xs text-white/70">
               {trend > 0 ? (
@@ -102,7 +97,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Hover Effect Indicator */}
         <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +108,6 @@ const Dashboard = () => {
     </Link>
   );
 
-  // Quick Stats Component
   const QuickStat = ({ label, value, icon: Icon, color }) => (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between">
@@ -133,7 +126,6 @@ const Dashboard = () => {
     <Loader />
   ) : (
     <div className="space-y-6">
-      {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-xl text-white">
         <div className="flex items-center justify-between">
           <div>
@@ -146,7 +138,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Surgeries"
@@ -189,7 +180,6 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* Quick Actions */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
           <FaChartLine className="mr-2 text-blue-500" />
@@ -240,9 +230,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Surgeries */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-gray-800">Recent Surgeries</h3>
@@ -258,7 +246,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Patients */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-gray-800">Recent Patients</h3>
