@@ -16,6 +16,7 @@ import RecentSurgeries from "../components/RecentSurgeries";
 import RecentPatients from "../components/RecentPatients";
 
 const Dashboard = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [counts, setCounts] = useState({
     surgeries: 0,
     patients: 0,
@@ -64,7 +65,7 @@ const Dashboard = () => {
     path,
     trend = null 
   }) => (
-    <Link to={path} className="group">
+    <Link to={path} onClick={() => {scrollTo(0, 0);} className="group">
       <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgGradient} p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1`}>
         {/* Background Pattern */}
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 rounded-full bg-white/5"></div>
@@ -136,7 +137,7 @@ const Dashboard = () => {
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-xl text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Welcome back! 👋</h2>
+            <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name}! 👋</h2>
             <p className="text-blue-100">Here's what's happening with your trauma registry today.</p>
           </div>
           <div className="hidden lg:block">

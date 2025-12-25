@@ -111,6 +111,7 @@ const Sidebar = () => {
               onClick={() => {
                 navigate("/");
                 setMenuOpen(false);
+                scrollTo(0, 0);
               }}
               className="text-xl font-bold cursor-pointer hover:text-blue-400 transition-colors"
             >
@@ -149,33 +150,36 @@ const Sidebar = () => {
           {/* Dropdown Menu */}
           {dropDownOpened && (
             <div className="mt-2 bg-slate-800/50 backdrop-blur-sm rounded-xl p-2 space-y-1 border border-slate-700/50 animate-fadeIn">
-              <NavLink
+              {role && (<NavLink
                 to="/add-hospital"
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
                 <FaHospital className="text-blue-400" />
                 <span>Add Hospital</span>
-              </NavLink>
-              <NavLink
+              </NavLink>)}
+              {role &&(<NavLink
                 to="/add-assistant"
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
                 <FaUserMd className="text-blue-400" />
                 <span>Add Assistant</span>
-              </NavLink>
+              </NavLink>)}
               <NavLink
                 to="/profile"
                 onClick={() => {
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white rounded-lg transition-all"
               >
@@ -188,6 +192,7 @@ const Sidebar = () => {
                   handleLogout();
                   setMenuOpen(false);
                   setDropDownOpened(false);
+                  scrollTo(0, 0);
                 }}
                 className="flex items-center space-x-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-lg transition-all w-full"
               >
@@ -206,7 +211,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/dashboard"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false);scrollTo(0, 0);}}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -217,9 +222,10 @@ const Sidebar = () => {
             <span className="font-medium">Dashboard</span>
           </NavLink>
 
-          <NavLink
+          {role && 
+            (<NavLink
             to="/all-patients"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -228,11 +234,11 @@ const Sidebar = () => {
           >
             <HiUsers className="text-xl" />
             <span className="font-medium">All Patients</span>
-          </NavLink>
+          </NavLink>)}
 
           <NavLink
             to="/patients/follow-up"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -245,7 +251,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/patients/surgeries"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
@@ -259,7 +265,7 @@ const Sidebar = () => {
           {role && (
             <NavLink
               to="/users"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {setMenuOpen(false); scrollTo(0, 0);}
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
