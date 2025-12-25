@@ -190,11 +190,6 @@ const Users = () => {
   return (
     <>
       <title>Users - Trauma Registry</title>
-
-      <div className="p-4 bg-white flex justify-between items-center shadow-sm">
-        <h2 className="text-2xl font-semibold">Users</h2>
-      </div>
-
       {loading ? (
         <Loader />
       ) : error ? (
