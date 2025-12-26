@@ -42,25 +42,35 @@ const Sidebar = () => {
   }, [location.pathname]);
 
   const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
     try {
-      const res = await axios.post(
-        `${URL}/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        localStorage.clear();
-        toast.success(res.data.message);
-        navigate("/");
+      if (token) {
+        await axios.post(
+          `${URL}/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       }
+      toast.success("Logged out successfully");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Logout failed");
+      if (error.response?.status !== 401) {
+        toast.error(
+          error.response?.data?.message || "Logout failed"
+        );
+      }
+      toast.info("Session expired, please log in again");
+    } finally {
+      localStorage.clear();
+      navigate("/login");
     }
   };
+
+
 
   const userInfo = JSON.parse(localStorage.getItem("user"));
 
@@ -92,9 +102,8 @@ const Sidebar = () => {
       </div>
 
       <div
-        className={`${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 fixed top-0 left-0 h-screen w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-[55] transition-transform duration-300 overflow-y-auto shadow-2xl mt-14 md:mt-0`}
+        className={`${menuOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 fixed top-0 left-0 h-screen w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-[55] transition-transform duration-300 overflow-y-auto shadow-2xl mt-14 md:mt-0`}
       >
         <div className="hidden md:flex items-center space-x-3 p-6 border-b border-slate-700/50">
           <div className="bg-blue-500 p-2 rounded-lg">
