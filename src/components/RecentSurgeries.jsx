@@ -52,6 +52,7 @@ const RecentSurgeries = () => {
           <table className="min-w-full text-sm">
             <thead className="bg-indigo-50 sticky top-0 z-10">
               <tr>
+                <TableHead>Date of Surgery</TableHead>
                 <TableHead>Patient Name</TableHead>
                 <TableHead>Description</TableHead>
               </tr>
@@ -65,6 +66,7 @@ const RecentSurgeries = () => {
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                   }`}
                 >
+                  <TableCell>N/A</TableCell>
                   <TableCell>
                     {`${surgery.patient_detail.first_name} ${surgery.patient_detail.last_name}`}
                   </TableCell>
