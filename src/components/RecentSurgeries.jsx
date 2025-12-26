@@ -12,22 +12,31 @@ const RecentSurgeries = () => {
     const fetchSurgeries = async () => {
       try {
         const res = await axios.get(`${URL}/create-surgery`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
 
-        setSurgeries(res.data.data || []);
+        console.log("API Response:", res.data); // Debug
+
+        setSurgeries(res.data?.data || []);
       } catch (error) {
-        toast.error(error.response?.data?.message || "Failed to fetch surgeries");
+        console.error(error);
+        toast.error(
+          error.response?.data?.message || "Failed to fetch surgeries"
+        );
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchSurgeries();
   }, []);
 
-  // Only show max 5 and avoid null patient_detail
+  // Filter valid data, sort by id descending, limit to 5
   const displayData = surgeries
     .filter((s) => s.patient_detail)
+    .sort((a, b) => b.id - a.id) // newest first
     .slice(0, 5);
 
   return (
@@ -35,30 +44,32 @@ const RecentSurgeries = () => {
       {loading ? (
         <Loader />
       ) : displayData.length === 0 ? (
-        <div className="text-gray-500 text-center py-6">No recent surgeries found.</div>
+        <div className="text-gray-500 text-center py-6">
+          No recent surgeries found.
+        </div>
       ) : (
         <div className="overflow-y-auto max-h-[350px] border rounded-md">
           <table className="min-w-full text-sm">
             <thead className="bg-indigo-50 sticky top-0 z-10">
               <tr>
-                <TableHead>Date of Surgery</TableHead>
                 <TableHead>Patient Name</TableHead>
+                <TableHead>Description</TableHead>
               </tr>
             </thead>
 
             <tbody>
               {displayData.map((surgery, index) => (
                 <tr
-                  key={index}
-                  className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    }`}
+                  key={surgery.id || index}
+                  className={`hover:bg-gray-50 transition-colors ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  }`}
                 >
                   <TableCell>
-                    {new Date(surgery.created_at).toISOString().split("T")[0]}
-                  </TableCell>
-
-                  <TableCell>
                     {`${surgery.patient_detail.first_name} ${surgery.patient_detail.last_name}`}
+                  </TableCell>
+                  <TableCell>
+                    {surgery.combined_surgery_description || "N/A"}
                   </TableCell>
                 </tr>
               ))}
@@ -72,7 +83,10 @@ const RecentSurgeries = () => {
 
 export default RecentSurgeries;
 
-// Reusable table components
+/* ======================
+   Reusable Table Components
+   ====================== */
+
 const TableHead = ({ children }) => (
   <th className="px-6 py-3 text-left font-semibold text-gray-700 border-b">
     {children}
