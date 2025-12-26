@@ -3,12 +3,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const AllPatients = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -20,8 +21,20 @@ const AllPatients = () => {
 
         setPatients(res.data?.data || []);
       } catch (error) {
-        toast.error("Error fetching patients");
-      } finally {
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients"
+          );
+        }
+      }
+      finally {
         setLoading(false);
       }
     };
