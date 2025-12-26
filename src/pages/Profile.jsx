@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { URL } from "../components/URL";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user?.id;
@@ -27,7 +30,18 @@ const Profile = () => {
           throw new Error("No user data found");
         }
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch user profile"
+          );
+        }
       } finally {
         setLoading(false);
       }

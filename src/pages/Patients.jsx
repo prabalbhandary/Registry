@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 
 const Surgeries = () => {
@@ -10,6 +10,8 @@ const Surgeries = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1024);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,9 +35,18 @@ const Surgeries = () => {
 
         setPatients(res.data?.data || []);
       } catch (error) {
-        toast.error(
-          error.response?.data?.message || "Error fetching patients"
-        );
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients detail"
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -163,7 +174,9 @@ const Surgeries = () => {
   );
 
   return (
-    <div className="p-6 min-h-[300px]">
+    <>
+      <title>Trauma Registry - Patients</title>
+      <div className="p-6 min-h-[300px]">
       {loading ? (
         <Loader />
       ) : (
@@ -194,6 +207,7 @@ const Surgeries = () => {
         </>
       )}
     </div>
+    </>
   );
 };
 

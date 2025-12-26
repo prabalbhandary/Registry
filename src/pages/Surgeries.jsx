@@ -25,7 +25,18 @@ const Patients = () => {
 
         setPatients(filteredPatients);
       } catch (error) {
-        toast.error("Error fetching patients");
+        if (error.response?.status === 401) {
+                  toast.error("Session expired. Please log in again.", {
+                    onClose: () => {
+                      localStorage.clear();
+                      navigate("/login");
+                    },
+                  });
+                } else {
+                  toast.error(
+                    error.response?.data?.message || "Failed to fetch patients detail"
+                  );
+                }
       }
       setLoading(false);
     };

@@ -57,16 +57,24 @@ const SelectPage = () => {
         navigate("/create-surgery");
       }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error.message ||
-          "Something went wrong"
-      );
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch surgeon detail"
+          );
+        }
     }
   };
 
   useEffect(() => {
-    axios.get(`${URL}/hospital`).then((res) => {
+    try {
+    axios.get(`${URL}/hospital`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then((res) => {
       const data = res?.data?.data || [];
       setHospitals(
         data
@@ -74,19 +82,50 @@ const SelectPage = () => {
           .map((h) => ({ value: h.id, label: h.name }))
       );
     });
+    } catch (error) {
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients"
+          );
+        }
+    }
   }, []);
 
   useEffect(() => {
-    axios.get(`${URL}/assistant-surgeone`).then((res) => {
+    try {
+      axios.get(`${URL}/assistant-surgeone`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then((res) => {
       const data = res?.data?.data || [];
       setAssistantSurgeons(
         data.map((s) => ({ value: s.name, label: s.name }))
       );
     });
+    } catch (error) {
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients"
+          );
+        }
+    }
   }, []);
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white shadow-md rounded-lg relative z-10">
+    <>
+      <title>Select Page - Trauma Registry</title>
+      <div className="max-w-md mx-auto mt-12 p-6 bg-white shadow-md rounded-lg relative z-10">
       {/* Hospital */}
       <div className="mb-6">
         <h1 className="text-lg font-semibold mb-2">Select Hospital</h1>
@@ -214,6 +253,7 @@ const SelectPage = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

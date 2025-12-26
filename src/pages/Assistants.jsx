@@ -2,12 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { URL } from "../components/URL";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Assistants = () => {
   const [assistants, setAssistants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedAssistant, setSelectedAssistant] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Assistants - Trauma Registry";
@@ -33,9 +36,18 @@ const Assistants = () => {
         setSelectedAssistant(res.data.data[0]);
       } catch (error) {
         setError(error);
-        toast.error(
-          error?.response?.data?.message || "Failed to fetch assistants"
-        );
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch assistants"
+          );
+        }
       } finally {
         setLoading(false);
       }

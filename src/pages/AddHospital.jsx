@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { PiToggleLeftFill, PiToggleRightFill } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
 const AddHospital = () => {
   const [name, setName] = useState("");
@@ -11,6 +12,8 @@ const AddHospital = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleReset = () => {
     setSearchTerm("");
   };
@@ -18,11 +21,25 @@ const AddHospital = () => {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const res = await axios.get(`${URL}/hospital`);
+        const res = await axios.get(`${URL}/hospital`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setHospitals(res.data.data);
       } catch (err) {
-        console.error("Error fetching hospitals:", err);
-        toast.error("Failed to load hospitals.");
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients"
+          );
+        }
       }
     };
     fetchHospitals();
@@ -44,9 +61,18 @@ const AddHospital = () => {
         setAddress("");
       }
     } catch (err) {
-      console.error("Add hospital error:", err);
-      toast.error(err?.response?.data?.message || "Error adding hospital");
-      setError(err.response?.data?.error);
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients"
+          );
+        }
     }
   };
 
@@ -67,8 +93,18 @@ const AddHospital = () => {
         );
       }
     } catch (err) {
-      console.error("Toggle status error:", err);
-      toast.error(err.message || "Failed to update hospital status.");
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch hospitals"
+          );
+        }
     }
   };
 

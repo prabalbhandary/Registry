@@ -59,7 +59,9 @@ const AllPatients = () => {
   }
 
   return (
-    <div className="p-6">
+    <>
+      <title>Trauma Registry - All Patients</title>
+      <div className="p-6">
       <div className="flex items-center justify-end mb-4">
         <input
           type="text"
@@ -175,6 +177,7 @@ const AllPatients = () => {
         </>
       )}
     </div>
+    </>
   );
 };
 

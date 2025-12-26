@@ -124,11 +124,18 @@ const Surgery = () => {
       navigate("/patients/surgeries");
       setSubmittedData(res.data);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          "An error occurred while submitting the form."
-      );
+      if (error.response?.status === 401) {
+                toast.error("Session expired. Please log in again.", {
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                });
+              } else {
+                toast.error(
+                  error.response?.data?.message || "Failed to submit form"
+                );
+              }
     }
   };
 

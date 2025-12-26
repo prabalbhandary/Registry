@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "../components/URL";
@@ -26,6 +26,8 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const loadCounts = async () => {
       try {
@@ -46,7 +48,18 @@ const Dashboard = () => {
           hospitals: data.hospital || 0,
         });
       } catch (error) {
-        toast.error(error.response?.data?.message || "Error fetching data");
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch counts"
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -125,7 +138,9 @@ const Dashboard = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="space-y-6">
+    <>
+      <title>Trauma Registry - Dashboard</title>
+      <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-2xl p-8 shadow-xl text-white">
         <div className="flex items-center justify-between">
           <div>
@@ -262,6 +277,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

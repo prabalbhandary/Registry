@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { URL } from "../components/URL";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const FollowUp = () => {
   const patientDetailId = localStorage.getItem("patient_detail_id") || "";
@@ -83,6 +84,8 @@ const FollowUp = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchPatientDetail = async () => {
       try {
@@ -101,7 +104,18 @@ const FollowUp = () => {
           sex: data.gender,
         }));
       } catch (err) {
-        console.log(err);
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch patients detail"
+          );
+        }
       }
     };
 
@@ -122,7 +136,18 @@ const FollowUp = () => {
           setPatientInfo((prev) => ({ ...prev, diagnosis }));
         }
       } catch (err) {
-        console.log(err);
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch femur fracture"
+          );
+        }
       }
     };
 
@@ -170,9 +195,18 @@ const FollowUp = () => {
         toast.error("Something went wrong.");
       }
     } catch (err) {
-      console.error(err);
-      setError("Failed to submit follow-up.");
-      toast.error("Failed to submit follow-up.");
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to create follow-up"
+          );
+        }
     }
   };
 

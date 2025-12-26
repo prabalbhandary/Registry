@@ -17,12 +17,15 @@ import {
   PiTrashFill,
 } from "react-icons/pi";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
 
   // =============================
   // Delete User
@@ -52,8 +55,18 @@ const Users = () => {
           Swal.fire("Deleted!", "User has been removed.", "success");
         }
       } catch (err) {
-        toast.error("Error deleting user");
-        setError(err);
+        if (error.response?.status === 401) {
+                  toast.error("Session expired. Please log in again.", {
+                    onClose: () => {
+                      localStorage.clear();
+                      navigate("/login");
+                    },
+                  });
+                } else {
+                  toast.error(
+                    error.response?.data?.message || "Failed to delete user"
+                  );
+                }
       }
     }
   };
@@ -79,8 +92,18 @@ const Users = () => {
         );
       }
     } catch (err) {
-      setError(err);
-      toast.error("Error updating user");
+      if (error.response?.status === 401) {
+                toast.error("Session expired. Please log in again.", {
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                });
+              } else {
+                toast.error(
+                  error.response?.data?.message || "Failed to update user"
+                );
+              }
     }
   };
 
@@ -109,8 +132,18 @@ const Users = () => {
         );
       }
     } catch (err) {
-      setError(err);
-      toast.error("Error updating role");
+      if (error.response?.status === 401) {
+                toast.error("Session expired. Please log in again.", {
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                });
+              } else {
+                toast.error(
+                  error.response?.data?.message || "Failed to update role"
+                );
+              }
     }
   };
 
@@ -129,6 +162,18 @@ const Users = () => {
         if (res.status === 200) setUsers(res.data.data);
       } catch (err) {
         setError(err);
+        if (error.response?.status === 401) {
+                  toast.error("Session expired. Please log in again.", {
+                    onClose: () => {
+                      localStorage.clear();
+                      navigate("/login");
+                    },
+                  });
+                } else {
+                  toast.error(
+                    error.response?.data?.message || "Failed to fetch users"
+                  );
+                }
       } finally {
         setLoading(false);
       }

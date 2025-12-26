@@ -45,7 +45,20 @@ const CreateSurgery = () => {
   useEffect(() => {
     axios.get(`${BASE_URL}/countries`)
       .then(res => setCountries(res.data.data))
-      .catch(() => toast.error("Failed to load countries"));
+      .catch(() => {
+        if (error.response?.status === 401) {
+                  toast.error("Session expired. Please log in again.", {
+                    onClose: () => {
+                      localStorage.clear();
+                      navigate("/login");
+                    },
+                  });
+                } else {
+                  toast.error(
+                    error.response?.data?.message || "Failed to fetch countries"
+                  );
+                }
+      });
   }, []);
 
   useEffect(() => {
@@ -81,7 +94,20 @@ const CreateSurgery = () => {
         setDistricts(res.data.data);
         setDistrictId("");
       })
-      .catch(() => toast.error("Failed to load districts"));
+      .catch(() => {
+        if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to fetch districts"
+          );
+        }
+      });
   }, [province_id]);
 
   const [fieldErrors, setFieldErrors] = useState({
@@ -276,12 +302,18 @@ const CreateSurgery = () => {
         });
       }
     } catch (error) {
-      const errMsg =
-        error?.response?.data?.error ||
-        "Something went wrong. Please try again.";
-      toast.error(errMsg);
-      setError(errMsg);
-      console.log(error);
+      if (error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+        } else {
+          toast.error(
+            error.response?.data?.message || "Failed to create patient"
+          );
+        }
     }
   };
 
