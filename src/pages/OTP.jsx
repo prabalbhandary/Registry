@@ -8,29 +8,35 @@ import axios from "axios";
 const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigate = useNavigate();
-  const [email, setEmail] = useState(localStorage.getItem("otpEmail"));
+  const [email] = useState(localStorage.getItem("otpEmail"));
 
   const handleChange = (e, index) => {
     const value = e.target.value;
-    if (/[^0-9]/.test(value)) return;
+    if (!/^\d?$/.test(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    if (value && index < otp.length - 1) {
-      document.getElementById(`otp-${index + 1}`).focus();
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
     }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").trim();
+    if (!/^\d{6}$/.test(pasted)) return;
+    const newOtp = pasted.split("");
+    setOtp(newOtp);
+    document.getElementById("otp-5")?.focus();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const otpValue = otp.join("");
-
     if (otpValue.length !== 6) {
       toast.error("Please enter a valid 6-digit OTP.");
       return;
     }
-
     try {
       const res = await axios.post(`${URL}/verify-otp`, {
         otp: otpValue,
@@ -63,11 +69,13 @@ const OTP = () => {
               {otp.map((digit, index) => (
                 <input
                   key={index}
-                  type="text"
                   id={`otp-${index}`}
+                  type="text"
+                  inputMode="numeric"
                   value={digit}
                   onChange={(e) => handleChange(e, index)}
-                  maxLength="1"
+                  onPaste={handlePaste}
+                  maxLength={1}
                   className="w-12 h-12 text-center text-xl border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   autoFocus={index === 0}
                   placeholder="•"
