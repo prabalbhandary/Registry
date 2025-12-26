@@ -300,8 +300,7 @@ const Sidebar = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 bg-slate-900/50">
           <div className="text-center">
-            <p className="text-xs text-slate-500">Version 1.0.0</p>
-            <p className="text-xs text-slate-600 mt-1">© 2024 Trauma Registry</p>
+            <p className="text-xs text-slate-600 mt-1">© {new Date().getFullYear()} Trauma Registry</p>
           </div>
         </div>
       </div>
