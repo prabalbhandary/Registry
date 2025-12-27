@@ -11,8 +11,13 @@ const Surgeries = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1024);
 
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
   const navigate = useNavigate();
 
+  /* ---------- SCREEN SIZE ---------- */
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 1024);
@@ -21,41 +26,45 @@ const Surgeries = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const res = await axios.get(
-          `${URL}/patient-detail?treatment_status=follow_up`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+  /* ---------- FETCH PATIENTS ---------- */
+  const fetchPatients = async () => {
+    try {
+      setLoading(true);
 
-        setPatients(res.data?.data || []);
-      } catch (error) {
-        if (error.response?.status === 401) {
-          toast.error("Session expired. Please log in again.", {
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          });
-        } else {
-          toast.error(
-            error.response?.data?.message || "Failed to fetch patients detail"
-          );
+      const res = await axios.get(
+        `${URL}/patient-detail?treatment_status=follow_up&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      } finally {
-        setLoading(false);
+      );
+
+      setPatients(res.data?.data || []);
+      setLastPage(res.data?.meta?.last_page || 1);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please log in again.", {
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
+      } else {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch patients detail"
+        );
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPatients();
-  }, []);
+  }, [page]);
 
-  // Filter patients based on search term
+  /* ---------- SEARCH (CURRENT PAGE ONLY) ---------- */
   const filteredPatients = patients.filter((patient) => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -63,8 +72,9 @@ const Surgeries = () => {
       patient.last_name?.toLowerCase().includes(searchLower) ||
       patient.hospital_number?.toLowerCase().includes(searchLower) ||
       patient.type_of_injury?.toLowerCase().includes(searchLower) ||
-      patient.femur_fracture?.diagonis?.toLowerCase().includes(searchLower) ||
-      patient.femur_fracture?.treatment_status?.toLowerCase().includes(searchLower)
+      patient.femur_fracture?.diagnosis
+        ?.toLowerCase()
+        .includes(searchLower)
     );
   });
 
@@ -77,7 +87,7 @@ const Surgeries = () => {
 
   /* -------------------- MOBILE CARDS -------------------- */
   const renderCards = () =>
-    filteredPatients.map((patient) => (
+    filteredPatients.map((patient, index) => (
       <div
         key={patient.id}
         onClick={() => handleClick(patient.id)}
@@ -88,7 +98,7 @@ const Surgeries = () => {
             {patient.first_name} {patient.last_name}
           </h3>
           <span className="text-xs text-gray-500">
-            {new Date(patient.created_at).toLocaleDateString()}
+            #{(page - 1) * 10 + index + 1}
           </span>
         </div>
 
@@ -96,16 +106,13 @@ const Surgeries = () => {
           <CardItem label="Age" value={patient.age} />
           <CardItem label="Gender" value={patient.gender} />
           <CardItem label="Hospital No." value={patient.hospital_number} />
-          <CardItem
-            label="Injury Type"
-            value={patient.type_of_injury}
-          />
+          <CardItem label="Injury Type" value={patient.type_of_injury} />
         </div>
 
         {patient.femur_fracture && (
           <CardText
             label="Femur Fracture Diagnosis"
-            value={patient.femur_fracture.diagonis}
+            value={patient.femur_fracture.diagnosis}
           />
         )}
       </div>
@@ -127,7 +134,10 @@ const Surgeries = () => {
               "Follow-up Status",
               "Created At",
             ].map((head, i) => (
-              <th key={i} className="px-4 py-3 border-b text-left font-medium">
+              <th
+                key={i}
+                className="px-4 py-3 border-b text-left font-medium"
+              >
                 {head}
               </th>
             ))}
@@ -136,11 +146,10 @@ const Surgeries = () => {
 
         <tbody>
           {filteredPatients.map((patient, index) => (
-            <tr
-              key={patient.id}
-              className="hover:bg-gray-50 transition"
-            >
-              <td className="px-4 py-3 border-b">{index + 1}</td>
+            <tr key={patient.id} className="hover:bg-gray-50 transition">
+              <td className="px-4 py-3 border-b">
+                {(page - 1) * 10 + index + 1}
+              </td>
 
               <td className="px-4 py-3 border-b">
                 <Link
@@ -161,7 +170,7 @@ const Surgeries = () => {
                 {patient.type_of_injury}
               </td>
               <td className="px-4 py-3 border-b capitalize">
-                {patient.femur_fracture?.treatment_status || "—"}
+                {patient.treatment_status_label || "—"}
               </td>
               <td className="px-4 py-3 border-b">
                 {new Date(patient.created_at).toLocaleDateString()}
@@ -175,38 +184,63 @@ const Surgeries = () => {
 
   return (
     <>
-      <title>Trauma Registry - Patients</title>
-      <div className="p-6 min-h-[300px]">
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          {/* Search Bar */}
-          <div className="mb-6 flex items-center justify-end">
-            <input
-              type="text"
-              placeholder="Search by name, hospital no, injury type..."
-              className="px-4 py-2 border border-gray-300 rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+      <title>Trauma Registry - Follow Up</title>
 
-          {/* Results */}
-          {filteredPatients.length === 0 ? (
-            <div className="bg-white border rounded-lg p-8 text-center text-gray-500">
-              {patients.length === 0
-                ? "No follow-up patients found."
-                : "No matching patients found."}
+      <div className="p-6 min-h-[300px]">
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {/* Search */}
+            <div className="mb-6 flex items-center justify-end">
+              <input
+                type="text"
+                placeholder="Search by name, hospital no, injury type..."
+                className="px-4 py-2 border border-gray-300 rounded-lg w-1/2"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1);
+                }}
+              />
             </div>
-          ) : isSmallScreen ? (
-            renderCards()
-          ) : (
-            renderTable()
-          )}
-        </>
-      )}
-    </div>
+
+            {/* Results */}
+            {filteredPatients.length === 0 ? (
+              <div className="bg-white border rounded-lg p-8 text-center text-gray-500">
+                No matching patients found.
+              </div>
+            ) : isSmallScreen ? (
+              renderCards()
+            ) : (
+              renderTable()
+            )}
+
+            {/* Pagination */}
+            <div className="flex justify-between items-center mt-6">
+              <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+
+              <span className="text-sm text-gray-600">
+                Page {page} of {lastPage}
+              </span>
+
+              <button
+                onClick={() => setPage((p) => Math.min(p + 1, lastPage))}
+                disabled={page === lastPage}
+                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

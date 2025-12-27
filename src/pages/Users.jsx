@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 import { URL } from "../components/URL";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
 import {
   FaUserShield,
   FaUser,
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-
 import {
   PiToggleLeftFill,
   PiToggleRightFill,
@@ -22,14 +20,54 @@ import { useNavigate } from "react-router-dom";
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // ✅ Pagination state
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   const navigate = useNavigate();
 
-  // =============================
-  // Delete User
-  // =============================
+  /* =============================
+     FETCH USERS (PAGINATED)
+  ============================= */
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const res = await axios.get(`${URL}/user?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setUsers(res.data?.data || []);
+      setLastPage(res.data?.meta?.last_page || 1);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        toast.error("Session expired. Please log in again.", {
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
+      } else {
+        toast.error(
+          err.response?.data?.message || "Failed to fetch users"
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
+
+  /* =============================
+     DELETE USER
+  ============================= */
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -41,78 +79,51 @@ const Users = () => {
       confirmButtonText: "Yes, delete",
     });
 
-    if (confirm.isConfirmed) {
-      try {
-        const res = await axios.delete(`${URL}/user/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+    if (!confirm.isConfirmed) return;
 
-        if (res.status === 200) {
-          toast.success("User deleted");
-          setUsers(users.filter((u) => u.id !== id));
-          Swal.fire("Deleted!", "User has been removed.", "success");
-        }
-      } catch (err) {
-        if (error.response?.status === 401) {
-                  toast.error("Session expired. Please log in again.", {
-                    onClose: () => {
-                      localStorage.clear();
-                      navigate("/login");
-                    },
-                  });
-                } else {
-                  toast.error(
-                    error.response?.data?.message || "Failed to delete user"
-                  );
-                }
-      }
+    try {
+      await axios.delete(`${URL}/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      toast.success("User deleted");
+      fetchUsers();
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Failed to delete user"
+      );
     }
   };
 
-  // =============================
-  // Toggle Approved State
-  // =============================
+  /* =============================
+     TOGGLE APPROVAL
+  ============================= */
   const handleToggle = async (id, is_approved) => {
     try {
-      const res = await axios.get(`${URL}/approve-user/${id}`, {
+      await axios.get(`${URL}/approve-user/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         params: { is_approved: !is_approved },
       });
 
-      if (res.status === 200) {
-        toast.success("User updated");
-        setUsers(
-          users.map((u) =>
-            u.id === id ? { ...u, is_approved: !u.is_approved } : u
-          )
-        );
-      }
+      toast.success("User updated");
+      fetchUsers();
     } catch (err) {
-      if (error.response?.status === 401) {
-                toast.error("Session expired. Please log in again.", {
-                  onClose: () => {
-                    localStorage.clear();
-                    navigate("/login");
-                  },
-                });
-              } else {
-                toast.error(
-                  error.response?.data?.message || "Failed to update user"
-                );
-              }
+      toast.error(
+        err.response?.data?.message || "Failed to update user"
+      );
     }
   };
 
-  // =============================
-  // Toggle Role Admin/User
-  // =============================
+  /* =============================
+     TOGGLE ROLE
+  ============================= */
   const handleChangeRole = async (id, is_admin) => {
     try {
-      const res = await axios.put(
+      await axios.put(
         `${URL}/user/${id}`,
         {},
         {
@@ -123,66 +134,18 @@ const Users = () => {
         }
       );
 
-      if (res.status === 200) {
-        toast.success("Role updated");
-        setUsers(
-          users.map((u) =>
-            u.id === id ? { ...u, is_admin: !u.is_admin } : u
-          )
-        );
-      }
+      toast.success("Role updated");
+      fetchUsers();
     } catch (err) {
-      if (error.response?.status === 401) {
-                toast.error("Session expired. Please log in again.", {
-                  onClose: () => {
-                    localStorage.clear();
-                    navigate("/login");
-                  },
-                });
-              } else {
-                toast.error(
-                  error.response?.data?.message || "Failed to update role"
-                );
-              }
+      toast.error(
+        err.response?.data?.message || "Failed to update role"
+      );
     }
   };
 
-  // =============================
-  // Fetch Users
-  // =============================
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get(`${URL}/user`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        if (res.status === 200) setUsers(res.data.data);
-      } catch (err) {
-        setError(err);
-        if (error.response?.status === 401) {
-                  toast.error("Session expired. Please log in again.", {
-                    onClose: () => {
-                      localStorage.clear();
-                      navigate("/login");
-                    },
-                  });
-                } else {
-                  toast.error(
-                    error.response?.data?.message || "Failed to fetch users"
-                  );
-                }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  // Filter users based on search term
+  /* =============================
+     SEARCH (CURRENT PAGE ONLY)
+  ============================= */
   const filteredUsers = users.filter((user) => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -191,196 +154,129 @@ const Users = () => {
     );
   });
 
-  const UserCard = ({ user, index }) => (
-    <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
-      <div className="flex justify-between items-center">
-        <h3 className="font-semibold text-lg">
-          {index + 1}. {user.name}
-        </h3>
-        <button
-          onClick={() => handleDelete(user.id)}
-          className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded flex items-center text-sm"
-        >
-          <PiTrashFill className="mr-1" /> Delete
-        </button>
-      </div>
-
-      <p className="text-gray-600 mt-2 mb-4">{user.email}</p>
-
-      <div className="flex justify-between">
-        {/* Role */}
-        <div className="flex items-center space-x-2">
-          <span className="text-gray-700">Admin:</span>
-          {user.is_admin ? (
-            <PiToggleRightFill
-              className="text-green-500 text-3xl cursor-pointer"
-              onClick={() => handleChangeRole(user.id, user.is_admin)}
-            />
-          ) : (
-            <PiToggleLeftFill
-              className="text-gray-400 text-3xl cursor-pointer"
-              onClick={() => handleChangeRole(user.id, user.is_admin)}
-            />
-          )}
-        </div>
-
-        {/* Approval */}
-        <div className="flex items-center space-x-2">
-          <span className="text-gray-700">Approved:</span>
-          {user.is_approved ? (
-            <PiToggleRightFill
-              className="text-green-500 text-3xl cursor-pointer"
-              onClick={() => handleToggle(user.id, user.is_approved)}
-            />
-          ) : (
-            <PiToggleLeftFill
-              className="text-gray-400 text-3xl cursor-pointer"
-              onClick={() => handleToggle(user.id, user.is_approved)}
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  if (loading) return <Loader />;
 
   return (
     <>
       <title>Users - Trauma Registry</title>
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <div className="p-4 m-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          Error: {error.message}
+
+      {/* Search */}
+      <div className="p-4 flex justify-end">
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          className="px-4 py-2 border border-gray-300 rounded-lg w-1/2"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setPage(1);
+          }}
+        />
+      </div>
+
+      {/* Empty State */}
+      {filteredUsers.length === 0 ? (
+        <div className="p-6 text-center text-gray-500">
+          No users found.
         </div>
       ) : (
         <>
-          {/* Search Bar */}
-          <div className="p-4 flex items-center justify-end">
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              className="px-4 py-2 border border-gray-300 rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto p-4">
+            <table className="min-w-full bg-white border rounded shadow-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  {["#", "Username", "Email", "Admin", "Approved", "Actions"].map(
+                    (h) => (
+                      <th key={h} className="px-4 py-3 text-left font-semibold">
+                        {h}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredUsers.map((user, index) => (
+                  <tr key={user.id} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      {(page - 1) * 10 + index + 1}
+                    </td>
+                    <td className="px-4 py-3">{user.name}</td>
+                    <td className="px-4 py-3">{user.email}</td>
+
+                    <td className="px-4 py-3">
+                      {user.is_admin ? (
+                        <PiToggleRightFill
+                          className="text-green-500 text-3xl cursor-pointer"
+                          onClick={() =>
+                            handleChangeRole(user.id, user.is_admin)
+                          }
+                        />
+                      ) : (
+                        <PiToggleLeftFill
+                          className="text-gray-400 text-3xl cursor-pointer"
+                          onClick={() =>
+                            handleChangeRole(user.id, user.is_admin)
+                          }
+                        />
+                      )}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      {user.is_approved ? (
+                        <PiToggleRightFill
+                          className="text-green-500 text-3xl cursor-pointer"
+                          onClick={() =>
+                            handleToggle(user.id, user.is_approved)
+                          }
+                        />
+                      ) : (
+                        <PiToggleLeftFill
+                          className="text-gray-400 text-3xl cursor-pointer"
+                          onClick={() =>
+                            handleToggle(user.id, user.is_approved)
+                          }
+                        />
+                      )}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="bg-red-500 text-white px-3 py-2 rounded"
+                      >
+                        <PiTrashFill />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Empty State */}
-          {filteredUsers.length === 0 && (
-            <div className="p-4 m-4 bg-gray-100 border border-gray-300 text-gray-700 rounded text-center">
-              {users.length === 0
-                ? "No users found."
-                : "No matching users found."}
-            </div>
-          )}
+          {/* Pagination */}
+          <div className="flex justify-between items-center px-6 pb-6">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
 
-          {/* Mobile View */}
-          {filteredUsers.length > 0 && (
-            <div className="md:hidden px-4 py-2">
-              {filteredUsers.map((u, i) => (
-                <UserCard key={u.id} user={u} index={i} />
-              ))}
-            </div>
-          )}
+            <span className="text-sm text-gray-600">
+              Page {page} of {lastPage}
+            </span>
 
-          {/* Desktop Table */}
-          {filteredUsers.length > 0 && (
-            <div className="hidden md:block overflow-x-auto p-4">
-              <table className="min-w-full bg-white border rounded shadow-sm">
-                <thead className="bg-gray-100">
-                  <tr>
-                    {["#", "Username", "Email", "Admin", "Approved", "Actions"].map(
-                      (h) => (
-                        <th
-                          key={h}
-                          className="py-3 px-4 font-semibold text-left border-b"
-                        >
-                          {h}
-                        </th>
-                      )
-                    )}
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {filteredUsers.map((user, index) => (
-                    <tr
-                      key={user.id}
-                      className="hover:bg-gray-50 border-b transition"
-                    >
-                      <td className="px-4 py-3">{index + 1}</td>
-                      <td className="px-4 py-3">{user.name}</td>
-                      <td className="px-4 py-3">{user.email}</td>
-
-                      {/* Admin Toggle */}
-                      <td className="px-4 py-3">
-                        <div className="flex items-center space-x-2">
-                          {user.is_admin ? (
-                            <PiToggleRightFill
-                              className="text-green-500 text-4xl cursor-pointer"
-                              onClick={() =>
-                                handleChangeRole(user.id, user.is_admin)
-                              }
-                            />
-                          ) : (
-                            <PiToggleLeftFill
-                              className="text-gray-400 text-4xl cursor-pointer"
-                              onClick={() =>
-                                handleChangeRole(user.id, user.is_admin)
-                              }
-                            />
-                          )}
-                          {user.is_admin ? (
-                            <FaUserShield className="text-blue-600" />
-                          ) : (
-                            <FaUser className="text-gray-500" />
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Approved Toggle */}
-                      <td className="px-4 py-3">
-                        <div className="flex items-center space-x-2">
-                          {user.is_approved ? (
-                            <PiToggleRightFill
-                              className="text-green-500 text-4xl cursor-pointer"
-                              onClick={() =>
-                                handleToggle(user.id, user.is_approved)
-                              }
-                            />
-                          ) : (
-                            <PiToggleLeftFill
-                              className="text-gray-400 text-4xl cursor-pointer"
-                              onClick={() =>
-                                handleToggle(user.id, user.is_approved)
-                              }
-                            />
-                          )}
-
-                          {user.is_approved ? (
-                            <FaCheckCircle className="text-green-600" />
-                          ) : (
-                            <FaTimesCircle className="text-red-500" />
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Delete */}
-                      <td className="px-4 py-3">
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded flex items-center"
-                        >
-                          <PiTrashFill />
-                          <span className="ml-2 hidden lg:inline">Delete</span>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+            <button
+              onClick={() => setPage((p) => Math.min(p + 1, lastPage))}
+              disabled={page === lastPage}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
     </>
