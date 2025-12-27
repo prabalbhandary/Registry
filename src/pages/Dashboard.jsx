@@ -155,7 +155,7 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          label="Total Surgeries"
+          label="Surgeries Performed"
           count={counts.surgeries}
           icon={RiSurgicalMaskFill}
           bgGradient="from-amber-400 to-orange-500"
