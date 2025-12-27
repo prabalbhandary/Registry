@@ -12,31 +12,35 @@ const AddAssistant = () => {
   const [hospitals, setHospitals] = useState([]);
   const [hospitals_id, setHospitals_id] = useState("");
 
+  // ✅ Pagination
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  /* ===================== RESET ===================== */
-  const handleReset = () => setSearchTerm("");
-
-  /* ===================== FETCH ASSISTANT SURGEONS ===================== */
+  /* ===================== FETCH ASSISTANT SURGEONS (PAGINATED) ===================== */
   useEffect(() => {
     const fetchAssistantSurgeons = async () => {
       try {
-        const res = await axios.get(`${URL}/assistant-surgeone`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(
+          `${URL}/assistant-surgeone?page=${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        setSurgeons(res.data?.data || res.data);
+        setSurgeons(res.data?.data || []);
+        setLastPage(res.data?.meta?.last_page || 1);
       } catch (error) {
-        console.error("Fetch assistant surgeons error:", error);
         handleAuthError(error, "Failed to fetch assistant surgeons");
       }
     };
 
     fetchAssistantSurgeons();
-  }, [token]);
+  }, [page, token]);
 
   /* ===================== FETCH HOSPITALS ===================== */
   useEffect(() => {
@@ -50,7 +54,6 @@ const AddAssistant = () => {
 
         setHospitals(res.data?.data || []);
       } catch (error) {
-        console.error("Fetch hospitals error:", error);
         handleAuthError(error, "Failed to fetch hospitals");
       }
     };
@@ -81,22 +84,22 @@ const AddAssistant = () => {
         }
       );
 
-      toast.success(res.data?.message || "Assistant surgeon added");
-
-      setSurgeons((prev) => [...prev, res.data.assistant_surgeon]);
+      toast.success("Assistant surgeon added");
       setName("");
       setHospitals_id("");
+
+      // refresh current page
+      setPage(1);
     } catch (error) {
-      console.error("Add assistant surgeon error:", error);
       handleAuthError(error, "Failed to add assistant surgeon");
     }
   };
 
   /* ===================== TOGGLE ACTIVE STATUS ===================== */
-  const toggleActiveStatus = async (surgeonId, currentStatus) => {
+  const toggleActiveStatus = async (id, currentStatus) => {
     try {
-      const res = await axios.patch(
-        `${URL}/activate-assistant-surgeone/${surgeonId}`,
+      await axios.patch(
+        `${URL}/activate-assistant-surgeone/${id}`,
         { is_active: !currentStatus },
         {
           headers: {
@@ -105,19 +108,14 @@ const AddAssistant = () => {
         }
       );
 
-      if (res.status === 200) {
-        setSurgeons((prev) =>
-          prev.map((s) =>
-            s.id === surgeonId ? { ...s, is_active: !currentStatus } : s
-          )
-        );
+      toast.success("Status updated");
 
-        toast.success(
-          `Status changed to ${!currentStatus ? "Active" : "Inactive"}`
-        );
-      }
+      setSurgeons((prev) =>
+        prev.map((s) =>
+          s.id === id ? { ...s, is_active: !currentStatus } : s
+        )
+      );
     } catch (error) {
-      console.error("Toggle status error:", error);
       handleAuthError(error, "Failed to update status");
     }
   };
@@ -136,90 +134,83 @@ const AddAssistant = () => {
     }
   };
 
-  /* ===================== FILTER ===================== */
-  const filteredSurgeons = surgeons.filter((surgeon) =>
-    surgeon.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  /* ===================== SEARCH (CURRENT PAGE ONLY) ===================== */
+  const filteredSurgeons = surgeons.filter((s) =>
+    s.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <>
       <title>Assistant Surgeons - Trauma Registry</title>
 
-      {/* ===================== FORM ===================== */}
-      <section className="container mx-auto px-4 md:px-8 py-6 bg-white shadow-xl rounded-lg my-8">
-        <h1 className="text-3xl font-bold mb-2">Add New Assistant Surgeon</h1>
-        <p className="text-gray-600 mb-6">Enter name and select hospital</p>
+      {/* ===================== ADD FORM ===================== */}
+      <section className="container mx-auto px-6 py-6 bg-white shadow rounded-lg my-8">
+        <h1 className="text-2xl font-bold mb-4">Add Assistant Surgeon</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-4 border rounded-md"
-            required
+            className="w-full p-3 border rounded"
           />
 
           <select
             value={hospitals_id}
             onChange={(e) => setHospitals_id(e.target.value)}
-            className="w-full p-4 border rounded-md"
-            required
+            className="w-full p-3 border rounded"
           >
             <option value="">Select Hospital</option>
             {hospitals
               .filter((h) => h.is_active)
-              .map((hospital) => (
-                <option key={hospital.id} value={hospital.id}>
-                  {hospital.name}
+              .map((h) => (
+                <option key={h.id} value={h.id}>
+                  {h.name}
                 </option>
               ))}
           </select>
 
-          <button className="w-full bg-blue-600 text-white py-4 rounded-md hover:bg-blue-700">
+          <button className="w-full bg-blue-600 text-white py-3 rounded">
             Save
           </button>
         </form>
       </section>
 
       {/* ===================== LIST ===================== */}
-      <section className="container mx-auto px-4 md:px-8 py-6 bg-white shadow-xl rounded-lg my-8">
-        <h2 className="text-3xl font-bold mb-4">Assistant Surgeons</h2>
-
+      <section className="container mx-auto px-6 py-6 bg-white shadow rounded-lg my-8">
         <div className="flex gap-4 mb-4">
           <input
             type="text"
-            placeholder="Search by name"
+            placeholder="Search name..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow p-3 border rounded-md"
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
+            className="flex-grow p-3 border rounded"
           />
-          <button
-            onClick={handleReset}
-            className="bg-blue-600 text-white px-4 rounded-md"
-          >
-            Reset
-          </button>
         </div>
 
         <table className="w-full border">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3 text-left">S.No</th>
+              <th className="p-3 text-left">#</th>
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Status</th>
             </tr>
           </thead>
+
           <tbody>
             {filteredSurgeons.length > 0 ? (
               filteredSurgeons.map((s, i) => (
                 <tr key={s.id} className="border-t">
-                  <td className="p-3">{i + 1}</td>
+                  <td className="p-3">
+                    {(page - 1) * 10 + i + 1}
+                  </td>
                   <td className="p-3">{s.name}</td>
                   <td className="p-3">
-                    <button
-                      onClick={() => toggleActiveStatus(s.id, s.is_active)}
-                    >
+                    <button onClick={() => toggleActiveStatus(s.id, s.is_active)}>
                       {s.is_active ? (
                         <PiToggleRightFill className="text-green-500 text-3xl" />
                       ) : (
@@ -238,6 +229,29 @@ const AddAssistant = () => {
             )}
           </tbody>
         </table>
+
+        {/* ===================== PAGINATION ===================== */}
+        <div className="flex justify-between items-center mt-6">
+          <button
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <span className="text-sm text-gray-600">
+            Page {page} of {lastPage}
+          </span>
+
+          <button
+            onClick={() => setPage((p) => Math.min(p + 1, lastPage))}
+            disabled={page === lastPage}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </section>
     </>
   );
