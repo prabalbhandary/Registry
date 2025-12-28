@@ -95,7 +95,7 @@ const FollowUp = () => {
           },
         });
 
-        const data = res.data.data[0];
+        const data = res.data.data;
 
         setPatientInfo((prev) => ({
           ...prev,

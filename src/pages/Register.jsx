@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUserPlus, FaCheckCircle, FaClock } from "react-icons/fa";
 import Logo from "../assets/logo.png";
 
 const Register = () => {
@@ -13,14 +13,24 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords and confirm password do not match");
+    
+    if (!agreeTerms) {
+      toast.error("Please agree to the Terms & Conditions");
       return;
     }
+    
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await axios.post(`${URL}/register`, {
@@ -43,147 +53,333 @@ const Register = () => {
       } else {
         toast.error(response?.message || "An error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <title>Register - Trauma Registry</title>
-      <section className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
-        <article className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-          <header className="text-center mb-8">
-            <Link to="/" className="text-3xl font-semibold text-blue-600">
-              Nepal Orthopedic Association
-            </Link>
-            <img src={Logo} alt="Logo" className="w-32 h-32 mx-auto mb-4" />
-          </header>
-
-          <form onSubmit={handleSubmit}>
-            <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-              Create an Account in Trauma Registry
-            </h1>
-
-            <section className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
-                className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </section>
-
-            <section className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Your Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@domain.com"
-                className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </section>
-
-            <section className="mb-6 relative">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••••"
-                className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
-              >
-                {showConfirmPassword ? (
-                  <FaEyeSlash className="text-gray-600 text-xl" />
-                ) : (
-                  <FaEye className="text-gray-600 text-xl" />
-                )}
-              </span>
-            </section>
-
-            <section className="mb-6 relative">
-              <label
-                htmlFor="confirm_password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </label>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirm_password"
-                id="confirm_password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••••••••"
-                className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <span
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-[70%] transform -translate-y-1/2 cursor-pointer"
-              >
-                {showConfirmPassword ? (
-                  <FaEyeSlash className="text-gray-600 text-xl" />
-                ) : (
-                  <FaEye className="text-gray-600 text-xl" />
-                )}
-              </span>
-            </section>
-            <section className="mb-6 flex">
-              <input type="checkbox" />
-              <p>
-                I hereby agree to Terms & Conditions{" "}
-                {/* <Link to="/terms" className="underline">Terms and Conditions</Link> */}
-                of Nepal Orthopedic Association for using Trauma Registry.
+      
+      <div className="min-h-screen flex flex-col lg:flex-row">
+        {/* Left Side - Branding */}
+        <div className="lg:w-1/2 bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-700 p-8 lg:p-16 flex flex-col justify-center relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white opacity-5 rounded-full -ml-48 -mt-48"></div>
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-white opacity-5 rounded-full -mr-40 -mb-40"></div>
+          
+          <div className="relative z-10 text-white space-y-8 animate-[fadeIn_0.8s_ease-out]">
+            {/* Logo and Title */}
+            <div className="text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
+                <img 
+                onClick={() => navigate("/")}
+                  src={Logo} 
+                  alt="Nepal Orthopedic Association" 
+                  className="w-20 h-20 lg:w-24 lg:h-24 object-contain bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20"
+                />
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                    Nepal Orthopedic<br />Association
+                  </h1>
+                </div>
+              </div>
+              
+              <h2 className="text-2xl lg:text-3xl font-bold mb-4">
+                Join Our Registry System
+              </h2>
+              <p className="text-emerald-100 text-lg">
+                Create your account to start managing trauma patient records
               </p>
-            </section>
+            </div>
 
-            <section className="mb-6">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-200"
-              >
-                CREATE ACCOUNT
-              </button>
-            </section>
+            {/* Registration Benefits */}
+            <div className="space-y-6 pt-8">
+              <div className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaCheckCircle className="text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-1">Quick Approval</h3>
+                  <p className="text-emerald-100 text-sm">
+                    Your account will be reviewed and approved by our admin team
+                  </p>
+                </div>
+              </div>
 
-            <footer className="text-center mt-6">
-              <p className="text-sm text-gray-600">Already have an account?</p>
-              <Link
-                to="/login"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Login Here
-              </Link>
-            </footer>
-          </form>
-        </article>
-      </section>
+              <div className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaUserPlus className="text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-1">Full Access</h3>
+                  <p className="text-emerald-100 text-sm">
+                    Access patient records, surgical data, and follow-up tracking
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaClock className="text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-1">24/7 Availability</h3>
+                  <p className="text-emerald-100 text-sm">
+                    Access your data anytime, anywhere with secure cloud storage
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div className="pt-8 border-t border-white/20">
+              <h3 className="text-lg font-bold mb-4">Getting Started</h3>
+              <ol className="space-y-3 text-emerald-100">
+                <li className="flex items-center gap-3">
+                  <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                  Create your account with valid credentials
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                  Wait for admin approval (usually within 24 hours)
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                  Login and start managing patient records
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Registration Form */}
+        <div className="lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-gradient-to-br from-slate-50 to-slate-100">
+          <div className="w-full max-w-md animate-[slideUp_0.8s_ease-out]">
+            <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-10 border border-slate-200">
+              {/* Form Header */}
+              <div className="text-center mb-8">
+                <div className="inline-block p-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mb-4">
+                  <svg 
+                    className="w-8 h-8 text-white" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" 
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800 mb-2">
+                  Create Account
+                </h2>
+                <p className="text-slate-600">
+                  Join the trauma registry system
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name Input */}
+                <div>
+                  <label 
+                    htmlFor="name" 
+                    className="block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full p-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-300 text-slate-700"
+                    required
+                  />
+                </div>
+
+                {/* Email Input */}
+                <div>
+                  <label 
+                    htmlFor="email" 
+                    className="block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@domain.com"
+                    className="w-full p-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-300 text-slate-700"
+                    required
+                  />
+                </div>
+
+                {/* Password Input */}
+                <div>
+                  <label 
+                    htmlFor="password" 
+                    className="block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider"
+                  >
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••••••••"
+                      className="w-full p-4 pr-12 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-300 text-slate-700"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                      {showPassword ? (
+                        <FaEyeSlash className="text-xl" />
+                      ) : (
+                        <FaEye className="text-xl" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm Password Input */}
+                <div>
+                  <label 
+                    htmlFor="confirm_password" 
+                    className="block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider"
+                  >
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirm_password"
+                      id="confirm_password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••••••••"
+                      className="w-full p-4 pr-12 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-300 text-slate-700"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                      {showConfirmPassword ? (
+                        <FaEyeSlash className="text-xl" />
+                      ) : (
+                        <FaEye className="text-xl" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Terms & Conditions */}
+                <div className="pt-2">
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={agreeTerms}
+                      onChange={(e) => setAgreeTerms(e.target.checked)}
+                      className="w-5 h-5 mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                    />
+                    <span className="text-sm text-slate-600 group-hover:text-slate-800">
+                      I hereby agree to the Terms & Conditions of Nepal Orthopedic Association for using the Trauma Registry system.
+                    </span>
+                  </label>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle 
+                          className="opacity-25" 
+                          cx="12" 
+                          cy="12" 
+                          r="10" 
+                          stroke="currentColor" 
+                          strokeWidth="4" 
+                          fill="none"
+                        />
+                        <path 
+                          className="opacity-75" 
+                          fill="currentColor" 
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Creating Account...
+                    </span>
+                  ) : (
+                    "Create Your Account"
+                  )}
+                </button>
+
+                {/* Login Link */}
+                <div className="text-center pt-4 border-t border-slate-200">
+                  <p className="text-slate-600">
+                    Already have an account?{" "}
+                    <Link
+                      to="/login"
+                      className="text-emerald-600 hover:text-emerald-700 font-bold hover:underline"
+                    >
+                      Sign In
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
+
+            {/* Additional Info */}
+            <p className="text-center text-slate-500 text-sm mt-8">
+              © 2024 Nepal Orthopedic Association. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </>
   );
 };

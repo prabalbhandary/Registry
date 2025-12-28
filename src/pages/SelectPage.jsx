@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { URL } from "../components/URL";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaArrowLeft } from "react-icons/fa6";
 
 const selectStyles = {
   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
@@ -35,7 +35,6 @@ const SelectPage = () => {
       toast.error("Please select a hospital.");
       return;
     }
-
     if (selectedAssistants.length === 0) {
       toast.error("Please select at least one assistant surgeon.");
       return;
@@ -46,6 +45,10 @@ const SelectPage = () => {
         surgeon_name: primarySurgeon,
         hospitals_id: selectedHospital.value,
         assistant_surgeones: selectedAssistants.map((s) => s.value),
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (res.data.success) {
@@ -57,195 +60,190 @@ const SelectPage = () => {
         navigate("/create-surgery");
       }
     } catch (error) {
-      if (error.response?.status === 401) {
-          toast.error("Session expired. Please log in again.", {
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          });
-        } else {
-          toast.error(
-            error.response?.data?.message || "Failed to fetch surgeon detail"
-          );
-        }
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
   useEffect(() => {
-    try {
-    axios.get(`${URL}/hospital`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then((res) => {
-      const data = res?.data?.data || [];
-      setHospitals(
-        data
-          .filter((h) => h.is_active)
-          .map((h) => ({ value: h.id, label: h.name }))
-      );
-    });
-    } catch (error) {
-      if (error.response?.status === 401) {
-          toast.error("Session expired. Please log in again.", {
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          });
-        } else {
-          toast.error(
-            error.response?.data?.message || "Failed to fetch patients"
-          );
-        }
-    }
+    axios
+      .get(`${URL}/hospital`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        setHospitals(
+          (res.data?.data || [])
+            .filter((h) => h.is_active)
+            .map((h) => ({ value: h.id, label: h.name }))
+        );
+      });
   }, []);
 
   useEffect(() => {
-    try {
-      axios.get(`${URL}/assistant-surgeone`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }).then((res) => {
-      const data = res?.data?.data || [];
-      setAssistantSurgeons(
-        data.map((s) => ({ value: s.name, label: s.name }))
-      );
-    });
-    } catch (error) {
-      if (error.response?.status === 401) {
-          toast.error("Session expired. Please log in again.", {
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          });
-        } else {
-          toast.error(
-            error.response?.data?.message || "Failed to fetch patients"
-          );
-        }
-    }
+    axios
+      .get(`${URL}/assistant-surgeone`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        setAssistantSurgeons(
+          (res.data?.data || []).map((s) => ({
+            value: s.name,
+            label: s.name,
+          }))
+        );
+      });
   }, []);
 
   return (
-    <>
-      <title>Select Page - Trauma Registry</title>
-      <div className="max-w-md mx-auto mt-12 p-6 bg-white shadow-md rounded-lg relative z-10">
-      {/* Hospital */}
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold mb-2">Select Hospital</h1>
-        <div className="flex">
-          <Select
-            styles={selectStyles}
-            menuPortalTarget={document.body}
-            options={hospitals}
-            value={selectedHospital}
-            onChange={setSelectedHospital}
-            className="flex-1"
-            placeholder="Select Hospital"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-slate-100 p-4 md:p-8">
+      {/* Header */}
+      <div className="max-w-3xl mx-auto mb-8">
+        <div className="flex items-center gap-4">
           <button
-            onClick={() => setIsHospitalModalOpen(true)}
-            className="ml-2 p-3 bg-blue-500 text-white rounded"
+            onClick={() => navigate(-1)}
+            className="p-3 bg-white rounded-xl border border-slate-200 hover:shadow-lg"
           >
-            <FaPlus />
+            <FaArrowLeft />
           </button>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-700 to-purple-500 bg-clip-text text-transparent">
+              Surgeon Details
+            </h1>
+            <p className="text-slate-600 font-medium">
+              Select hospital & assistant surgeons
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Assistants */}
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold mb-2">
-          Select Assistant Surgeon(s)
-        </h1>
-        <div className="flex">
-          <Select
-            isMulti
-            styles={selectStyles}
-            menuPortalTarget={document.body}
-            options={assistantSurgeons}
-            value={selectedAssistants}
-            onChange={setSelectedAssistants}
-            className="flex-1"
-            placeholder="Select Assistants"
-          />
-          <button
-            onClick={() => setIsAssistantModalOpen(true)}
-            className="ml-2 p-3 bg-blue-500 text-white rounded"
-          >
-            <FaPlus />
-          </button>
-        </div>
-      </div>
-
-      {/* Buttons */}
-      <div className="flex justify-between relative z-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Back
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Hospital Modal */}
-      {isHospitalModalOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Add Hospital</h2>
-            <input
-              className="w-full p-2 border mb-3"
-              placeholder="Hospital Name"
-              value={hospitalName}
-              onChange={(e) => setHospitalName(e.target.value)}
-            />
-            <input
-              className="w-full p-2 border mb-3"
-              placeholder="Address"
-              value={hospitalAddress}
-              onChange={(e) => setHospitalAddress(e.target.value)}
-            />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setIsHospitalModalOpen(false)}>
-                Cancel
-              </button>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                Save
+      {/* Card */}
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 p-8 space-y-8">
+          {/* Hospital */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
+              Hospital
+            </label>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <Select
+                  styles={selectStyles}
+                  menuPortalTarget={document.body}
+                  options={hospitals}
+                  value={selectedHospital}
+                  onChange={setSelectedHospital}
+                  placeholder="Select Hospital"
+                />
+              </div>
+              <button
+                onClick={() => setIsHospitalModalOpen(true)}
+                className="p-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:shadow-lg"
+              >
+                <FaPlus />
               </button>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* Assistant Modal */}
-      {isAssistantModalOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Add Assistant</h2>
-            <input
-              className="w-full p-2 border mb-3"
-              placeholder="Assistant Name"
-              value={assistantName}
-              onChange={(e) => setAssistantName(e.target.value)}
-            />
-            <select
-              className="w-full p-2 border mb-3"
-              value={assistantHospitalId}
-              onChange={(e) => setAssistantHospitalId(e.target.value)}
+          {/* Assistants */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
+              Assistant Surgeons
+            </label>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <Select
+                  isMulti
+                  styles={selectStyles}
+                  menuPortalTarget={document.body}
+                  options={assistantSurgeons}
+                  value={selectedAssistants}
+                  onChange={setSelectedAssistants}
+                  placeholder="Select Assistant Surgeons"
+                />
+              </div>
+              <button
+                onClick={() => setIsAssistantModalOpen(true)}
+                className="p-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:shadow-lg"
+              >
+                <FaPlus />
+              </button>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between pt-6 border-t border-slate-200">
+            <button
+              onClick={() => navigate(-1)}
+              className="px-6 py-3 rounded-xl border-2 border-slate-300 font-semibold hover:bg-slate-50"
             >
-              <option value="">Select Hospital</option>
-              {hospitals.map((h) => (
-                <option key={h.value} value={h.value}>
-                  {h.label}
-                </option>
-              ))}
-            </select>
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setIsAssistantModalOpen(false)}>
+              Back
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:shadow-xl"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Modals (same logic, improved style) */}
+      {(isHospitalModalOpen || isAssistantModalOpen) && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+            <h2 className="text-xl font-bold mb-4">
+              {isHospitalModalOpen ? "Add Hospital" : "Add Assistant"}
+            </h2>
+
+            {isHospitalModalOpen ? (
+              <>
+                <input
+                  className="w-full p-3 border-2 rounded-xl mb-3"
+                  placeholder="Hospital Name"
+                  value={hospitalName}
+                  onChange={(e) => setHospitalName(e.target.value)}
+                />
+                <input
+                  className="w-full p-3 border-2 rounded-xl mb-4"
+                  placeholder="Address"
+                  value={hospitalAddress}
+                  onChange={(e) => setHospitalAddress(e.target.value)}
+                />
+              </>
+            ) : (
+              <>
+                <input
+                  className="w-full p-3 border-2 rounded-xl mb-3"
+                  placeholder="Assistant Name"
+                  value={assistantName}
+                  onChange={(e) => setAssistantName(e.target.value)}
+                />
+                <select
+                  className="w-full p-3 border-2 rounded-xl mb-4"
+                  value={assistantHospitalId}
+                  onChange={(e) => setAssistantHospitalId(e.target.value)}
+                >
+                  <option value="">Select Hospital</option>
+                  {hospitals.map((h) => (
+                    <option key={h.value} value={h.value}>
+                      {h.label}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setIsHospitalModalOpen(false);
+                  setIsAssistantModalOpen(false);
+                }}
+                className="px-4 py-2 font-semibold"
+              >
                 Cancel
               </button>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              <button className="px-6 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-violet-600 to-purple-600">
                 Save
               </button>
             </div>
@@ -253,7 +251,6 @@ const SelectPage = () => {
         </div>
       )}
     </div>
-    </>
   );
 };
 

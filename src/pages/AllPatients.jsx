@@ -71,136 +71,290 @@ const AllPatients = () => {
     <>
       <title>Trauma Registry - All Patients</title>
 
-      <div className="p-6">
-        {/* Search */}
-        <div className="flex items-center justify-end mb-4">
-          <input
-            type="text"
-            placeholder="Search by name, hospital no, phone..."
-            className="px-4 py-2 border border-gray-300 rounded-lg w-1/2"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-          />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4 md:p-8">
+        {/* Header */}
+        <div className="max-w-7xl mx-auto mb-8 animate-[slideDown_0.6s_ease-out]">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent mb-2 tracking-tight">
+            Patient Registry
+          </h1>
+          <p className="text-slate-600 text-lg font-medium">
+            Comprehensive trauma patient records and management
+          </p>
         </div>
 
-        {/* Empty States */}
-        {filteredPatients.length === 0 ? (
-          <p className="text-gray-500 text-center">
-            No matching patients found
-          </p>
-        ) : (
-          <>
-            {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto rounded-lg border">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-100 text-gray-700">
-                  <tr>
-                    <th className="px-4 py-3 text-left">#</th>
-                    <th className="px-4 py-3 text-left">Hospital No</th>
-                    <th className="px-4 py-3 text-left">Patient Name</th>
-                    <th className="px-4 py-3 text-left">Age</th>
-                    <th className="px-4 py-3 text-left">Gender</th>
-                    <th className="px-4 py-3 text-left">Phone</th>
-                    <th className="px-4 py-3 text-left">Injury Type</th>
-                    <th className="px-4 py-3 text-left">Arrival Date</th>
-                  </tr>
-                </thead>
+        {/* Stats Cards */}
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 animate-[fadeIn_0.8s_ease-out_0.2s_backwards]">
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Total Patients
+            </div>
+            <div className="text-3xl font-bold text-slate-900">
+              {patients.length}
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Current Page
+            </div>
+            <div className="text-3xl font-bold text-slate-900">{page}</div>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Filtered Results
+            </div>
+            <div className="text-3xl font-bold text-slate-900">
+              {filteredPatients.length}
+            </div>
+          </div>
+        </div>
 
-                <tbody>
-                  {filteredPatients.map((patient, index) => (
-                    <tr
-                      key={patient.id}
-                      className="border-t hover:bg-gray-50"
-                    >
-                      <td className="px-4 py-2">
-                        {(page - 1) * 10 + index + 1}
-                      </td>
-                      <td className="px-4 py-2 font-medium">
-                        {patient.hospital_number}
-                      </td>
-                      <td className="px-4 py-2">
-                        {patient.first_name} {patient.last_name}
-                      </td>
-                      <td className="px-4 py-2">{patient.age}</td>
-                      <td className="px-4 py-2">{patient.gender}</td>
-                      <td className="px-4 py-2">{patient.phone_number}</td>
-                      <td className="px-4 py-2">{patient.type_of_injury}</td>
-                      <td className="px-4 py-2">
-                        {new Date(
-                          patient.arrival_date
-                        ).toLocaleDateString()}
-                      </td>
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-[fadeIn_0.8s_ease-out_0.4s_backwards]">
+          {/* Search Section */}
+          <div className="bg-gradient-to-r from-slate-50 to-white p-6 border-b-2 border-slate-200">
+            <div className="relative max-w-md ml-auto">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="8" strokeWidth="2" />
+                <path d="m21 21-4.35-4.35" strokeWidth="2" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by name, hospital number, phone..."
+                className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 text-slate-700 placeholder:text-slate-400"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Content */}
+          {filteredPatients.length === 0 ? (
+            // Empty State
+            <div className="py-20 px-6 text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                <span className="text-4xl">🔍</span>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                No Patients Found
+              </h3>
+              <p className="text-slate-500 text-lg">
+                Try adjusting your search criteria or browse all patients
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gradient-to-r from-slate-100 to-slate-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        #
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Hospital No
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Patient Name
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Age
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Gender
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Phone
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Injury Type
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Arrival Date
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredPatients.map((patient, index) => (
+                      <tr
+                        key={patient.id}
+                        className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-slate-50 transition-all duration-200 hover:scale-[1.002]"
+                      >
+                        <td className="px-6 py-5">
+                          <span className="text-sm font-semibold text-slate-500">
+                            {(page - 1) * 10 + index + 1}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className="font-bold text-blue-700 font-mono">
+                            {patient.hospital_number}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className="font-semibold text-slate-800">
+                            {patient.first_name} {patient.last_name}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5 text-slate-700">
+                          {patient.age}
+                        </td>
+                        <td className="px-6 py-5 text-slate-700">
+                          {patient.gender}
+                        </td>
+                        <td className="px-6 py-5 text-slate-700">
+                          {patient.phone_number}
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className="inline-block px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 rounded-lg text-sm font-semibold border border-blue-300">
+                            {patient.type_of_injury}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5 text-slate-700">
+                          {new Date(patient.arrival_date).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-            {/* Mobile Cards */}
-            <div className="md:hidden space-y-4">
-              {filteredPatients.map((patient, index) => (
-                <div
-                  key={patient.id}
-                  className="bg-white rounded-lg border p-4 shadow-sm"
-                >
-                  <div className="flex justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {patient.first_name} {patient.last_name}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        #{patient.hospital_number}
-                      </p>
+              {/* Mobile Cards */}
+              <div className="md:hidden p-4 space-y-4">
+                {filteredPatients.map((patient, index) => (
+                  <div
+                    key={patient.id}
+                    className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-5 shadow-lg border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-200">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-800 mb-1">
+                          {patient.first_name} {patient.last_name}
+                        </h3>
+                        <p className="text-sm font-bold text-blue-600 font-mono">
+                          {patient.hospital_number}
+                        </p>
+                      </div>
+                      <span className="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg text-xs font-bold shadow-lg">
+                        #{(page - 1) * 10 + index + 1}
+                      </span>
                     </div>
-                    <span className="text-sm bg-gray-100 px-2 py-1 rounded">
-                      {(page - 1) * 10 + index + 1}
-                    </span>
+
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Age
+                        </span>
+                        <span className="text-base font-medium text-slate-800">
+                          {patient.age}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Gender
+                        </span>
+                        <span className="text-base font-medium text-slate-800">
+                          {patient.gender}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Phone
+                        </span>
+                        <span className="text-base font-medium text-slate-800">
+                          {patient.phone_number}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Injury Type
+                        </span>
+                        <span className="text-base font-medium text-slate-800">
+                          {patient.type_of_injury}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Arrival Date
+                        </span>
+                        <span className="text-base font-medium text-slate-800">
+                          {new Date(patient.arrival_date).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </span>
+                      </div>
+                    </div>
                   </div>
+                ))}
+              </div>
 
-                  <div className="text-sm space-y-1">
-                    <p><strong>Age:</strong> {patient.age}</p>
-                    <p><strong>Gender:</strong> {patient.gender}</p>
-                    <p><strong>Phone:</strong> {patient.phone_number}</p>
-                    <p><strong>Injury:</strong> {patient.type_of_injury}</p>
-                    <p>
-                      <strong>Arrival:</strong>{" "}
-                      {new Date(
-                        patient.arrival_date
-                      ).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+              {/* Pagination */}
+              <div className="bg-gradient-to-r from-slate-50 to-white px-6 py-5 border-t-2 border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <button
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                  className="w-full sm:w-auto px-6 py-3 bg-white border-2 border-slate-300 rounded-xl font-semibold text-slate-700 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-500 hover:text-white hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:bg-white disabled:hover:text-slate-700 disabled:hover:border-slate-300 transition-all duration-300"
+                >
+                  ← Previous
+                </button>
 
-            {/* Pagination */}
-            <div className="flex justify-between items-center mt-6">
-              <button
-                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                disabled={page === 1}
-                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-              >
-                Previous
-              </button>
+                <span className="text-base font-semibold text-slate-600">
+                  Page {page} of {lastPage}
+                </span>
 
-              <span className="text-sm text-gray-600">
-                Page {page} of {lastPage}
-              </span>
-
-              <button
-                onClick={() => setPage((p) => Math.min(p + 1, lastPage))}
-                disabled={page === lastPage}
-                className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+                <button
+                  onClick={() => setPage((p) => Math.min(p + 1, lastPage))}
+                  disabled={page === lastPage}
+                  className="w-full sm:w-auto px-6 py-3 bg-white border-2 border-slate-300 rounded-xl font-semibold text-slate-700 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-500 hover:text-white hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:bg-white disabled:hover:text-slate-700 disabled:hover:border-slate-300 transition-all duration-300"
+                >
+                  Next →
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </>
   );
 };

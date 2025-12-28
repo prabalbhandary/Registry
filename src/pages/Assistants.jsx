@@ -57,40 +57,107 @@ const Assistants = () => {
   }, []);
 
   return (
-    <>
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Assistants</h1>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-sky-50 to-slate-100 p-4 md:p-8">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto mb-8 animate-[slideDown_0.6s_ease-out]">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-700 to-sky-500 bg-clip-text text-transparent mb-2">
+          Assistants
+        </h1>
+        <p className="text-slate-600 text-lg font-medium">
+          List of assistant surgeons and assigned hospitals
+        </p>
+      </div>
+
+      {/* Table Container */}
+      <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-[fadeIn_0.8s_ease-out]">
+        {/* Loader */}
         {loading && (
-          <div className="flex justify-center items-center h-full w-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          <div className="py-20 flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-cyan-500" />
           </div>
         )}
-        {error && <p className="text-red-500">Error: {error.message}</p>}
+
+        {/* Error */}
+        {error && (
+          <div className="p-6 text-red-600 font-semibold">
+            Error: {error.message}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && assistants.length === 0 && (
+          <div className="py-20 text-center">
+            <h3 className="text-2xl font-bold text-slate-800 mb-2">
+              No Assistants Found
+            </h3>
+            <p className="text-slate-500">
+              Assistants will appear here once added
+            </p>
+          </div>
+        )}
+
+        {/* Table */}
         {!loading && !error && assistants.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-300 rounded-md shadow-md">
-              <thead className="bg-gray-200 text-gray-700">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-cyan-100 to-sky-50">
                 <tr>
-                  <th className="py-2 px-4 text-left">Name</th>
-                  <th className="py-2 px-4 text-left">Hospitals</th>
-                  <th className="py-2 px-4 text-left">Is Active</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    #
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Assistant Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Hospital
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Status
+                  </th>
                 </tr>
               </thead>
-              <tbody>
-                {assistants.map((assistant) => (
+
+              <tbody className="divide-y divide-slate-100">
+                {assistants.map((assistant, index) => (
                   <tr
                     key={assistant.id}
-                    className={`cursor-pointer ${
-                      selectedAssistant?.id === assistant.id
-                        ? "bg-blue-100"
-                        : "hover:bg-gray-100"
-                    }`}
                     onClick={() => setSelectedAssistant(assistant)}
+                    className={`cursor-pointer transition-all duration-200
+                  ${selectedAssistant?.id === assistant.id
+                        ? "bg-cyan-50"
+                        : "hover:bg-gradient-to-r hover:from-cyan-50 hover:to-sky-50"
+                      }
+                `}
                   >
-                    <td className="py-2 px-4 font-medium">{assistant.name}</td>
-                    <td className="py-2 px-4">{assistant.hospitals.name}</td>
-                    <td className="py-2 px-4">
-                      {assistant.is_active ? "Yes" : "No"}
+                    <td className="px-6 py-5">
+                      <span className="text-sm font-semibold text-slate-500">
+                        {index + 1}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-5 font-semibold text-slate-800">
+                      {assistant.name}
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="font-semibold text-slate-800">
+                        {assistant.hospital?.name}
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        {assistant.hospital?.address}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      {assistant.is_active ? (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-green-100 text-green-700 text-sm font-semibold">
+                          ● Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-red-100 text-red-700 text-sm font-semibold">
+                          ● Inactive
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -99,7 +166,29 @@ const Assistants = () => {
           </div>
         )}
       </div>
-    </>
+
+      <style>{`
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  `}</style>
+    </div>
   );
 };
 

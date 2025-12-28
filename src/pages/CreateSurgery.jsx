@@ -43,7 +43,11 @@ const CreateSurgery = () => {
   const BASE_URL = URL;
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/countries`)
+    axios.get(`${BASE_URL}/countries`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
       .then(res => setCountries(res.data.data))
       .catch(() => {
         if (error.response?.status === 401) {
@@ -69,7 +73,11 @@ const CreateSurgery = () => {
     const isNepal = selectedCountry?.name?.toLowerCase() === 'nepal';
 
     if (isNepal) {
-      axios.get(`${BASE_URL}/provinces?country_id=${country_id}`)
+      axios.get(`${BASE_URL}/provinces?country_id=${country_id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
         .then(res => {
           setProvinces(res.data.data);
           setProvinceId("");
@@ -89,7 +97,11 @@ const CreateSurgery = () => {
   useEffect(() => {
     if (!province_id) return;
 
-    axios.get(`${BASE_URL}/districts?province_id=${province_id}`)
+    axios.get(`${BASE_URL}/districts?province_id=${province_id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
       .then(res => {
         setDistricts(res.data.data);
         setDistrictId("");
