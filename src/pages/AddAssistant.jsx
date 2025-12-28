@@ -102,15 +102,12 @@ const AddAssistant = () => {
   /* ===================== TOGGLE ACTIVE STATUS ===================== */
   const toggleActiveStatus = async (id, currentStatus) => {
     try {
-      await axios.patch(
-        `${URL}/activate-assistant-surgeone/${id}`,
-        { is_active: !currentStatus },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.get(`${URL}/activate-assistant-surgeone/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { is_active: !currentStatus }, // send as query param
+      });
 
       toast.success("Status updated");
 
@@ -373,11 +370,10 @@ const AddAssistant = () => {
                           Status
                         </span>
                         <span
-                          className={`text-xs font-medium ${
-                            surgeon.is_active
+                          className={`text-xs font-medium ${surgeon.is_active
                               ? "text-green-600"
                               : "text-slate-500"
-                          }`}
+                            }`}
                         >
                           {surgeon.is_active ? "Active" : "Inactive"}
                         </span>

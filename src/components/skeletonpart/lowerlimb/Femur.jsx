@@ -60,6 +60,11 @@ const Femur = () => {
         fracture_sub_classification: subClassification,
         plan,
         treatment_status: treatmentStatus,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       toast.success(res.data.message);
       if(buttonType === "save"){

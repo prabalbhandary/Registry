@@ -303,6 +303,10 @@ const CreateSurgery = () => {
         treatment_location: treatmentWhere,
         antibiotic,
         treatment_details: whatTreatment,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (res.data.success === true) {
         toast.success(res.data.message);
