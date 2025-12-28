@@ -1,4 +1,4 @@
 // export const URL = "http://127.0.0.1:8000/api"
 // export const URL = "http://127.0.0.1:8002/api/v2";
-export const URL = "https://registry.suryanarayan.com.np/api/v1";
-// export const URL = "https://registry.suryanarayan.com.np/api/v2";
+// export const URL = "https://registry.suryanarayan.com.np/api/v1";
+export const URL = "https://registry.suryanarayan.com.np/api/v2";
