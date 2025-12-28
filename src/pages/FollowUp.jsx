@@ -104,7 +104,7 @@ const FollowUp = () => {
           sex: data.gender,
         }));
       } catch (err) {
-        if (error.response?.status === 401) {
+        if (err.response?.status === 401) {
           toast.error("Session expired. Please log in again.", {
             onClose: () => {
               localStorage.clear();
@@ -113,14 +113,14 @@ const FollowUp = () => {
           });
         } else {
           toast.error(
-            error.response?.data?.message || "Failed to fetch patients detail"
+            err.response?.data?.message || "Failed to fetch patients detail"
           );
         }
       }
     };
 
     if (patientDetailId) fetchPatientDetail();
-  }, [patientDetailId]);
+  }, [patientDetailId, navigate]);
 
   useEffect(() => {
     const fetchFemurDiagnosis = async () => {
@@ -136,7 +136,7 @@ const FollowUp = () => {
           setPatientInfo((prev) => ({ ...prev, diagnosis }));
         }
       } catch (err) {
-        if (error.response?.status === 401) {
+        if (err.response?.status === 401) {
           toast.error("Session expired. Please log in again.", {
             onClose: () => {
               localStorage.clear();
@@ -145,14 +145,14 @@ const FollowUp = () => {
           });
         } else {
           toast.error(
-            error.response?.data?.message || "Failed to fetch femur fracture"
+            err.response?.data?.message || "Failed to fetch femur fracture"
           );
         }
       }
     };
 
     fetchFemurDiagnosis();
-  }, []);
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -181,65 +181,90 @@ const FollowUp = () => {
 
     if (!formData.follow_up_period.trim()) {
       setError("Follow-Up Period is required.");
+      toast.error("Follow-Up Period is required.");
       return;
     }
 
     try {
-      const res = await axios.post(`${URL}/follow-up`, formData);
+      const res = await axios.post(`${URL}/follow-up`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       if (res.data.success) {
         setMessage("Follow-up created successfully!");
         toast.success("Follow-up created successfully!");
+        navigate("/patients/follow-up");
       } else {
         setError("Something went wrong.");
         toast.error("Something went wrong.");
       }
     } catch (err) {
-      if (error.response?.status === 401) {
-          toast.error("Session expired. Please log in again.", {
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          });
-        } else {
-          toast.error(
-            error.response?.data?.message || "Failed to create follow-up"
-          );
-        }
+      if (err.response?.status === 401) {
+        toast.error("Session expired. Please log in again.", {
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
+      } else {
+        toast.error(
+          err.response?.data?.message || "Failed to create follow-up"
+        );
+      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="border-b border-gray-200 pb-6 mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Follow-Up Assessment</h1>
-            <p className="text-gray-600">Complete patient follow-up evaluation form</p>
+        {/* Header Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Follow-Up Assessment</h1>
+              <p className="text-gray-600 text-sm mt-1">Complete comprehensive patient follow-up evaluation</p>
+            </div>
           </div>
+        </div>
 
-          {message && (
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
-              <p className="text-green-700 font-medium">{message}</p>
-            </div>
-          )}
-          
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
-              <p className="text-red-700 font-medium">{error}</p>
-            </div>
-          )}
+        {/* Alerts */}
+        {message && (
+          <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <svg className="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <p className="text-green-700 font-medium">{message}</p>
+          </div>
+        )}
+        
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <svg className="w-5 h-5 text-red-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className="text-red-700 font-medium">{error}</p>
+          </div>
+        )}
 
+        {/* Main Form */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">1</span>
+            {/* Patient Information */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
                 Patient Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Patient Name</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Patient Name</label>
                   <input 
                     className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 font-medium" 
                     value={patientInfo.name} 
@@ -247,7 +272,7 @@ const FollowUp = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Age</label>
                   <input 
                     className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 font-medium" 
                     value={patientInfo.age} 
@@ -255,7 +280,7 @@ const FollowUp = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Sex</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Sex</label>
                   <input 
                     className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 font-medium" 
                     value={patientInfo.sex} 
@@ -263,7 +288,7 @@ const FollowUp = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Diagnosis</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Diagnosis</label>
                   <input 
                     className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 font-medium" 
                     value={patientInfo.diagnosis || "No diagnosis"} 
@@ -273,14 +298,15 @@ const FollowUp = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">2</span>
+            {/* Follow-Up Details */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
                 Follow-Up Details
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Follow-Up Period <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -288,53 +314,57 @@ const FollowUp = () => {
                     name="follow_up_period"
                     value={formData.follow_up_period}
                     onChange={handleChange}
-                    placeholder="e.g., 2 weeks, 1 month"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="e.g., 2 weeks, 1 month, 6 months"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">3</span>
+            {/* Chief Complaint */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
                 Chief Complaint
               </h2>
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Complaint Type</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Complaint Type</label>
                     <input
                       type="text"
                       name="complaint_type"
                       value={formData.complaint_type}
                       onChange={handleChange}
-                      placeholder="e.g., Pain, Swelling"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                      placeholder="e.g., Pain, Swelling, Stiffness"
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Severity</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Severity</label>
+                    <select
                       name="severity"
                       value={formData.severity}
                       onChange={handleChange}
-                      placeholder="e.g., Mild, Moderate, Severe"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    >
+                      <option value="">Select Severity</option>
+                      <option value="Mild">Mild</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Severe">Severe</option>
+                    </select>
                   </div>
                 </div>
 
-                <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+                <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
                       name="presence"
                       checked={formData.presence}
                       onChange={handleChange}
-                      className="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500"
+                      className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                     />
                     <span className="ml-3 text-sm font-medium text-gray-700">Complaint Currently Present</span>
                   </label>
@@ -342,111 +372,118 @@ const FollowUp = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Pain Level</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Pain Level (0-10)</label>
                     <input
-                      type="text"
+                      type="number"
                       name="pain_level"
                       value={formData.pain_level}
                       onChange={handleChange}
-                      placeholder="Scale 0-10"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                      placeholder="0-10 scale"
+                      min="0"
+                      max="10"
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Pain Location</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Pain Location</label>
                     <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
-                      placeholder="Specific area"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                      placeholder="Specific area of pain"
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Fever Temperature</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Last Fever Temperature</label>
                   <input
                     type="text"
                     name="fever_last_temp"
                     value={formData.fever_last_temp}
                     onChange={handleChange}
-                    placeholder="e.g., 98.6°F"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                    placeholder="e.g., 98.6°F or 37°C"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    placeholder="Detailed description of complaint"
+                    placeholder="Detailed description of complaint..."
                     rows="4"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">4</span>
+            {/* Wound Assessment */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">4</span>
                 Wound Assessment
               </h2>
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Wound Status</label>
-                  <input
-                    type="text"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Wound Status</label>
+                  <select
                     name="wound_status"
                     value={formData.wound_status}
                     onChange={handleChange}
-                    placeholder="e.g., Healing, Open, Closed"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
-                  />
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Wound Status</option>
+                    <option value="Healing">Healing Well</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Fully Closed</option>
+                    <option value="Infected">Signs of Infection</option>
+                  </select>
                 </div>
 
-                <div className="bg-orange-50 rounded-lg p-5 border border-orange-200">
+                <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                   <h3 className="text-md font-semibold text-gray-800 mb-4">Wound Details</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Size</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Size</label>
                         <input
                           type="text"
                           name="wound_details.size"
                           value={formData.wound_details.size}
                           onChange={handleChange}
                           placeholder="e.g., 2cm x 3cm"
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition bg-white"
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Color</label>
                         <input
                           type="text"
                           name="wound_details.color"
                           value={formData.wound_details.color}
                           onChange={handleChange}
-                          placeholder="e.g., Pink, Red"
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition bg-white"
+                          placeholder="e.g., Pink, Red, Pale"
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
                         />
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg p-4 border border-orange-200">
+                    <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
                       <label className="flex items-center cursor-pointer">
                         <input
                           type="checkbox"
                           name="wound_details.infection_signs"
                           checked={formData.wound_details.infection_signs}
                           onChange={handleChange}
-                          className="w-5 h-5 text-orange-600 rounded focus:ring-2 focus:ring-orange-500"
+                          className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                         />
                         <span className="ml-3 text-sm font-medium text-gray-700">Signs of Infection Present</span>
                       </label>
@@ -456,234 +493,270 @@ const FollowUp = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">5</span>
+            {/* Fracture Healing Evaluation */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">5</span>
                 Fracture Healing Evaluation
               </h2>
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Healing Status</label>
-                  <input
-                    type="text"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Healing Status</label>
+                  <select
                     name="fracture_healing_evaluation_status"
                     value={formData.fracture_healing_evaluation_status}
                     onChange={handleChange}
-                    placeholder="e.g., Good, Delayed, Non-union"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-                  />
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Healing Status</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Delayed">Delayed Union</option>
+                    <option value="Non-union">Non-union</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Healing Details</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Healing Details</label>
                   <textarea
                     name="fracture_healing_evaluation_details"
                     value={formData.fracture_healing_evaluation_details}
                     onChange={handleChange}
-                    placeholder="Detailed evaluation of fracture healing progress"
+                    placeholder="Detailed evaluation of fracture healing progress..."
                     rows="4"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-teal-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">6</span>
+            {/* Functional Outcome */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">6</span>
                 Functional Outcome
               </h2>
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Functional Outcome Evaluation</label>
-                  <input
-                    type="text"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Functional Outcome Evaluation</label>
+                  <select
                     name="functional_outcome_evaluation"
                     value={formData.functional_outcome_evaluation}
                     onChange={handleChange}
-                    placeholder="e.g., Excellent, Good, Fair, Poor"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
-                  />
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Outcome</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Functional Outcome Details</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Functional Outcome Details</label>
                   <textarea
                     name="functional_outcome_evaluation_details"
                     value={formData.functional_outcome_evaluation_details}
                     onChange={handleChange}
-                    placeholder="Detailed assessment of functional recovery"
+                    placeholder="Detailed assessment of functional recovery..."
                     rows="4"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-indigo-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">7</span>
+            {/* Activities of Daily Living */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">7</span>
                 Activities of Daily Living
               </h2>
-              <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Dressing</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Dressing</label>
+                    <select
                       name="activity_of_daily_living.dressing"
                       value={formData.activity_of_daily_living.dressing}
                       onChange={handleChange}
-                      placeholder="e.g., Independent, Needs assistance"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Independent">Independent</option>
+                      <option value="Needs Assistance">Needs Assistance</option>
+                      <option value="Dependent">Dependent</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bathing</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Bathing</label>
+                    <select
                       name="activity_of_daily_living.bathing"
                       value={formData.activity_of_daily_living.bathing}
                       onChange={handleChange}
-                      placeholder="e.g., Independent, Needs assistance"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Independent">Independent</option>
+                      <option value="Needs Assistance">Needs Assistance</option>
+                      <option value="Dependent">Dependent</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Feeding</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Feeding</label>
+                    <select
                       name="activity_of_daily_living.feeding"
                       value={formData.activity_of_daily_living.feeding}
                       onChange={handleChange}
-                      placeholder="e.g., Independent, Needs assistance"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Independent">Independent</option>
+                      <option value="Needs Assistance">Needs Assistance</option>
+                      <option value="Dependent">Dependent</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-cyan-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">8</span>
+            {/* Return to Work, Mobility, Complications - Continue pattern... */}
+            {/* I'll add a few more key sections to show the pattern */}
+
+            {/* Return to Work */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">8</span>
                 Return to Work
               </h2>
-              <div className="bg-cyan-50 rounded-lg p-5 border border-cyan-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                    <select
                       name="return_to_work.status"
                       value={formData.return_to_work.status}
                       onChange={handleChange}
-                      placeholder="e.g., Returned, On leave, Modified duty"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Returned">Returned to Work</option>
+                      <option value="On leave">On Medical Leave</option>
+                      <option value="Modified duty">Modified Duty</option>
+                      <option value="Not applicable">Not Applicable</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Restrictions</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Restrictions</label>
                     <input
                       type="text"
                       name="return_to_work.restrictions"
                       value={formData.return_to_work.restrictions}
                       onChange={handleChange}
                       placeholder="e.g., No heavy lifting, Limited hours"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition bg-white"
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">9</span>
+            {/* Mobility Status */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">9</span>
                 Mobility Status
               </h2>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Current Mobility Status</label>
-                <input
-                  type="text"
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Current Mobility Status</label>
+                <select
                   name="mobility_status"
                   value={formData.mobility_status}
                   onChange={handleChange}
-                  placeholder="e.g., Walking independently, Using walker, Wheelchair"
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition"
-                />
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                >
+                  <option value="">Select Mobility Status</option>
+                  <option value="Walking independently">Walking Independently</option>
+                  <option value="Using crutches">Using Crutches</option>
+                  <option value="Using walker">Using Walker</option>
+                  <option value="Wheelchair">Wheelchair Bound</option>
+                  <option value="Bed-bound">Bed-bound</option>
+                </select>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">10</span>
+            {/* Complications */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">10</span>
                 Complications
               </h2>
-              <div className="bg-red-50 rounded-lg p-5 border border-red-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="space-y-4">
-                  <div className="bg-white rounded-lg p-4 border border-red-200">
+                  <div className="bg-white rounded-lg p-4 border border-gray-300">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         name="complications.infection"
                         checked={formData.complications.infection}
                         onChange={handleChange}
-                        className="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500"
+                        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                       />
                       <span className="ml-3 text-sm font-medium text-gray-700">Infection</span>
                     </label>
                   </div>
 
-                  <div className="bg-white rounded-lg p-4 border border-red-200">
+                  <div className="bg-white rounded-lg p-4 border border-gray-300">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         name="complications.blood_clot"
                         checked={formData.complications.blood_clot}
                         onChange={handleChange}
-                        className="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500"
+                        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                       />
-                      <span className="ml-3 text-sm font-medium text-gray-700">Blood Clot</span>
+                      <span className="ml-3 text-sm font-medium text-gray-700">Blood Clot / DVT</span>
                     </label>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-amber-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">11</span>
+            {/* Unplanned Readmission */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">11</span>
                 Unplanned Readmission
               </h2>
-              <div className="bg-amber-50 rounded-lg p-5 border border-amber-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="space-y-4">
-                  <div className="bg-white rounded-lg p-4 border border-amber-200">
+                  <div className="bg-white rounded-lg p-4 border border-gray-300">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         name="unplanned_readmission.any"
                         checked={formData.unplanned_readmission.any}
                         onChange={handleChange}
-                        className="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500"
+                        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                       />
-                      <span className="ml-3 text-sm font-medium text-gray-700">Patient was readmitted</span>
+                      <span className="ml-3 text-sm font-medium text-gray-700">Patient was readmitted to hospital</span>
                     </label>
                   </div>
 
                   {formData.unplanned_readmission.any && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Readmission Reason</label>
-                      <input
-                        type="text"
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Readmission Reason</label>
+                      <textarea
                         name="unplanned_readmission.reason"
                         value={formData.unplanned_readmission.reason}
                         onChange={handleChange}
-                        placeholder="Specify reason for readmission"
-                        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white"
+                        placeholder="Specify reason for readmission..."
+                        rows="3"
+                        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
                       />
                     </div>
                   )}
@@ -691,34 +764,35 @@ const FollowUp = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">12</span>
+            {/* Rehabilitation Services */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">12</span>
                 Rehabilitation Services
               </h2>
-              <div className="bg-emerald-50 rounded-lg p-5 border border-emerald-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="space-y-4">
-                  <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                  <div className="bg-white rounded-lg p-4 border border-gray-300">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         name="rehabilitation_service.physical_therapy"
                         checked={formData.rehabilitation_service.physical_therapy}
                         onChange={handleChange}
-                        className="w-5 h-5 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+                        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                       />
                       <span className="ml-3 text-sm font-medium text-gray-700">Physical Therapy</span>
                     </label>
                   </div>
 
-                  <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                  <div className="bg-white rounded-lg p-4 border border-gray-300">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         name="rehabilitation_service.occupational_therapy"
                         checked={formData.rehabilitation_service.occupational_therapy}
                         onChange={handleChange}
-                        className="w-5 h-5 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+                        className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                       />
                       <span className="ml-3 text-sm font-medium text-gray-700">Occupational Therapy</span>
                     </label>
@@ -727,125 +801,169 @@ const FollowUp = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-violet-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">13</span>
+            {/* Quality of Life */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">13</span>
                 Quality of Life
               </h2>
-              <div className="bg-violet-50 rounded-lg p-5 border border-violet-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Pain Score</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Pain Score (0-10)</label>
                     <input
-                      type="text"
+                      type="number"
                       name="quality_of_life.pain_score"
                       value={formData.quality_of_life.pain_score}
                       onChange={handleChange}
-                      placeholder="Scale 0-10"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white"
+                      placeholder="0-10 scale"
+                      min="0"
+                      max="10"
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Overall Satisfaction</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Overall Satisfaction</label>
+                    <select
                       name="quality_of_life.overall_satisfaction"
                       value={formData.quality_of_life.overall_satisfaction}
                       onChange={handleChange}
-                      placeholder="e.g., Satisfied, Neutral, Dissatisfied"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Satisfaction</option>
+                      <option value="Very Satisfied">Very Satisfied</option>
+                      <option value="Satisfied">Satisfied</option>
+                      <option value="Neutral">Neutral</option>
+                      <option value="Dissatisfied">Dissatisfied</option>
+                      <option value="Very Dissatisfied">Very Dissatisfied</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-fuchsia-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">14</span>
+            {/* Psychological Status */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">14</span>
                 Psychological Status
               </h2>
-              <div className="bg-fuchsia-50 rounded-lg p-5 border border-fuchsia-200">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Anxiety Level</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Anxiety Level</label>
+                    <select
                       name="psychological_status.anxiety"
                       value={formData.psychological_status.anxiety}
                       onChange={handleChange}
-                      placeholder="e.g., None, Mild, Moderate, Severe"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Level</option>
+                      <option value="None">None</option>
+                      <option value="Mild">Mild</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Severe">Severe</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Depression Level</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Depression Level</label>
+                    <select
                       name="psychological_status.depression"
                       value={formData.psychological_status.depression}
                       onChange={handleChange}
-                      placeholder="e.g., None, Mild, Moderate, Severe"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition bg-white"
-                    />
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    >
+                      <option value="">Select Level</option>
+                      <option value="None">None</option>
+                      <option value="Mild">Mild</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Severe">Severe</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-blue-700 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">15</span>
+            {/* Patient Satisfaction & Access */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b-2 border-indigo-100 flex items-center gap-2">
+                <span className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">15</span>
                 Patient Satisfaction & Access
               </h2>
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Patient Satisfaction</label>
-                  <input
-                    type="text"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Patient Satisfaction Rating</label>
+                  <select
                     name="patient_satisfaction"
                     value={formData.patient_satisfaction}
                     onChange={handleChange}
-                    placeholder="Overall satisfaction rating"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  />
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Rating</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                  </select>
                 </div>
 
-                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
                       name="financial_impact"
                       checked={formData.financial_impact}
                       onChange={handleChange}
-                      className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                     />
-                    <span className="ml-3 text-sm font-medium text-gray-700">Financial Impact Present</span>
+                    <span className="ml-3 text-sm font-medium text-gray-700">Financial Impact / Burden Present</span>
                   </label>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Access to Follow-up Care</label>
-                  <input
-                    type="text"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Access to Follow-up Care</label>
+                  <select
                     name="access_to_followup_care"
                     value={formData.access_to_followup_care}
                     onChange={handleChange}
-                    placeholder="e.g., Good, Limited, Poor"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  />
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Access Level</option>
+                    <option value="Good">Good - Easy Access</option>
+                    <option value="Moderate">Moderate - Some Difficulties</option>
+                    <option value="Limited">Limited Access</option>
+                    <option value="Poor">Poor - Significant Barriers</option>
+                  </select>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end pt-6">
+            {/* Submit Button */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="w-full sm:w-auto px-8 py-3.5 bg-white text-gray-700 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Cancel
+                </span>
+              </button>
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200"
+                className="flex-1 px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
               >
-                Submit Follow-Up Form
+                <span className="flex items-center justify-center gap-2">
+                  Submit Follow-Up Assessment
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
               </button>
             </div>
           </form>
