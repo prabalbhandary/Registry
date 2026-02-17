@@ -1,10 +1,8 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/logo.png";
-import { AppContext } from "../context/AppContext";
 
 const Terms = () => {
-  const { token } = useContext(AppContext);
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -30,7 +28,7 @@ const Terms = () => {
             </Link>
 
             <div className="flex items-center gap-3">
-              {token ? (
+              {isAuthenticated ? (
                 <Link
                   to="/dashboard"
                   className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
