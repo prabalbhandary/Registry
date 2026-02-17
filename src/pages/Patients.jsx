@@ -186,7 +186,7 @@ const Surgeries = () => {
                         Follow-up Status
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                        Created At
+                        Arrived At
                       </th>
                     </tr>
                   </thead>
@@ -232,14 +232,7 @@ const Surgeries = () => {
                           </span>
                         </td>
                         <td className="px-6 py-5 text-slate-700">
-                          {new Date(patient.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
+                          {patient.arrival_date} - {patient.arrival_time}
                         </td>
                       </tr>
                     ))}
@@ -315,17 +308,10 @@ const Surgeries = () => {
                       )}
                       <div className="flex justify-between items-center pt-2">
                         <span className="text-sm font-semibold text-slate-500">
-                          Created
+                          Arrived At
                         </span>
                         <span className="text-base font-medium text-slate-800">
-                          {new Date(patient.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
+                          {patient.arrival_date} - {patient.arrival_time}
                         </span>
                       </div>
                     </div>
