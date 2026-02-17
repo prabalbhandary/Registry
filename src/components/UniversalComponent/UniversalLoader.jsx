@@ -35,14 +35,17 @@ export const DotsLoader = ({ text }) => {
 // 3. Pulse Loader (Smooth & Modern)
 export const PulseLoader = ({ text }) => {
     return (
-        <div className="flex flex-col justify-center items-center py-20" role="status">
-            <div className="relative">
-                <div className="w-10 h-10 border-4 border-blue-200 rounded-full"></div>
-                <div className="w-10 h-10 border-4 border-blue-500 rounded-full absolute top-0 left-0 animate-ping"></div>
+
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+            <div className="relative w-20 h-20">
+                <div className="absolute inset-0 w-20 h-20 rounded-full border-4 border-blue-200 animate-spin"></div>
+
+                <div className="absolute inset-2 w-16 h-16 rounded-full border-4 border-t-blue-600 border-r-indigo-500 border-b-transparent border-l-transparent animate-spin"></div>
+
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 animate-pulse"></div>
             </div>
-            {text && <span className="mt-3 text-gray-600 text-sm">{text}</span>}
-            <span className="sr-only">Loading...</span>
         </div>
+
     );
 };
 
@@ -62,6 +65,22 @@ export const BarsLoader = ({ text }) => {
         </div>
     );
 };
+
+export const GlowingLoader = ({ text }) => {
+    return (
+        <div className="flex flex-col justify-center items-center py-20" role="status">
+            <div className="relative w-20 h-20">
+                <div className="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-40"></div>
+                <div className="absolute inset-2 rounded-full bg-purple-500 animate-ping opacity-40" style={{ animationDelay: '0.2s' }}></div>
+                <div className="absolute inset-4 rounded-full bg-pink-500 animate-ping opacity-40" style={{ animationDelay: '0.4s' }}></div>
+                <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 animate-pulse shadow-[0_0_30px_rgba(147,51,234,0.6)]"></div>
+            </div>
+            {text && <span className="mt-4 text-gray-600 text-sm font-medium">{text}</span>}
+            <span className="sr-only">Loading...</span>
+        </div>
+    );
+};
+
 
 // 5. Circular Progress (Stylish Spinner)
 export const CircularLoader = ({ text }) => {
@@ -121,8 +140,8 @@ const LoaderDemo = () => {
                             key={key}
                             onClick={() => setActiveLoader(key)}
                             className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeLoader === key
-                                    ? 'bg-blue-500 text-white'
-                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-white text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             {name}

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { PulseLoader } from "./UniversalComponent/UniversalLoader";
+import { GlowingLoader } from "./UniversalComponent/UniversalLoader";
 
 function Loader({children}) {
   const [loading, setLoading] = useState(true);
   
   if (loading) {
-    return <PulseLoader />;
+    return <GlowingLoader />;
   }
   
   return <div>{children}</div>;
