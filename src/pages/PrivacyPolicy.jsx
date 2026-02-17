@@ -139,8 +139,28 @@ const PrivacyPolicy = () => {
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-400 text-sm">
-          © 2024 Nepal Orthopedic Association. All rights reserved.
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <img
+                src={Logo}
+                alt="Logo"
+                className="w-12 h-12 object-contain bg-white/10 rounded-xl p-2"
+              />
+              <div>
+                <div className="font-bold text-lg">
+                  Nepal Orthopedic Association
+                </div>
+                <div className="text-slate-400 text-sm">
+                  Trauma Registry System
+                </div>
+              </div>
+            </div>
+            <div className="text-slate-400 text-sm text-center md:text-right">
+              © 2024 Nepal Orthopedic Association.<br className="sm:hidden" />
+              All rights reserved.
+            </div>
+          </div>
         </div>
       </footer>
     </div>
