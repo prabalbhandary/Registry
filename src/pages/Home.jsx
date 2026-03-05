@@ -256,7 +256,7 @@ const Home = () => {
               </div>
             </div>
             <div className="text-slate-400 text-sm text-center md:text-right">
-              © 2024 Nepal Orthopedic Association.<br className="sm:hidden" /> All rights reserved.
+              &copy; {new Date().getFullYear()} Nepal Orthopedic Association.<br className="sm:hidden" /> All rights reserved.
             </div>
           </div>
         </div>
