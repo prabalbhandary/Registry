@@ -82,7 +82,7 @@ const ResetPassword = () => {
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
                 <img
-                onClick={() => navigate("/")}
+                  onClick={() => navigate("/")}
                   src={logo}
                   alt="Nepal Orthopedic Association"
                   className="w-20 h-20 lg:w-24 lg:h-24 object-contain bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20"
@@ -252,13 +252,12 @@ const ResetPassword = () => {
                       </div>
                       <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all duration-300 ${
-                            passwordStrength.strength <= 2
+                          className={`h-full transition-all duration-300 ${passwordStrength.strength <= 2
                               ? "bg-red-500"
                               : passwordStrength.strength <= 3
-                              ? "bg-yellow-500"
-                              : "bg-green-500"
-                          }`}
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                            }`}
                           style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
                         ></div>
                       </div>
