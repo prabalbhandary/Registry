@@ -1,7 +1,29 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import { FaUserMd, FaHospital, FaChartLine, FaShieldAlt, FaClock, FaUsers } from "react-icons/fa";
+
+function Counter({ end, duration = 2000 }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        start = end;
+        clearInterval(timer);
+      }
+      setCount(Math.floor(start));
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+}
 
 const Home = () => {
   const isAuthenticated = localStorage.getItem("token");
@@ -14,9 +36,9 @@ const Home = () => {
           <div className="flex items-center justify-between h-20">
             {/* Logo and Title */}
             <Link to="/" className="flex items-center gap-4 group">
-              <img 
-                src={Logo} 
-                alt="Nepal Orthopedic Association" 
+              <img
+                src={Logo}
+                alt="Nepal Orthopedic Association"
                 className="w-14 h-14 object-contain transition-transform group-hover:scale-110 duration-300"
               />
               <div className="hidden sm:block">
@@ -63,9 +85,9 @@ const Home = () => {
           {/* Logo Circle */}
           <div className="inline-block mb-8">
             <div className="w-32 h-32 lg:w-40 lg:h-40 bg-white rounded-3xl shadow-2xl p-6 border-4 border-blue-100">
-              <img 
-                src={Logo} 
-                alt="Logo" 
+              <img
+                src={Logo}
+                alt="Logo"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -75,7 +97,7 @@ const Home = () => {
           <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight">
             Trauma Registry System
           </h1>
-          
+
           <p className="text-xl lg:text-2xl text-slate-600 mb-4 max-w-3xl mx-auto font-medium">
             Nepal Orthopedic Association
           </p>
@@ -104,16 +126,24 @@ const Home = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto mt-16">
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg">
-              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-blue-600 mb-2">
+                <Counter end={500} />+
+              </div>
               <div className="text-slate-600 font-medium">Patients</div>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg">
-              <div className="text-4xl font-bold text-indigo-600 mb-2">50+</div>
+
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-indigo-600 mb-2">
+                <Counter end={50} />+
+              </div>
               <div className="text-slate-600 font-medium">Surgeons</div>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg">
-              <div className="text-4xl font-bold text-purple-600 mb-2">10+</div>
+
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-purple-600 mb-2">
+                <Counter end={10} />+
+              </div>
               <div className="text-slate-600 font-medium">Hospitals</div>
             </div>
           </div>
@@ -245,9 +275,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <img 
-                src={Logo} 
-                alt="Logo" 
+              <img
+                src={Logo}
+                alt="Logo"
                 className="w-12 h-12 object-contain bg-white/10 rounded-xl p-2"
               />
               <div>
