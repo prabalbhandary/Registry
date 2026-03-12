@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { URL } from "../components/URL";
-import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
+import { FaEnvelope, FaArrowLeft, FaLock } from "react-icons/fa";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
@@ -109,17 +109,7 @@ const ForgetPassword = () => {
             {/* Security Note */}
             <div className="pt-8 border-t border-white/20">
               <div className="flex items-start gap-3">
-                <svg
-                  className="w-6 h-6 flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <FaLock className="text-orange-100 w-6 h-6 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold mb-1">Secure Process</h4>
                   <p className="text-orange-100 text-sm">
