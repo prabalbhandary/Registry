@@ -1,10 +1,32 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { FaEye, FaEyeSlash, FaUserMd, FaShieldAlt, FaHospital } from "react-icons/fa";
 import Logo from "../assets/logo.png";
+
+function Counter({ end, duration = 2000 }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        start = end;
+        clearInterval(timer);
+      }
+      setCount(Math.floor(start));
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+}
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -117,18 +139,26 @@ const Login = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 pt-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-1">500+</div>
-                <div className="text-blue-200 text-sm">Patients</div>
+            <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto mt-16">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-blue-600 mb-2">
+                  <Counter end={500} />+
+                </div>
+                <div className="text-white font-medium">Patients</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-1">50+</div>
-                <div className="text-blue-200 text-sm">Surgeons</div>
+
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-indigo-600 mb-2">
+                  <Counter end={50} />+
+                </div>
+                <div className="text-white font-medium">Surgeons</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-1">10+</div>
-                <div className="text-blue-200 text-sm">Hospitals</div>
+
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 shadow-lg hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-purple-600 mb-2">
+                  <Counter end={10} />+
+                </div>
+                <div className="text-white font-medium">Hospitals</div>
               </div>
             </div>
           </div>
