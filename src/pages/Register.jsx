@@ -328,7 +328,7 @@ const Register = () => {
 
             {/* Additional Info */}
             <p className="text-center text-slate-500 text-sm mt-8">
-              © 2024 Nepal Orthopedic Association. All rights reserved.
+              © {new Date().getFullYear()} Nepal Orthopedic Association. All rights reserved.
             </p>
           </div>
         </div>
