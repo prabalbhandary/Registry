@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { URL } from "../components/URL";
 import axios from "axios";
-import { FaShieldAlt, FaArrowLeft, FaEnvelope } from "react-icons/fa";
+import { FaShieldAlt, FaArrowLeft, FaEnvelope, FaClock } from "react-icons/fa";
 
 const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -143,9 +143,7 @@ const OTP = () => {
 
               <div className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                  </svg>
+                  <FaClock className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Limited Time</h3>
