@@ -82,6 +82,7 @@ const ResetPassword = () => {
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
                 <img
+                onClick={() => navigate("/")}
                   src={logo}
                   alt="Nepal Orthopedic Association"
                   className="w-20 h-20 lg:w-24 lg:h-24 object-contain bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20"
