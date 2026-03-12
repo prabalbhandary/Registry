@@ -250,7 +250,7 @@ const Home = () => {
               Ready to Get Started?
             </h2>
             <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-              Join Nepal Orthopedic Association's trauma registry system and streamline your patient care management today.
+              Join Nepal Orthopedic Association's Trauma Registry system and streamline your patient care management today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
