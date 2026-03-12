@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { URL } from "../components/URL";
 import { FaEye, FaEyeSlash, FaUserPlus, FaCheckCircle, FaClock } from "react-icons/fa";
 import Logo from "../assets/logo.png";
+import { TiUserAdd } from "react-icons/ti";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -161,19 +162,7 @@ const Register = () => {
               {/* Form Header */}
               <div className="text-center mb-8">
                 <div className="inline-block p-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mb-4">
-                  <svg 
-                    className="w-8 h-8 text-white" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" 
-                    />
-                  </svg>
+                  <TiUserAdd className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-3xl font-bold text-slate-800 mb-2">
                   Create Account
