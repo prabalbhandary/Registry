@@ -2,66 +2,268 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
+/* ─── Theme Tokens ──────────────────────────────────────────────────────────── */
+:root,
+[data-theme="light"] {
+  --color-bg:           #ffffff;
+  --color-bg-subtle:    #f8fafc;
+  --color-border:       #e2e8f0;
+  --color-shadow:       rgba(0, 0, 0, 0.06);
+
+  --color-text-primary:   #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted:     #94a3b8;
+
+  --color-search-bg:      #f1f5f9;
+  --color-search-border:  #e2e8f0;
+  --color-search-focus:   #3b82f6;
+
+  --color-toggle-track:   #e2e8f0;
+  --color-toggle-thumb:   #ffffff;
+  --color-toggle-icon:    #f59e0b;
+
+  --color-cta-from:       #3b82f6;
+  --color-cta-to:         #2563eb;
+  --color-cta-text:       #ffffff;
+  --color-cta-shadow:     rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] {
+  --color-bg:           #0f172a;
+  --color-bg-subtle:    #1e293b;
+  --color-border:       #334155;
+  --color-shadow:       rgba(0, 0, 0, 0.4);
+
+  --color-text-primary:   #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted:     #64748b;
+
+  --color-search-bg:      #1e293b;
+  --color-search-border:  #334155;
+  --color-search-focus:   #60a5fa;
+
+  --color-toggle-track:   #334155;
+  --color-toggle-thumb:   #1e293b;
+  --color-toggle-icon:    #818cf8;
+
+  --color-cta-from:       #2563eb;
+  --color-cta-to:         #1d4ed8;
+  --color-cta-text:       #ffffff;
+  --color-cta-shadow:     rgba(37, 99, 235, 0.5);
+}
+
+/* ─── Navbar ────────────────────────────────────────────────────────────────── */
+.navbar {
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 6px var(--color-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .navbar__inner {
+    padding: 1rem 2rem;
+  }
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.navbar__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  transition: color 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .navbar__title {
+    font-size: 1.75rem;
+  }
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ─── Search ────────────────────────────────────────────────────────────────── */
+.navbar__search {
+  display: none;
+  align-items: center;
+  background-color: var(--color-search-bg);
+  border: 1px solid var(--color-search-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  width: 16rem;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .navbar__search {
+    display: flex;
+  }
+}
+
+.navbar__search:focus-within {
+  border-color: var(--color-search-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .navbar__search:focus-within {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.navbar__search-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  transition: color 0.3s ease;
+}
+
+.navbar__search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  width: 100%;
+  transition: color 0.3s ease;
+}
+
+.navbar__search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ─── Theme Toggle ──────────────────────────────────────────────────────────── */
+.theme-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle__track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 3rem;
+  height: 1.625rem;
+  background-color: var(--color-toggle-track);
+  border-radius: 9999px;
+  padding: 0.1875rem;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .theme-toggle__track {
+  background-color: #3730a3;
+}
+
+.theme-toggle__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--color-toggle-thumb);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+}
+
+[data-theme="dark"] .theme-toggle__thumb {
+  transform: translateX(1.375rem);
+  background-color: #0f172a;
+}
+
+.theme-toggle__icon {
+  font-size: 0.625rem;
+  transition: color 0.3s ease;
+}
+
+.theme-toggle__icon--sun {
+  color: #f59e0b;
+}
+
+.theme-toggle__icon--moon {
+  color: #818cf8;
+}
+
+/* ─── CTA Button ────────────────────────────────────────────────────────────── */
+.navbar__cta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--color-cta-from), var(--color-cta-to));
+  color: var(--color-cta-text);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px var(--color-cta-shadow);
+  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.navbar__cta:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 18px var(--color-cta-shadow);
+  transform: translateY(-1px);
+}
+
+.navbar__cta:active {
+  transform: translateY(0);
+}
+
+.navbar__cta-label--short {
+  display: inline;
+}
+
+.navbar__cta-label--full {
   display: none;
 }
-/* Add these animations to your global CSS or Tailwind config */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@media (min-width: 640px) {
+  .navbar__cta-label--short { display: none; }
+  .navbar__cta-label--full  { display: inline; }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-/* Smooth scrollbar for sidebar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+/* ─── Animations ────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Gradient animations */
 @keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .animate-gradient {
@@ -69,18 +271,20 @@
   animation: gradient 15s ease infinite;
 }
 
-/* Pulse animation for notifications */
 @keyframes pulse-ring {
-  0% {
-    transform: scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0;
-  }
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
 }
 
 .animate-pulse-ring {
   animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
