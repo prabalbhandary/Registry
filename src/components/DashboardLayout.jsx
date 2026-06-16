@@ -36,7 +36,7 @@ import AllPatients from "../pages/AllPatients";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
+    <div className="flex min-h-screen app-shell">
       {/* Sidebar */}
       <Sidebar />
       
