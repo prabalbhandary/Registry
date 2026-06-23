@@ -58,8 +58,7 @@ const Patients = () => {
   const filteredPatients = patients.filter((patient) => {
     const searchLower = searchTerm.toLowerCase();
     return (
-      patient.first_name?.toLowerCase().includes(searchLower) ||
-      patient.last_name?.toLowerCase().includes(searchLower) ||
+      patient.name?.toLowerCase().includes(searchLower) ||
       patient.hospital_number?.toLowerCase().includes(searchLower) ||
       patient.phone_number?.toLowerCase().includes(searchLower) ||
       patient.mechanism_of_injury?.toLowerCase().includes(searchLower)
@@ -198,7 +197,7 @@ const Patients = () => {
                           onClick={() => handlePatientClick(patient.id)}
                         >
                           <span className="font-semibold text-purple-700 hover:text-purple-600 hover:underline transition-colors">
-                            {patient.first_name} {patient.last_name}
+                            {patient.name}
                           </span>
                         </td>
                         <td className="px-6 py-5">
@@ -243,7 +242,7 @@ const Patients = () => {
                     <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-purple-200">
                       <div>
                         <h3 className="text-xl font-bold text-slate-800 mb-1">
-                          {patient.first_name} {patient.last_name}
+                          {patient.name}
                         </h3>
                         <p className="text-sm font-bold text-purple-600 font-mono">
                           {patient.hospital_number}

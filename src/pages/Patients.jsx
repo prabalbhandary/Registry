@@ -207,7 +207,7 @@ const Surgeries = () => {
                             onClick={() => handleClick(patient.id)}
                             className="font-semibold text-emerald-700 hover:text-emerald-600 hover:underline transition-colors"
                           >
-                            {patient.first_name} {patient.last_name}
+                            {patient.name}
                           </Link>
                         </td>
                         <td className="px-6 py-5 text-slate-700">
@@ -252,7 +252,7 @@ const Surgeries = () => {
                     <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-emerald-200">
                       <div>
                         <h3 className="text-xl font-bold text-slate-800 mb-1">
-                          {patient.first_name} {patient.last_name}
+                          {patient.name}
                         </h3>
                         <p className="text-sm font-bold text-emerald-600 font-mono">
                           {patient.hospital_number}

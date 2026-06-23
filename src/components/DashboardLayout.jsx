@@ -51,7 +51,7 @@ const DashboardLayout = () => {
         <main className="p-4 sm:p-6 lg:p-8">
           <Routes>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="/all-patients" element={<AllPatients />} />
+            <Route path="all-patients" element={<AllPatients />} />
             <Route path="patients/surgeries" element={<Surgeries />} />
             <Route path="patients/follow-up" element={<Patients />} />
             <Route path="users" element={<Users />} />
