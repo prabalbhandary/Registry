@@ -14,6 +14,12 @@ const AllPatients = () => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
+  // Modal and assistant surgeon state
+  const [assistantSurgeons, setAssistantSurgeons] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedAssistant, setSelectedAssistant] = useState(null);
+
   const navigate = useNavigate();
 
   const fetchPatients = async () => {
@@ -52,6 +58,48 @@ const AllPatients = () => {
   useEffect(() => {
     fetchPatients();
   }, [page]);
+
+  // Fetch assistant surgeons
+  useEffect(() => {
+    const fetchAssistants = async () => {
+      try {
+        const res = await axios.get(`${URL}/assistant-surgeone`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setAssistantSurgeons(res.data?.data || []);
+      } catch (error) {
+        console.error("Failed to fetch assistant surgeons");
+      }
+    };
+    fetchAssistants();
+  }, []);
+
+  const handleSaveToFollowUp = (patient) => {
+    toast.success(`Patient ${patient.name} saved to follow-up`);
+  };
+
+  const handleSaveToSurgery = (patient) => {
+    setSelectedPatient(patient);
+    setSelectedAssistant(null);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmSurgery = async () => {
+    if (!selectedAssistant) {
+      toast.error("Please select an assistant surgeon");
+      return;
+    }
+    try {
+      toast.success(`Patient ${selectedPatient.first_name} saved to surgery with assistant ${selectedAssistant.name}`);
+      setIsModalOpen(false);
+      setSelectedPatient(null);
+      setSelectedAssistant(null);
+    } catch (error) {
+      toast.error("Failed to save surgery details");
+    }
+  };
 
   // Client-side search (current page only)
   const filteredPatients = patients.filter((patient) => {
@@ -180,6 +228,9 @@ const AllPatients = () => {
                       <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                         Arrival Date
                       </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -200,7 +251,7 @@ const AllPatients = () => {
                         </td>
                         <td className="px-6 py-5">
                           <span className="font-semibold text-slate-800">
-                            {patient.first_name} {patient.last_name}
+                            {patient.name}
                           </span>
                         </td>
                         <td className="px-6 py-5 text-slate-700">
@@ -226,6 +277,22 @@ const AllPatients = () => {
                               year: "numeric",
                             }
                           )}
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleSaveToFollowUp(patient)}
+                              className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-lg"
+                            >
+                              FollowUp
+                            </button>
+                            <button
+                              onClick={() => handleSaveToSurgery(patient)}
+                              className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-lg"
+                            >
+                              Surgery
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -302,6 +369,20 @@ const AllPatients = () => {
                           )}
                         </span>
                       </div>
+                      <div className="flex gap-2 pt-3 border-t-2 border-slate-200">
+                        <button
+                          onClick={() => handleSaveToFollowUp(patient)}
+                          className="flex-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-lg"
+                        >
+                          FollowUp
+                        </button>
+                        <button
+                          onClick={() => handleSaveToSurgery(patient)}
+                          className="flex-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-lg"
+                        >
+                          Surgery
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -333,6 +414,61 @@ const AllPatients = () => {
           )}
         </div>
       </div>
+
+      {/* Modal for Assistant Surgeon Selection */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              Select Assistant Surgeon
+            </h2>
+            <p className="text-slate-600 text-sm mb-6">
+              Choose an assistant surgeon for {selectedPatient?.first_name} {selectedPatient?.last_name}
+            </p>
+
+            <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
+              {assistantSurgeons.length > 0 ? (
+                assistantSurgeons.map((assistant) => (
+                  <div
+                    key={assistant.id}
+                    onClick={() => setSelectedAssistant(assistant)}
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                      selectedAssistant?.id === assistant.id
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-slate-200 hover:border-blue-300 hover:bg-blue-50"
+                    }`}
+                  >
+                    <p className="font-semibold text-slate-800">{assistant.name}</p>
+                    <p className="text-sm text-slate-600">Hospital: {assistant.hospital?.name || "N/A"}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-slate-500">No assistant surgeons available</p>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedPatient(null);
+                  setSelectedAssistant(null);
+                }}
+                className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmSurgery}
+                className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!selectedAssistant}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes slideDown {

@@ -13,20 +13,15 @@ const selectStyles = {
 
 const SelectPage = () => {
   const [hospitals, setHospitals] = useState([]);
-  const [assistantSurgeons, setAssistantSurgeons] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState(null);
-  const [selectedAssistants, setSelectedAssistants] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const [primarySurgeon] = useState(user?.name || "");
 
   const [hospitalName, setHospitalName] = useState("");
   const [hospitalAddress, setHospitalAddress] = useState("");
-  const [assistantName, setAssistantName] = useState("");
-  const [assistantHospitalId, setAssistantHospitalId] = useState("");
 
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
-  const [isAssistantModalOpen, setIsAssistantModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,16 +30,11 @@ const SelectPage = () => {
       toast.error("Please select a hospital.");
       return;
     }
-    if (selectedAssistants.length === 0) {
-      toast.error("Please select at least one assistant surgeon.");
-      return;
-    }
 
     try {
       const res = await axios.post(`${URL}/surgeon-detail`, {
         surgeon_name: primarySurgeon,
         hospitals_id: selectedHospital.value,
-        assistant_surgeones: selectedAssistants.map((s) => s.value),
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -78,20 +68,7 @@ const SelectPage = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(`${URL}/assistant-surgeone`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        setAssistantSurgeons(
-          (res.data?.data || []).map((s) => ({
-            value: s.name,
-            label: s.name,
-          }))
-        );
-      });
-  }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-slate-100 p-4 md:p-8">
@@ -109,7 +86,7 @@ const SelectPage = () => {
               Surgeon Details
             </h1>
             <p className="text-slate-600 font-medium">
-              Select hospital & assistant surgeons
+              Select hospital
             </p>
           </div>
         </div>
@@ -143,32 +120,6 @@ const SelectPage = () => {
             </div>
           </div>
 
-          {/* Assistants */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
-              Assistant Surgeons
-            </label>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <Select
-                  isMulti
-                  styles={selectStyles}
-                  menuPortalTarget={document.body}
-                  options={assistantSurgeons}
-                  value={selectedAssistants}
-                  onChange={setSelectedAssistants}
-                  placeholder="Select Assistant Surgeons"
-                />
-              </div>
-              <button
-                onClick={() => setIsAssistantModalOpen(true)}
-                className="p-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:shadow-lg"
-              >
-                <FaPlus />
-              </button>
-            </div>
-          </div>
-
           {/* Actions */}
           <div className="flex justify-between pt-6 border-t border-slate-200">
             <button
@@ -188,56 +139,28 @@ const SelectPage = () => {
       </div>
 
       {/* Modals (same logic, improved style) */}
-      {(isHospitalModalOpen || isAssistantModalOpen) && (
+      {isHospitalModalOpen && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
-            <h2 className="text-xl font-bold mb-4">
-              {isHospitalModalOpen ? "Add Hospital" : "Add Assistant"}
-            </h2>
+            <h2 className="text-xl font-bold mb-4">Add Hospital</h2>
 
-            {isHospitalModalOpen ? (
-              <>
-                <input
-                  className="w-full p-3 border-2 rounded-xl mb-3"
-                  placeholder="Hospital Name"
-                  value={hospitalName}
-                  onChange={(e) => setHospitalName(e.target.value)}
-                />
-                <input
-                  className="w-full p-3 border-2 rounded-xl mb-4"
-                  placeholder="Address"
-                  value={hospitalAddress}
-                  onChange={(e) => setHospitalAddress(e.target.value)}
-                />
-              </>
-            ) : (
-              <>
-                <input
-                  className="w-full p-3 border-2 rounded-xl mb-3"
-                  placeholder="Assistant Name"
-                  value={assistantName}
-                  onChange={(e) => setAssistantName(e.target.value)}
-                />
-                <select
-                  className="w-full p-3 border-2 rounded-xl mb-4"
-                  value={assistantHospitalId}
-                  onChange={(e) => setAssistantHospitalId(e.target.value)}
-                >
-                  <option value="">Select Hospital</option>
-                  {hospitals.map((h) => (
-                    <option key={h.value} value={h.value}>
-                      {h.label}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
+            <input
+              className="w-full p-3 border-2 rounded-xl mb-3"
+              placeholder="Hospital Name"
+              value={hospitalName}
+              onChange={(e) => setHospitalName(e.target.value)}
+            />
+            <input
+              className="w-full p-3 border-2 rounded-xl mb-4"
+              placeholder="Address"
+              value={hospitalAddress}
+              onChange={(e) => setHospitalAddress(e.target.value)}
+            />
 
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => {
                   setIsHospitalModalOpen(false);
-                  setIsAssistantModalOpen(false);
                 }}
                 className="px-4 py-2 font-semibold"
               >

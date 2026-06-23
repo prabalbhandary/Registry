@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SecondNavbar from "../components/SecondNavbar";
+// import SecondNavbar from "../components/SecondNavbar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -8,8 +8,7 @@ import Select from "react-select";
 
 const CreateSurgery = () => {
   const navigate = useNavigate();
-  const [first_name, setFirst_name] = useState("");
-  const [last_name, setLast_name] = useState("");
+  const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [countries, setCountries] = useState([]);
@@ -48,7 +47,14 @@ const CreateSurgery = () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then(res => setCountries(res.data.data))
+      .then(res => {
+        setCountries(res.data.data);
+        // Set Nepal as default country
+        const nepal = res.data.data.find(c => c.name?.toLowerCase() === 'nepal');
+        if (nepal) {
+          setCountryId(nepal.id);
+        }
+      })
       .catch(() => {
         if (error.response?.status === 401) {
           toast.error("Session expired. Please log in again.", {
@@ -121,8 +127,7 @@ const CreateSurgery = () => {
   }, [province_id]);
 
   const [fieldErrors, setFieldErrors] = useState({
-    first_name: "",
-    last_name: "",
+    name: "",
     age: "",
     gender: "",
     country_id: "",
@@ -176,8 +181,7 @@ const CreateSurgery = () => {
     e.preventDefault();
 
     setFieldErrors({
-      first_name: "",
-      last_name: "",
+      name: "",
       age: "",
       gender: "",
       country_id: "",
@@ -197,13 +201,9 @@ const CreateSurgery = () => {
     let formValid = true;
     let newErrors = {};
 
-    if (!first_name) {
+    if (!name) {
       formValid = false;
-      newErrors.first_name = "First name is required.";
-    }
-    if (!last_name) {
-      formValid = false;
-      newErrors.last_name = "Last name is required.";
+      newErrors.name = "Name is required.";
     }
     if (!age || isNaN(age)) {
       formValid = false;
@@ -275,8 +275,7 @@ const CreateSurgery = () => {
     try {
       const res = await axios.post(`${URL}/patient-detail`, {
         surgeon_detail_id: localStorage.getItem("surgeonDetailId"),
-        first_name,
-        last_name,
+        name,
         age,
         gender,
         country_id,
@@ -376,7 +375,7 @@ const CreateSurgery = () => {
   return (
     <>
       <title>Create Surgery - Trauma Registry</title>
-      <SecondNavbar completedIndex={completedIndex} />
+      {/* <SecondNavbar completedIndex={completedIndex} /> */}
       
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4">
         <div className="max-w-5xl mx-auto">
@@ -406,52 +405,27 @@ const CreateSurgery = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* First Name */}
                   <div className="flex flex-col">
-                    <label htmlFor="firstName" className="text-sm font-semibold text-gray-700 mb-2">
-                      First Name <span className="text-red-500">*</span>
+                    <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 mb-2">
+                      Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="firstName"
-                      name="first_name"
-                      value={first_name}
-                      onChange={(e) => setFirst_name(e.target.value)}
-                      placeholder="Enter first name"
-                      className={`p-3 border ${fieldErrors.first_name ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
+                      id="fullName"
+                      name="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter full name"
+                      className={`p-3 border ${fieldErrors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
                     />
-                    {fieldErrors.first_name && (
+                    {fieldErrors.name && (
                       <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1">
                         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.4１４L１０ ８．５８６ ８．７０７ ７．２９３z" clipRule="evenodd" />
                         </svg>
-                        {fieldErrors.first_name}
+                        {fieldErrors.name}
                       </p>
                     )}
                   </div>
-
-                  {/* Last Name */}
-                  <div className="flex flex-col">
-                    <label htmlFor="lastName" className="text-sm font-semibold text-gray-700 mb-2">
-                      Last Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="last_name"
-                      value={last_name}
-                      onChange={(e) => setLast_name(e.target.value)}
-                      placeholder="Enter last name"
-                      className={`p-3 border ${fieldErrors.last_name ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
-                    />
-                    {fieldErrors.last_name && (
-                      <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1">
-                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                        {fieldErrors.last_name}
-                      </p>
-                    )}
-                  </div>
-
                   {/* Age */}
                   <div className="flex flex-col">
                     <label htmlFor="age" className="text-sm font-semibold text-gray-700 mb-2">
