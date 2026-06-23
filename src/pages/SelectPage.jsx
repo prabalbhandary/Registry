@@ -31,27 +31,10 @@ const SelectPage = () => {
       return;
     }
 
-    try {
-      const res = await axios.post(`${URL}/surgeon-detail`, {
-        surgeon_name: primarySurgeon,
-        hospitals_id: selectedHospital.value,
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (res.data.success) {
-        toast.success(res.data.message);
-        localStorage.setItem(
-          "surgeonDetailId",
-          JSON.stringify(res.data.data.id)
-        );
-        navigate("/create-surgery");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-    }
+    // Store selected hospital locally and proceed — no surgeon-detail POST
+    localStorage.setItem("selectedHospitalId", selectedHospital.value);
+    toast.success("Hospital selected");
+    navigate("/create-surgery");
   };
 
   useEffect(() => {
@@ -83,10 +66,10 @@ const SelectPage = () => {
           </button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-700 to-purple-500 bg-clip-text text-transparent">
-              Surgeon Details
+              Select Hospital
             </h1>
             <p className="text-slate-600 font-medium">
-              Select hospital
+              Select a hospital from the list
             </p>
           </div>
         </div>

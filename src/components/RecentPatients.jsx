@@ -35,6 +35,14 @@ const RecentPatients = () => {
   // Only show max 5 patients
   const displayData = patients.slice(0, 5);
 
+  const getPatientDisplayName = (patient) => {
+    if (!patient) return "Unknown";
+    const first = patient.first_name || patient.name || patient.full_name || patient.patient_name || "";
+    const last = patient.last_name || patient.surname || "";
+    const combined = `${first} ${last}`.trim();
+    return combined || "Unknown";
+  };
+
   return (
     <div className="bg-white rounded-lg">
       {loading ? (
@@ -60,12 +68,8 @@ const RecentPatients = () => {
                   className={`hover:bg-gray-50 cursor-pointer transition-all duration-150 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
                     }`}
                 >
-                  <TableCell>
-                    {(patient.first_name || "Unknown") +
-                      " " +
-                      (patient.last_name || "")}
-                  </TableCell>
-                  <TableCell>{patient.hospital_number || "-"}</TableCell>
+                  <TableCell>{getPatientDisplayName(patient)}</TableCell>
+                  <TableCell>{patient.hospital_number || patient.hospital_no || patient.hospitalNumber || "-"}</TableCell>
                 </tr>
               ))}
             </tbody>

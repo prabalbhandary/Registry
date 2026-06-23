@@ -247,37 +247,7 @@ const Sidebar = () => {
             </NavLink>
           )}
 
-          <NavLink
-            to="/patients/follow-up"
-            onClick={() => {
-              setMenuOpen(false);
-              scrollTo(0, 0);
-            }}
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
-                : "flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-700/50 hover:text-white transition-all"
-            }
-          >
-            <BiCalendarCheck className="text-xl" />
-            <span className="font-medium">Follow Up</span>
-          </NavLink>
-
-          <NavLink
-            to="/patients/surgeries"
-            onClick={() => {
-              setMenuOpen(false);
-              scrollTo(0, 0);
-            }}
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-3 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
-                : "flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:bg-slate-700/50 hover:text-white transition-all"
-            }
-          >
-            <RiSurgicalMaskFill className="text-xl" />
-            <span className="font-medium">Surgeries</span>
-          </NavLink>
+          {/* Follow Up and Surgeries temporarily hidden — use All Patients filters */}
 
           {role && (
             <NavLink

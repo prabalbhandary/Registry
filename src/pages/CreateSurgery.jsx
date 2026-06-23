@@ -32,6 +32,7 @@ const CreateSurgery = () => {
   const [primaryTreatment, setPrimaryTreatment] = useState("");
   const [treatmentWhere, setTreatmentWhere] = useState("");
   const [antibiotic, setAntibiotic] = useState("");
+  const [antibioticReceived, setAntibioticReceived] = useState("");
   const [whatTreatment, setWhatTreatment] = useState("");
 
   const selectPortalStyles = {
@@ -293,7 +294,7 @@ const CreateSurgery = () => {
         incident_time: incidentTime,
         primary_treatment_received: primaryTreatment,
         treatment_location: treatmentWhere,
-        antibiotic,
+        antibiotic: antibioticReceived === "Yes" ? antibiotic : "",
         treatment_details: whatTreatment,
       }, {
         headers: {
@@ -961,18 +962,36 @@ const CreateSurgery = () => {
                       </div>
 
                       <div className="flex flex-col">
-                        <label htmlFor="antibiotic" className="text-sm font-semibold text-gray-700 mb-2">
-                          Antibiotic
+                        <label htmlFor="antibioticReceived" className="text-sm font-semibold text-gray-700 mb-2">
+                          Antibiotic Received
                         </label>
-                        <input
-                          type="text"
-                          id="antibiotic"
-                          value={antibiotic}
-                          onChange={(e) => setAntibiotic(e.target.value)}
-                          placeholder="Antibiotic administered"
+                        <select
+                          id="antibioticReceived"
+                          value={antibioticReceived}
+                          onChange={(e) => setAntibioticReceived(e.target.value)}
                           className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                        />
+                        >
+                          <option value="">Select</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
                       </div>
+
+                      {antibioticReceived === "Yes" && (
+                        <div className="flex flex-col">
+                          <label htmlFor="antibiotic" className="text-sm font-semibold text-gray-700 mb-2">
+                            Antibiotic
+                          </label>
+                          <input
+                            type="text"
+                            id="antibiotic"
+                            value={antibiotic}
+                            onChange={(e) => setAntibiotic(e.target.value)}
+                            placeholder="Antibiotic administered"
+                            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                          />
+                        </div>
+                      )}
 
                       <div className="flex flex-col md:col-span-2">
                         <label htmlFor="whatTreatment" className="text-sm font-semibold text-gray-700 mb-2">
