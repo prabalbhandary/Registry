@@ -14,7 +14,11 @@ const AllPatients = () => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
-  // (No modal/assistant state needed — navigate to pages directly)
+  // Modal and assistant surgeon state
+  const [assistantSurgeons, setAssistantSurgeons] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedAssistant, setSelectedAssistant] = useState(null);
 
   const navigate = useNavigate();
 
@@ -55,21 +59,51 @@ const AllPatients = () => {
     fetchPatients();
   }, [page]);
 
-  // no assistant fetch — surgery selection handled on Surgery page
+  // Fetch assistant surgeons
+  useEffect(() => {
+    const fetchAssistants = async () => {
+      try {
+        const res = await axios.get(`${URL}/assistant-surgeone`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setAssistantSurgeons(res.data?.data || []);
+      } catch (error) {
+        console.error("Failed to fetch assistant surgeons");
+      }
+    };
+    fetchAssistants();
+  }, []);
 
   const handleSaveToFollowUp = (patient) => {
-    // Save patient id for FollowUp page and navigate
     localStorage.setItem("patient_detail_id", patient.id);
     navigate(`/followup/${patient.id}`);
   };
 
   const handleSaveToSurgery = (patient) => {
-    // Save patient id for Surgery page and navigate
-    localStorage.setItem("patientId", patient.id);
-    navigate(`/surgery`);
+    setSelectedPatient(patient);
+    setSelectedAssistant(null);
+    setIsModalOpen(true);
   };
 
-  // surgery confirmation handled in Surgery page
+  const handleConfirmSurgery = async () => {
+    if (!selectedAssistant) {
+      toast.error("Please select an assistant surgeon");
+      return;
+    }
+    try {
+      localStorage.setItem("patientId", selectedPatient.id);
+      localStorage.setItem("selectedAssistantSurgeon", JSON.stringify(selectedAssistant));
+      toast.success(`Patient ${selectedPatient.name} saved with assistant ${selectedAssistant.name}`);
+      setIsModalOpen(false);
+      setSelectedPatient(null);
+      setSelectedAssistant(null);
+      navigate("/surgery");
+    } catch (error) {
+      toast.error("Failed to save surgery details");
+    }
+  };
 
   // Client-side search (current page only)
   const filteredPatients = patients.filter((patient) => {
@@ -385,7 +419,60 @@ const AllPatients = () => {
         </div>
       </div>
 
-      {/* (No assistant modal — Surgery handled on Surgery page) */}
+      {/* Modal for Assistant Surgeon Selection */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              Select Assistant Surgeon
+            </h2>
+            <p className="text-slate-600 text-sm mb-6">
+              Choose an assistant surgeon for {selectedPatient?.name}
+            </p>
+
+            <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
+              {assistantSurgeons.length > 0 ? (
+                assistantSurgeons.map((assistant) => (
+                  <div
+                    key={assistant.id}
+                    onClick={() => setSelectedAssistant(assistant)}
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                      selectedAssistant?.id === assistant.id
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-slate-200 hover:border-blue-300 hover:bg-blue-50"
+                    }`}
+                  >
+                    <p className="font-semibold text-slate-800">{assistant.name}</p>
+                    <p className="text-sm text-slate-600">Hospital: {assistant.hospital?.name || "N/A"}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-slate-500">No assistant surgeons available</p>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedPatient(null);
+                  setSelectedAssistant(null);
+                }}
+                className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmSurgery}
+                className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!selectedAssistant}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes slideDown {
