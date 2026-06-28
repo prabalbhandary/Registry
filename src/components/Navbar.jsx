@@ -90,7 +90,7 @@ const Navbar = () => {
       {pathname === "/assistants" && <Header title="Assistant Surgeons" showSearch={true} />}
       {pathname === "/hospitals" && <Header title="Hospitals" showSearch={true} />}
       {pathname === "/profile" && <Header title="My Profile" />}
-      {pathname === "/create-surgery" && <Header title="Create Surgery" />}
+      {pathname === "/create-surgery" && <Header title="Create Patient" />}
       {pathname === "/add-surgerical-details" && <Header title="Add Surgical Details" />}
       {pathname === "/patient-surgical-details" && <Header title="Patient Surgical Details" />}
       {pathname === "/patient-injury-details" && <Header title="Patient Injury Details" />}

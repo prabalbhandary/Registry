@@ -299,8 +299,12 @@ const Femur = () => {
                                 >
                                   <div className="relative">
                                     <img
-                                      src={`/images/classification/${code}.png`}
+                                      src={`/images/classification/femur/${code}.png`}
                                       alt={sub}
+                                      onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = `/images/classification/${code}.png`;
+                                      }}
                                       className="w-full h-32 object-contain rounded-lg bg-white"
                                     />
                                     {isSelected && (

@@ -299,8 +299,22 @@ const TibiaAndFibula = () => {
                                 >
                                   <div className="relative">
                                     <img
-                                      src={`/images/classification/${code}.png`}
+                                      src={`/images/classification/tibia/${code}.png`}
                                       alt={sub}
+                                      onError={(e) => {
+                                        const el = e.currentTarget;
+                                        el.onerror = null;
+                                        // Fallback order: tibia -> radius -> ulna -> femur -> root
+                                        if (el.src.includes('/tibia/')) {
+                                          el.src = `/images/classification/radius/${code}.png`;
+                                        } else if (el.src.includes('/radius/')) {
+                                          el.src = `/images/classification/ulna/${code}.png`;
+                                        } else if (el.src.includes('/ulna/')) {
+                                          el.src = `/images/classification/femur/${code}.png`;
+                                        } else if (el.src.includes('/femur/')) {
+                                          el.src = `/images/classification/${code}.png`;
+                                        }
+                                      }}
                                       className="w-full h-32 object-contain rounded-lg bg-white"
                                     />
                                     {isSelected && (

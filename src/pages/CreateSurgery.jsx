@@ -273,9 +273,15 @@ const CreateSurgery = () => {
       return;
     }
 
+    const hospitalId = Number(localStorage.getItem("selectedHospitalId") || localStorage.getItem("hospitalId") || null);
+    if (!hospitalId) {
+      toast.error("Hospital id is required. Please select a hospital.");
+      return;
+    }
+
     try {
       const res = await axios.post(`${URL}/patient-detail`, {
-        surgeon_detail_id: localStorage.getItem("surgeonDetailId"),
+        hospital_id: hospitalId,
         name,
         age,
         gender,
@@ -375,7 +381,7 @@ const CreateSurgery = () => {
 
   return (
     <>
-      <title>Create Surgery - Trauma Registry</title>
+      <title>Create Patient - Trauma Registry</title>
       {/* <SecondNavbar completedIndex={completedIndex} /> */}
       
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4">

@@ -299,8 +299,12 @@ const Humerus = () => {
                                 >
                                   <div className="relative">
                                     <img
-                                      src={`/images/classification/${code}.png`}
+                                      src={`/images/classification/humerus/${code}.png`}
                                       alt={sub}
+                                      onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = `/images/classification/${code}.png`;
+                                      }}
                                       className="w-full h-32 object-contain rounded-lg bg-white"
                                     />
                                     {isSelected && (
