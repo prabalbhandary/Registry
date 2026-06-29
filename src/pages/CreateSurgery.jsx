@@ -357,7 +357,7 @@ const CreateSurgery = () => {
               </div>
               <h1 className="text-2xl font-bold text-gray-900">Select Hospital</h1>
             </div>
-            <p className="text-gray-500 ml-13 text-sm">Choose the hospital where the surgery will be performed</p>
+            <p className="text-gray-500 ml-13 text-sm">Which hospital are you at?</p>
           </div>
 
           {/* Card */}
