@@ -74,7 +74,7 @@ const Navbar = () => {
           title="Dashboard"
           showSearch={true}
           button={
-            <Link to="/select" className="navbar__cta">
+            <Link to="/create-surgery" className="navbar__cta">
               <FaPlus />
               <span className="navbar__cta-label--full">Create Patient</span>
               <span className="navbar__cta-label--short">Create</span>

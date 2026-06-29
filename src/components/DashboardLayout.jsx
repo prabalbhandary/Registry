@@ -29,7 +29,6 @@ import Femur from "./skeletonpart/lowerlimb/Femur";
 import TibiaAndFibula from "./skeletonpart/lowerlimb/TibiaAndFibula";
 import Patella from "./skeletonpart/lowerlimb/Patella";
 import Foot from "./skeletonpart/lowerlimb/Foot";
-import SelectPage from "../pages/SelectPage";
 import Surgery from "../pages/Surgery";
 import FollowUp from "../pages/FollowUp";
 import AllPatients from "../pages/AllPatients";
@@ -76,7 +75,6 @@ const DashboardLayout = () => {
             <Route path="tibia_and_fibula" element={<TibiaAndFibula />} />
             <Route path="patella" element={<Patella />} />
             <Route path="foot" element={<Foot />} />
-            <Route path="select" element={<SelectPage />} />
             <Route path="surgery" element={<Surgery />} />
             <Route path="followup/:id" element={<FollowUp />} />
           </Routes>
