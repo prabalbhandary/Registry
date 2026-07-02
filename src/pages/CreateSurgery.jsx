@@ -53,12 +53,14 @@ const CreateSurgery = () => {
   const [antibiotic, setAntibiotic] = useState("");
   const [antibioticReceived, setAntibioticReceived] = useState("");
   const [whatTreatment, setWhatTreatment] = useState("");
+  const [surgeon_detail_id, setSurgeon_detail_id] = useState("");
+  const [surgeons, setSurgeons] = useState([]);
 
   const [fieldErrors, setFieldErrors] = useState({
     name: "", age: "", gender: "", country_id: "", province_id: "",
     district_id: "", address: "", hospital_number: "", phone_number: "",
     occupation: "", mechanism_of_injury: "", type_of_injury: "",
-    incidentDate: "", incidentTime: "", primaryTreatment: "",
+    incidentDate: "", incidentTime: "", primaryTreatment: "", surgeon_detail_id: "",
   });
 
   const selectPortalStyles = {
@@ -151,6 +153,28 @@ const CreateSurgery = () => {
       });
   }, [province_id]);
 
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/assistant-surgeone`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        const surgeonList = (res.data?.data || [])
+          .filter((s) => s.is_active)
+          .map((s) => ({ value: s.id, label: s.name }));
+        setSurgeons(surgeonList);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          toast.error("Session expired. Please log in again.", {
+            onClose: () => { localStorage.clear(); navigate("/login"); },
+          });
+        } else {
+          toast.error(err.response?.data?.message || "Failed to fetch surgeons");
+        }
+      });
+  }, []);
+
   // ── Derived values ───────────────────────────────────────────────────────────
   const countryOptions = countries.map((c) => ({ value: c.id, label: c.name }));
   const selectedCountry = countryOptions.find((o) => o.value === country_id) || null;
@@ -223,7 +247,7 @@ const CreateSurgery = () => {
       name: "", age: "", gender: "", country_id: "", province_id: "",
       district_id: "", address: "", hospital_number: "", phone_number: "",
       occupation: "", mechanism_of_injury: "", type_of_injury: "",
-      incidentDate: "", incidentTime: "", primaryTreatment: "",
+      incidentDate: "", incidentTime: "", primaryTreatment: "", surgeon_detail_id: "",
     });
 
     let formValid = true;
@@ -233,6 +257,7 @@ const CreateSurgery = () => {
     if (!age || isNaN(age)) { formValid = false; newErrors.age = "Age is required and must be a number."; }
     if (!gender) { formValid = false; newErrors.gender = "Gender is required."; }
     if (!country_id) { formValid = false; newErrors.country_id = "Country is required."; }
+    if (!surgeon_detail_id) { formValid = false; newErrors.surgeon_detail_id = "Surgeon is required."; }
 
     if (isNepal) {
       if (!province_id) { formValid = false; newErrors.province_id = "Province is required."; }
@@ -264,7 +289,7 @@ const CreateSurgery = () => {
         `${URL}/patient-detail`,
         {
           hospital_id: hospitalId,
-          name, age, gender, country_id,
+          name, age, gender, country_id, surgeon_detail_id,
           province_id: isNepal ? province_id : null,
           district_id: isNepal ? district_id : null,
           address: !isNepal ? address : null,
@@ -557,25 +582,44 @@ const CreateSurgery = () => {
                     {fieldErrors.age && <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1"><ErrorIcon />{fieldErrors.age}</p>}
                   </div>
 
-                  {/* Gender */}
-                  <div className="flex flex-col">
-                    <label htmlFor="gender" className="text-sm font-semibold text-gray-700 mb-2">
-                      Gender <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="gender" name="gender" value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      className={`p-3 border ${fieldErrors.gender ? "border-red-300 bg-red-50" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    {fieldErrors.gender && <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1"><ErrorIcon />{fieldErrors.gender}</p>}
-                  </div>
-                </div>
-              </div>
+                   {/* Gender */}
+                   <div className="flex flex-col">
+                     <label htmlFor="gender" className="text-sm font-semibold text-gray-700 mb-2">
+                       Gender <span className="text-red-500">*</span>
+                     </label>
+                     <select
+                       id="gender" name="gender" value={gender}
+                       onChange={(e) => setGender(e.target.value)}
+                       className={`p-3 border ${fieldErrors.gender ? "border-red-300 bg-red-50" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`}
+                     >
+                       <option value="">Select Gender</option>
+                       <option value="Male">Male</option>
+                       <option value="Female">Female</option>
+                       <option value="Other">Other</option>
+                     </select>
+                     {fieldErrors.gender && <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1"><ErrorIcon />{fieldErrors.gender}</p>}
+                   </div>
+
+                   {/* Surgeon */}
+                   <div className="flex flex-col">
+                     <label htmlFor="surgeon" className="text-sm font-semibold text-gray-700 mb-2">
+                       Surgeon <span className="text-red-500">*</span>
+                     </label>
+                     <Select
+                       id="surgeon" name="surgeon"
+                       value={surgeons.find((s) => s.value === surgeon_detail_id) || null}
+                       onChange={(selectedOption) => setSurgeon_detail_id(selectedOption ? selectedOption.value : "")}
+                       options={surgeons}
+                       styles={{ ...customSelectStyles, ...selectPortalStyles }}
+                       menuPortalTarget={document.body}
+                       placeholder="Search or select surgeon..."
+                       isSearchable
+                       noOptionsMessage={() => "No surgeons found"}
+                     />
+                     {fieldErrors.surgeon_detail_id && <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1"><ErrorIcon />{fieldErrors.surgeon_detail_id}</p>}
+                   </div>
+                 </div>
+               </div>
 
               {/* 2. Contact & Location */}
               <div>
