@@ -202,7 +202,7 @@ const Dashboard = () => {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link
-            to="/select"
+            to="/create-surgery"
             className="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 transition-all group"
           >
             <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
